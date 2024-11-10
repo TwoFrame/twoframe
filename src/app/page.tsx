@@ -7,7 +7,7 @@ export default function Landing() {
           <p className="py-6">
             Keep up with tournaments for your favorite games.
           </p>
-          <a href="/tournaments/browse">
+          <a href="/tournaments/search">
             <button className="btn btn-primary">Discover</button>
           </a>
         </div>
