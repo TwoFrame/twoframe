@@ -1,9 +1,69 @@
 {
-  "id": "e52998cf-0696-437a-897b-3fd223f662af",
-  "prevId": "118d397e-3c90-436f-b15c-080df062045f",
+  "id": "79aab22e-20eb-4f01-ad1a-ea950248b909",
+  "prevId": "6d73a54a-2915-4aea-94f2-ef197a24f52d",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.tournaments": {
+      "name": "tournaments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tournaments_owner_id_usernames_id_fk": {
+          "name": "tournaments_owner_id_usernames_id_fk",
+          "tableFrom": "tournaments",
+          "tableTo": "usernames",
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.usernames": {
       "name": "usernames",
       "schema": "",

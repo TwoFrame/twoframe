@@ -1,4 +1,4 @@
-import Navbar from '@/app/components/navbar';
+import Navbar from "@/app/components/navbar";
 
 export default function Landing() {
   return (
@@ -10,9 +10,14 @@ export default function Landing() {
           <p className="py-6">
             Keep up with tournaments for your favorite games.
           </p>
-          <a href="/tournaments/search">
-            <button className="btn btn-primary">Discover</button>
-          </a>
+          <div className="flex flex-col gap-4">
+            <a href="/tournaments/search">
+              <button className="btn btn-primary">Discover</button>
+            </a>
+            <a href="/tournaments/create">
+              <button className="btn btn-primary">Create a Tournament</button>
+            </a>
+          </div>
         </div>
       </div>
     </div>

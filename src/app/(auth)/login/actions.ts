@@ -3,17 +3,16 @@
 import { LoginSchema } from "@/app/_lib/schemas";
 import { LoginState } from "../types";
 
-import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from "@/utils/supabase/server";
 
 export async function login(
   prevState: LoginState | null,
-  formData: FormData
+  formData: FormData,
 ): Promise<LoginState> {
-
-  const supabase = await createClient()
+  const supabase = await createClient();
 
   // Validate form Data
   const validationResult = LoginSchema.safeParse({
@@ -24,24 +23,20 @@ export async function login(
   if (!validationResult.success) {
     return {
       errors: validationResult.error.flatten().fieldErrors,
-      success: false
+      success: false,
     };
   }
 
   // Console Info
   const { email, password } = validationResult.data;
-  console.log("HANDLE LOGIN");
-  console.log("EMAIL:" + email);
-  console.log("PASSWORD:" + password);
-
 
   // Attempt to sign in
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    redirect('/error')
+    redirect("/error");
   }
 
-  revalidatePath('/', 'layout')
-  redirect('/')
+  revalidatePath("/", "layout");
+  redirect("/");
 }
