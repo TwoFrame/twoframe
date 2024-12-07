@@ -10,10 +10,6 @@ export default async function TournamentPage({
 
   const { tournament_data, error } = await getTournamentBySlug(slug);
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   if (tournament_data) {
     return (
       <div>
@@ -21,9 +17,10 @@ export default async function TournamentPage({
         <p>
           Start Date: {new Date(tournament_data.start_date).toLocaleString()}
         </p>
+        <p>End Date: {new Date(tournament_data.end_date).toLocaleString()}</p>
       </div>
     );
   }
 
-  return <div>Loading...</div>; // Opt
+  return <div>Error: {error}</div>;
 }

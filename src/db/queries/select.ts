@@ -1,15 +1,17 @@
-import { count, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { TournamentTable } from "../schema";
+import { TournamentTable, SlugBaseTable } from "../schema";
 
-export async function getTournamentsByTitle(query_title: string) {
+export async function getSlugNumber(slug: string) {
   try {
-    const result = await db
-      .select({ count: count() })
-      .from(TournamentTable)
-      .where(eq(TournamentTable.title, query_title));
-
-    return { title_count: result[0].count };
+    const result = await db.query.SlugBaseTable.findFirst({
+      where: eq(SlugBaseTable.slug_base, slug),
+    });
+    //slug base doesnt exist yet just return 0
+    if (!result) {
+      return { title_count: 0 };
+    }
+    return { title_count: result.latest_number + 1 };
   } catch (error) {
     return { selecterror: error };
   }
@@ -17,16 +19,13 @@ export async function getTournamentsByTitle(query_title: string) {
 
 export async function getTournamentBySlug(slug: string) {
   try {
-    const result = await db
-      .select()
-      .from(TournamentTable)
-      .where(eq(TournamentTable.slug, slug));
-
-    if (result.length === 0) {
-      return { error: "Tournament not found" };
+    const result = await db.query.TournamentTable.findFirst({
+      where: eq(TournamentTable.slug, slug),
+    });
+    if (!result) {
+      return { error: "No tournament found" };
     }
-
-    return { tournament_data: result[0] }; // Assuming you only want the first result, since slug should be unique
+    return { tournament_data: result };
   } catch (error) {
     return { error: "Failed to fetch tournament data" };
   }

@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, smallint } from "drizzle-orm/pg-core";
 
 export const authUsers = pgTable("auth.users", {
   id: uuid("id").primaryKey(),
@@ -25,5 +25,13 @@ export const TournamentTable = pgTable("tournaments", {
   end_date: timestamp("end_date", { mode: "string" }).notNull(),
 });
 
+export const SlugBaseTable = pgTable("slug_table", {
+  slug_base: text("slug_base").primaryKey(),
+  latest_number: smallint().default(0).notNull(),
+});
+
 export type InsertTournament = typeof TournamentTable.$inferInsert;
 export type SelectTournament = typeof TournamentTable.$inferSelect;
+
+export type InsertSlugBase = typeof SlugBaseTable.$inferInsert;
+export type SelectSlugBase = typeof SlugBaseTable.$inferSelect;

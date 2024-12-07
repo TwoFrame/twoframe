@@ -1,5 +1,10 @@
 import { db } from "../db";
-import { InsertTournament, TournamentTable } from "../schema";
+import {
+  InsertTournament,
+  InsertSlugBase,
+  TournamentTable,
+  SlugBaseTable,
+} from "../schema";
 
 export async function createTournament(data: InsertTournament) {
   try {
@@ -7,6 +12,16 @@ export async function createTournament(data: InsertTournament) {
 
     return { insertedTournament };
   } catch (error) {
-    return { inserterror: error };
+    return { insert_error: error };
+  }
+}
+
+export async function createSlugBase(data: InsertSlugBase) {
+  try {
+    const insertedSlugBase = await db.insert(SlugBaseTable).values(data);
+
+    return { insertedSlugBase };
+  } catch (error) {
+    return { insert_error: error };
   }
 }

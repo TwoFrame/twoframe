@@ -7,8 +7,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 
-import { createTournament } from "@/db/queries/insert";
-import { getTournamentsByTitle } from "@/db/queries/select";
+import { createTournament, createSlugBase } from "@/db/queries/insert";
+import { updateSlugBase } from "@/db/queries/update";
+import { getSlugNumber } from "@/db/queries/select";
 import slugify from "slugify/slugify";
 
 export async function createTournamentAction(
@@ -39,7 +40,7 @@ export async function createTournamentAction(
     };
   }
 
-  //make what the user gave us is formatted properly
+  //make sure what the user gave us is formatted properly
   const validationResult = TournamentCreateSchema.safeParse({
     title: formData.get("title"),
     start_date: new Date(formData.get("start_date") as string).toISOString(),
@@ -55,14 +56,12 @@ export async function createTournamentAction(
   const { title, start_date, end_date } = validationResult.data;
 
   //we want to generate the slug next
-  const { title_count, selecterror } = await getTournamentsByTitle(title);
+  const { title_count, selecterror } = await getSlugNumber(slugify(title));
   if (selecterror) {
-    console.log(selecterror);
     redirect("/error");
   }
 
-  console.log(title + " " + title_count);
-  const { inserterror } = await createTournament({
+  const { insert_error } = await createTournament({
     owner_id: data.user.id,
     title: title,
     slug: slugify(title + " " + title_count),
@@ -70,9 +69,30 @@ export async function createTournamentAction(
     end_date: end_date,
   });
 
-  if (inserterror) {
-    console.log(inserterror);
+  if (insert_error) {
     redirect("/error");
+  }
+
+  //now that our tournament has been inserted, we need to now make sure the slugtable is updated as well
+  if (title_count == 0) {
+    //current slug isn't in the slug table yet, add with 0
+    const { insert_error } = await createSlugBase({
+      slug_base: slugify(title),
+    });
+
+    if (insert_error) {
+      console.log(222);
+      redirect("/error");
+    }
+  } else {
+    //slug_base already exists, just increment
+    const { update_error } = await updateSlugBase(slugify(title), {
+      latest_number: title_count,
+    });
+    if (update_error) {
+      console.log(333);
+      redirect("/error");
+    }
   }
 
   revalidatePath("/", "layout");
