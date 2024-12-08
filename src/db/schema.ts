@@ -1,17 +1,15 @@
-import { pgTable, uuid, text, timestamp, smallint } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, smallint, pgSchema, serial } from "drizzle-orm/pg-core";
 
-export const authUsers = pgTable("auth.users", {
-  id: uuid("id").primaryKey(),
-  email: text("email").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+const authSchema = pgSchema('auth');
+
+const users = authSchema.table('users', {
+	id: uuid('id').primaryKey(),
 });
 
-export const UserTable = pgTable("usernames", {
-  id: uuid("id")
-    .primaryKey()
-    .references(() => authUsers.id),
-  username: text("username").notNull().unique(),
-  createdAt: timestamp("created_at").defaultNow(),
+export const profiles = pgTable('profiles', {
+	id: serial('id').primaryKey(),
+	username: text('username').notNull(),
+	user_id: uuid('user_id').references(() => users.id).notNull()
 });
 
 export const TournamentTable = pgTable("tournaments", {

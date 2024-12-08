@@ -5,57 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1730863636290,
-      "tag": "0000_flat_wendell_vaughn",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1733212806775,
-      "tag": "0001_init",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1733471930582,
-      "tag": "0002_open_warbird",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1733473733874,
-      "tag": "0003_needy_skreet",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1733474416401,
-      "tag": "0004_thick_forgotten_one",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1733475163860,
-      "tag": "0005_groovy_tarantula",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1733478473516,
-      "tag": "0006_yummy_kinsey_walden",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1733608396813,
-      "tag": "0007_empty_lady_deathstrike",
+      "when": 1733621962758,
+      "tag": "0000_shallow_sinister_six",
       "breakpoints": true
     }
   ]

@@ -27,7 +27,7 @@
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.20",
     "daisyui": "^4.12.14",
-    "drizzle-kit": "^0.27.1",
+    "drizzle-kit": "^0.29.1",
     "eslint": "^8",
     "eslint-config-next": "15.0.2",
     "postcss": "^8.4.47",
