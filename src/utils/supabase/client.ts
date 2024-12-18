@@ -1,4 +1,7 @@
 import { createBrowserClient } from "@supabase/ssr";
+import { config } from "dotenv";
+
+config({ path: "./.env", override: true });
 
 export function createClient() {
   return createBrowserClient(

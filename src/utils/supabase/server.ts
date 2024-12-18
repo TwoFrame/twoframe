@@ -1,5 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { config } from "dotenv";
+
+config({ path: "./.env", override: true });
 
 export async function createClient() {
   const cookieStore = await cookies();
