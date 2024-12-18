@@ -5,29 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1733621962758,
-      "tag": "0000_shallow_sinister_six",
+      "when": 1734510315756,
+      "tag": "0000_cloudy_king_cobra",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1734488492870,
-      "tag": "0001_lonely_skullbuster",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1734488656861,
-      "tag": "0002_omniscient_paibok",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1734489115319,
-      "tag": "0003_loving_bloodstrike",
+      "when": 1734510383921,
+      "tag": "0001_grey_hardball",
       "breakpoints": true
     }
   ]
