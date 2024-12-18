@@ -6,6 +6,7 @@ import { SignupState } from "../types";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { createProfile } from "@/db/queries/insert";
 import { createClient } from "@/utils/supabase/server";
 
 export async function signup(
@@ -27,16 +28,26 @@ export async function signup(
     };
   }
 
-  const { email, password } = validationResult.data;
-  console.log("HANDLE SIGNUP");
-  console.log("EMAIL:" + email);
-  console.log("PASSWORD:" + password);
+  const { username, email, password } = validationResult.data;
 
-  const { error } = await supabase.auth.signUp({ email, password });
+  const { data, error } = await supabase.auth.signUp({ email, password });
 
-  if (error) {
+  //if something goes wrong with creating the user
+  if (error || !data?.user) {
     redirect("/error");
   }
+  //add user
+  const { insert_error } = await createProfile({
+      user_id: data.user.id,
+      username: username,
+    });
+  
+    if (insert_error) {
+      redirect("/error");
+    }
+
+
+
 
   revalidatePath("/", "layout");
   redirect("/");

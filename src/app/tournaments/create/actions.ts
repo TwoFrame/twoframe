@@ -67,6 +67,7 @@ export async function createTournamentAction(
     slug: slugify(title + " " + title_count),
     start_date: start_date,
     end_date: end_date,
+    registration_deadline: start_date,
   });
 
   if (insert_error) {
@@ -81,7 +82,6 @@ export async function createTournamentAction(
     });
 
     if (insert_error) {
-      console.log(222);
       redirect("/error");
     }
   } else {
@@ -90,7 +90,6 @@ export async function createTournamentAction(
       latest_number: title_count,
     });
     if (update_error) {
-      console.log(333);
       redirect("/error");
     }
   }

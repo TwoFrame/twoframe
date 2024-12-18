@@ -1,11 +1,11 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { TournamentTable, SlugBaseTable } from "../schema";
+import { tournaments, slugs } from "../schema";
 
 export async function getSlugNumber(slug: string) {
   try {
-    const result = await db.query.SlugBaseTable.findFirst({
-      where: eq(SlugBaseTable.slug_base, slug),
+    const result = await db.query.slugs.findFirst({
+      where: eq(slugs.slug_base, slug),
     });
     //slug base doesnt exist yet just return 0
     if (!result) {
@@ -19,8 +19,8 @@ export async function getSlugNumber(slug: string) {
 
 export async function getTournamentBySlug(slug: string) {
   try {
-    const result = await db.query.TournamentTable.findFirst({
-      where: eq(TournamentTable.slug, slug),
+    const result = await db.query.tournaments.findFirst({
+      where: eq(tournaments.slug, slug),
     });
     if (!result) {
       return { error: "No tournament found" };
