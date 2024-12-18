@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { SelectSlugBase, SlugBaseTable } from "../schema";
+import { SelectSlugBase, slugs } from "../schema";
 
 export async function updateSlugBase(
   slug_base: SelectSlugBase["slug_base"],
@@ -8,9 +8,9 @@ export async function updateSlugBase(
 ) {
   try {
     const updated_slug = await db
-      .update(SlugBaseTable)
+      .update(slugs)
       .set(data)
-      .where(eq(SlugBaseTable.slug_base, slug_base));
+      .where(eq(slugs.slug_base, slug_base));
     return { updated_slug };
   } catch (error) {
     return { update_error: error };
