@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, text, timestamp, boolean, smallint, pgSchema, uniqueIndex } from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar, text, timestamp, boolean, smallint, pgSchema, unique } from "drizzle-orm/pg-core";
 
 const authSchema = pgSchema('auth');
 
@@ -10,12 +10,9 @@ export const profiles = pgTable('profiles', {
   user_id: uuid('user_id').primaryKey().references(() => users.id).notNull(),
   username: varchar('username', { length: 16 }).notNull(),
   tag: varchar('tag', { length: 6 }).notNull(),
-}, (table) => {
-  // Create a unique index that allows soft deletes or multiple profiles per user
-  return {
-    uniqueTag: uniqueIndex('unique__tag').on(table.username, table.tag)
-  };
-});
+}, (t) => [{
+  uniqueTag: unique('unique_tag').on(t.username, t.tag),
+}]);
 
 export const tournaments = pgTable("tournaments", {
   id: uuid("id").defaultRandom().primaryKey(),
