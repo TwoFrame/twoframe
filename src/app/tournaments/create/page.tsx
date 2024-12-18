@@ -33,7 +33,7 @@ export default function CreateTournamentPage() {
       } = await supabase.auth.getUser();
 
       if (!user) {
-        router.push("/");
+        router.push("/login");
       } else {
         setLoginCheck(false);
       }
