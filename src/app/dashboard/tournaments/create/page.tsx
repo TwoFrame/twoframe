@@ -1,10 +1,9 @@
 "use client";
 
-import { createTournamentAction } from "@/app/tournaments/create/actions";
 import { useState, useEffect, useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
-import Navbar from "@/app/components/navbar";
+import {createTournamentAction} from "./actions";
 
 export default function CreateTournamentPage() {
   const router = useRouter();
@@ -47,8 +46,7 @@ export default function CreateTournamentPage() {
   }
 
   return (
-    <div className="min-w-screen bg-base-200 min-h-screen w-screen h-screen">
-      <Navbar />
+    <div className="">
       <h1 className="text-center text-4xl font-extrabold relative top-24 z-100">
         Create a Tournament
       </h1>

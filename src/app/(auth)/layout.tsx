@@ -1,5 +1,25 @@
-import "@/app/styles/globals.css";
-import AuthNavbar from "@/app/components/auth-navbar";
+// import AuthNavigationBar from "../components/auth-navbar";
+// import "../styles/globals.css";
+
+// export default function BaseLayout({
+//   children, // will be a page or nested layout
+// }: {
+//   children: React.ReactNode;
+// }) {
+//   return (
+//     <html lang="en" data-theme="dark" className="bg-background-default">
+//       <AuthNavigationBar />
+//       <body className="mt-48">
+//         {children}
+//         </body>
+//     </html>
+//   );
+// }
+
+
+import AuthNavigationBar from "../../components/auth-navbar";
+import NavigationBar from "../../components/navbar";
+import "../styles/globals.css";
 
 export default function BaseLayout({
   children, // will be a page or nested layout
@@ -7,9 +27,11 @@ export default function BaseLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-w-screen min-h-screen h-screen w-screen bg-base-200">
-      <AuthNavbar />
-      {children}
-    </div>
+    <html lang="en" data-theme="dark" className="bg-background-default">
+      <body>
+        <AuthNavigationBar />
+        <section className="mt-24">{children}</section>
+      </body>
+    </html>
   );
 }

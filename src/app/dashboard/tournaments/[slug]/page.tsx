@@ -1,4 +1,4 @@
-import { TournamentTable } from "@/db/schema";
+// import { TournamentTable } from "@/db/schema";
 import { getTournamentBySlug } from "@/db/queries/select";
 
 export default async function TournamentPage({

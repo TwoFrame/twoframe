@@ -5,6 +5,7 @@ import { signup } from "@/app/(auth)/signup/actions";
 import { useState, useEffect, useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import { Spinner } from "@nextui-org/spinner";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function SignUpPage() {
       } = await supabase.auth.getUser();
 
       if (user) {
-        router.push("/");
+        router.push("/dashboard/tournaments/search")
       } else {
         setLoginCheck(false);
       }
@@ -28,18 +29,33 @@ export default function SignUpPage() {
     checkUserLoggedIn();
   }, [router]);
 
-  if (loginCheck) {
-    return null; // Return null or a loading indicator while checking
-  }
+  // Keep track of the sign up state
+  useEffect(()=> {
+    // TODO: go back to main page for now. Will have to navigate to a dashboard later on
+    if (state?.success == true) {
+      router.push("/dashboard/tournaments/search")
+    }
+  }, [state])
 
+
+  if (loginCheck) {
+    return (
+      <section className="flex flex-col justify-center items-center">
+        <Spinner color="default"/>
+        <p className="text-color-light-grey mt-4">Checking credentials</p>
+      </section>
+      
+    )
+  }
+  
   return (
-    <div className="flex flex-col items-center prose relative left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
-      <h1>Sign up</h1>
-      <div className="relative card bg-neutral text-neutral-content w-96 border border-neutral-content">
+    <section className="flex flex-col w-full items-center justify-center">
+      <h1 className="text-5xl font-extrabold text-white">Sign up</h1>
+      <div>
         <div className="card-body items-center text-center">
           <form
             action={formAction}
-            className="flex flex-col gap-4 w-64 sm:w-72"
+            className="flex flex-col gap-4 w-64 sm:w-72 mt-8"
           >
             <div className="flex flex-col gap-2">
               <div className="flex flex-col gap-0 my-0">
@@ -87,16 +103,16 @@ export default function SignUpPage() {
                 <p className="text-error text-xs">{state.errors.cpassword}</p>
               )}
             </div>
-            <input type="submit" value="Sign Up" className="btn btn-primary" />
+            <input type="submit" value="Sign Up" className="text-color-light-grey" />
           </form>
-          <p>
+          <p className="text-color-light-grey">
             Already have an account?{" "}
-            <Link href="/login" className="no-underline text-accent">
+            <Link href="/login" className="no-underline text-accent text-white">
               Login
             </Link>
           </p>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
