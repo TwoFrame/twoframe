@@ -10,10 +10,7 @@ import {
   Navbar, 
   NavbarBrand, 
   NavbarContent, 
-  NavbarItem, 
-  NavbarMenuToggle,
-  NavbarMenu,
-  NavbarMenuItem
+  NavbarItem
 } from "@nextui-org/navbar";
 import { Button } from "@nextui-org/button";
 import AuthNavigationBar from "./auth-navbar";
