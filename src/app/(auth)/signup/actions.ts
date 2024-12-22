@@ -2,10 +2,7 @@
 
 import { SignupSchema } from "@/app/_lib/schemas";
 import { SignupState } from "../types";
-
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-
 import { createProfile } from "@/db/queries/insert";
 import { createClient } from "@/utils/supabase/server";
 
