@@ -20,6 +20,7 @@ html {
     scrollbar-gutter: stable;
 }
 
+
 @layer  {
     @font-face {
         font-family: "micro";
@@ -41,6 +42,12 @@ html {
         --sidebar-border: 240 3.7% 15.9%;
         --sidebar-ring: black;
     }
-
      
 }  
+
+
+@layer utilities {
+    .dashboard-nav {
+        @apply h-[80px] border-b-1 border-b-background-light-grey p-4 bg-background-default w-screen;
+    }
+}
