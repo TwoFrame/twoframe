@@ -1,8 +1,5 @@
 export interface TournamentCreateState {
-  errors?: {
-    title?: string[];
-    start_date?: string[];
-    end_date?: string[];
-  };
+  validation_error: any;
+  server_error: any;
   success?: boolean;
 }
