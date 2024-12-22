@@ -2,11 +2,8 @@
 
 import { LoginSchema } from "@/app/_lib/schemas";
 import { LoginState } from "../types";
-
-import { redirect, RedirectType } from "next/navigation";
-
+import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
 
 export async function login(
   prevState: LoginState | null,
