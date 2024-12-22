@@ -31,12 +31,9 @@ export async function createTournamentAction(
   const endDateObject = Date.parse(formData.get("end_date") as string);
   if (isNaN(startDateObject) || isNaN(endDateObject)) {
     return {
-      errors: {
-        start_date: isNaN(startDateObject)
-          ? ["Unreadable end date format"]
-          : [],
-        end_date: isNaN(endDateObject) ? ["Unreadable end date format"] : [],
-      },
+      validation_error: "One or more dates are empty. Provide valid inputs",
+      server_error: null, 
+      success: false
     };
   }
 
@@ -49,11 +46,13 @@ export async function createTournamentAction(
 
   if (!validationResult.success) {
     return {
-      errors: validationResult.error.flatten().fieldErrors,
+      validation_error: "make sure all fields are properly formatted",
+      server_error: null,
+      success: false
     };
   }
 
-  const { title, start_date, end_date } = validationResult.data;
+  const { title, start_date, end_date } = validationResult!.data;
 
   //we want to generate the slug next
   const { title_count, selecterror } = await getSlugNumber(slugify(title));
@@ -71,7 +70,11 @@ export async function createTournamentAction(
   });
 
   if (insert_error) {
-    redirect("/error");
+    return {
+      validation_error: null,
+      server_error: insert_error,
+      success: false
+    }
   }
 
   //now that our tournament has been inserted, we need to now make sure the slugtable is updated as well
@@ -82,7 +85,11 @@ export async function createTournamentAction(
     });
 
     if (insert_error) {
-      redirect("/error");
+      return {
+        validation_error: null,
+        server_error: insert_error,
+        success: false
+      }
     }
   } else {
     //slug_base already exists, just increment
@@ -90,10 +97,18 @@ export async function createTournamentAction(
       latest_number: title_count,
     });
     if (update_error) {
-      redirect("/error");
+      return {
+        validation_error: null,
+        server_error: update_error,
+        success: false
+      }
     }
   }
 
-  revalidatePath("/", "layout");
-  redirect("/");
+  console.log("Successful insertion")
+  return {
+    validation_error: null,
+    server_error: null,
+    success: true
+  }
 }

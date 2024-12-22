@@ -4,25 +4,29 @@ import { useState, useEffect, useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import {createTournamentAction} from "./actions";
+import {Form} from "@nextui-org/form";
+import { Button } from "@nextui-org/button";
+import { DatePicker } from "@nextui-org/date-picker";
+import { Input } from "@nextui-org/input";
+import {Alert} from "@nextui-org/alert";
+import {getLocalTimeZone, today} from "@internationalized/date";
+import Link from "next/link";
 
 export default function CreateTournamentPage() {
   const router = useRouter();
   const [state, formAction] = useActionState(createTournamentAction, null);
   const [loginCheck, setLoginCheck] = useState(true);
 
-  const [inputtedFormData, setInputtedFormData] = useState({
-    title: "",
-    start_date: "",
-    end_date: "",
-  });
+  const [isSuccessVisible, setIsSuccessVisible] = useState(false);
+  const [isValidationErrorVisible, setIsValidationErrorVisible] = useState(false);
+  const [isFailureVisible, setIsFailureVisible] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setInputtedFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const successTitle = "Successful creation";
+  const failureTitle = "Something went wrong";
+  const successDescription = "Visit the Manage tab to add brackets and other details!";
+
+  const [failureDescription, setFailureDescription] = useState("");
+  const [validationDescription, setValidationDescription] = useState("");
 
   useEffect(() => {
     const checkUserLoggedIn = async () => {
@@ -41,17 +45,123 @@ export default function CreateTournamentPage() {
     checkUserLoggedIn();
   }, [router]);
 
+  useEffect(()=> {
+    console.log("form action state changed")
+    if (state?.success == true) {
+      console.log("setting success alert to visible")
+      setIsSuccessVisible(true)
+    }
+    if (state?.validation_error != null) {
+      console.log("setting validation alert to visible")
+      setIsValidationErrorVisible(true)
+      setValidationDescription(state.validation_error)
+    }
+    if (state?.server_error != null) {
+      console.log("setting failure alert to visible")
+      setIsFailureVisible(true)
+      setFailureDescription(state.server_error)
+    }
+
+  }, [state])
+
   if (loginCheck) {
     return null;
   }
 
   return (
-    <div className="">
-      <h1 className="text-center text-4xl font-extrabold relative top-24 z-100">
-        Create a Tournament
-      </h1>
+    <section className="flex flex-col bg-background-default">
 
-      <div className="relative card bg-neutral text-neutral-content  w-[400px] sm:w-[500px] left-1/2 -translate-x-1/2 top-28 border border-neutral-content">
+      {/* Custom dashboard nav title bar that displays basic info */}
+      <div className="dashboard-nav flex items-center" >
+        <h1 className="text-xl font-semibold">
+          Create a Tournament
+        </h1>
+      </div>
+
+
+      <div className="max-w-xl p-4">
+
+      {isSuccessVisible && (
+        <div className="w-full mx-auto flex items-center justify-center">
+           <Alert
+            color="success"
+            description={successDescription}
+            isVisible={isSuccessVisible}
+            title={successTitle}
+            variant="faded"
+            onClose={() => setIsSuccessVisible(false)}
+          />
+        </div>
+      )}
+
+      {isFailureVisible && (
+        <Alert
+          color="danger"
+          description={failureDescription}
+          isVisible={isFailureVisible}
+          title={failureTitle}
+          variant="faded"
+          onClose={() => setIsFailureVisible(false)}
+        />)
+      }
+
+      {isValidationErrorVisible && (
+        <Alert
+          color="danger"
+          description={validationDescription}
+          isVisible={isFailureVisible}
+          title={failureTitle}
+          variant="faded"
+          onClose={() => setIsFailureVisible(false)}
+        />)
+      }
+       <Form
+        className="w-full max-w-xl flex flex-col gap-4"
+        validationBehavior="native"
+        action={formAction}
+      >
+        
+        <Input
+          isRequired
+          label="Tournament name"
+          labelPlacement="outside"
+          name="title"
+          type="text"
+          radius="sm"
+        />
+
+        <DatePicker
+          isRequired
+          disableAnimation
+          name="start_date"
+          granularity="minute"
+          label="Start date"
+          radius="sm"
+          minValue={today(getLocalTimeZone())}
+        />
+
+        <DatePicker
+          isRequired
+          disableAnimation
+          name="end_date"
+          granularity="minute"
+          label="End date"
+          radius="sm"
+          minValue={today(getLocalTimeZone())}
+
+        />
+
+        <Button type="submit" variant="solid" radius="sm">
+          Submit
+        </Button>
+      </Form> 
+
+   
+      
+      
+
+      </div>
+      {/* <div className="relative card bg-neutral text-neutral-content  w-[400px] sm:w-[500px] left-1/2 -translate-x-1/2 top-28 border border-neutral-content">
         <div className="card-body items-center text-center">
           <form action={formAction}>
             <div className="flex flex-col gap-1">
@@ -112,15 +222,14 @@ export default function CreateTournamentPage() {
                 )}
               </label>
 
-              <input
-                type="submit"
-                value="Create Tournament"
-                className="btn btn-primary mt-4"
-              />
+
+              <Button type="submit" variant="solid">
+                Submit
+              </Button>
             </div>
           </form>
         </div>
-      </div>
-    </div>
+      </div> */}
+    </section>
   );
 }
