@@ -1,9 +1,61 @@
 {
-  "id": "a40c56be-2cd4-4d48-a650-ecf7442996bd",
-  "prevId": "2012f291-5691-4872-acc3-5645bb415407",
+  "id": "861f91c3-64c4-4e04-af7a-e4684a1c29a3",
+  "prevId": "c3da07a4-dbba-4e40-8818-f1d2ea65d712",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.entrants": {
+      "name": "entrants",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "event_id": {
+          "name": "event_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "entrants_user_id_profiles_user_id_fk": {
+          "name": "entrants_user_id_profiles_user_id_fk",
+          "tableFrom": "entrants",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "entrants_event_id_events_id_fk": {
+          "name": "entrants_event_id_events_id_fk",
+          "tableFrom": "entrants",
+          "tableTo": "events",
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.events": {
       "name": "events",
       "schema": "",
@@ -65,6 +117,12 @@
           "type": "varchar(16)",
           "primaryKey": false,
           "notNull": true
+        },
+        "tag": {
+          "name": "tag",
+          "type": "varchar(6)",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
@@ -90,8 +148,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.slug_table": {
-      "name": "slug_table",
+    "public.slugs": {
+      "name": "slugs",
       "schema": "",
       "columns": {
         "slug_base": {
