@@ -12,10 +12,9 @@ export default function DashboardLayout({children}: { children: React.ReactNode;
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <html lang="en" data-theme="dark" className="bg-background-default w-full overflow-hidden">
+    <html lang="en" data-theme="dark" className="bg-background-default w-full">
       <body>
-        <SidebarProvider>
-
+        <SidebarProvider className="flex flex-row">
           <DashboardNavBar />
           {/* <SidebarTrigger/> */}
           <main className="flex-1">
