@@ -48,6 +48,6 @@ html {
 
 @layer utilities {
     .dashboard-nav {
-        @apply h-[80px] border-b-1 border-b-background-light-grey p-4 bg-background-default w-screen;
+        @apply h-[80px] border-b-1 border-b-background-light-grey p-4 bg-background-default;
     }
 }
