@@ -11,24 +11,33 @@ export default function SearchPage() {
   } = useSidebar();
 
   return (
-      <section className="flex flex-col bg-background-default lg:w-3/4 h-screen">
+    <section className="flex flex-col bg-background-default h-screen w-full">
 
-        {/* Custom dashboard nav title bar that displays basic info */}
-        <div className="dashboard-nav flex items-center justify-between w-3/4" >
-          <h1 className="text-xl font-semibold">
-            Search for tournaments
-          </h1>
-          <Button onPress={()=>{
+      <section className="dashboard-nav flex items-center justify-between w-full" >
+        <h1 className="text-xl font-semibold">
+          Search for tournaments
+        </h1>
+
+        {/* Opens the mobile sidebar */}
+        <Button onPress={()=>{
             setOpenMobile(true)
           }}
           isIconOnly
           variant="light"
+          radius="sm"
+          className="flex justify-center lg:hidden"
         >
           <PanelLeft size={16}/>
         </Button>
-        </div>
       </section>
-    
+      
+      {/* Content under the dashboard navbar with content padding */}
+      <section className="p-4">
+        <div className="h-full w-full bg-background-light-grey p-4">testing layout</div>
+
+      </section>
+
+    </section>
     
   );
   {/*TODO: add actual search feature for this page, and display existing tournaments

@@ -157,26 +157,30 @@ export default function CreateTournamentPage() {
 
 
   return (
-    <section className="flex flex-col bg-background-default lg:w-3/4 h-screen">
+    <section className="flex flex-col bg-background-default h-screen w-full">
 
       {/* Custom dashboard nav title bar that displays basic info */}
-      <div className="dashboard-nav flex items-center justify-between w-3/4" >
+      <section className="dashboard-nav flex items-center justify-between" >
+
         <h1 className="text-xl font-semibold">
           Create a Tournament
         </h1>
 
+        {/* Opens the mobile sidebar */}
         <Button onPress={()=>{
             setOpenMobile(true)
           }}
           isIconOnly
           variant="light"
+          radius="sm"
+          className="flex justify-center lg:hidden"
         >
           <PanelLeft size={16}/>
         </Button>
-      </div>
+      </section>
 
-
-      <div className="p-4 box-border max-w-xl">
+      {/* Content under the dashboard navbar with content padding and a custom max width */}
+      <section className="p-4 max-w-xl">
 
       {isSuccessVisible && (
         <div className="w-full mx-auto flex items-center justify-center mb-2">
@@ -205,6 +209,7 @@ export default function CreateTournamentPage() {
         )}
 
       {isValidationErrorVisible && (
+
         <div className="w-full mx-auto flex items-center justify-center mb-2">
           <Alert
           color="warning"
@@ -264,7 +269,7 @@ export default function CreateTournamentPage() {
           isRequired
           isClearable
           name="description"
-          className="col-span-12 md:col-span-6 mb-6 md:mb-0"
+          className="col-span-12 md:col-span-6"
           label="Description"
           placeholder="Enter tournament description"
           variant="flat"
@@ -278,11 +283,12 @@ export default function CreateTournamentPage() {
           }
           value={formData.description}
         />
+
         <Button type="submit" variant="solid" radius="sm">
           Submit
         </Button>
       </Form> 
-      </div>
+      </section>
     </section>
   );
 }
