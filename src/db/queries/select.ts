@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "../db";
-import { tournaments, slugs } from "../schema";
+import { tournaments, slugs, profiles } from "../schema";
 
 export async function getSlugNumber(slug: string) {
   try {
@@ -27,6 +27,27 @@ export async function getTournamentBySlug(slug: string) {
     }
     return { tournament_data: result };
   } catch (error) {
+    console.log(error)
     return { error: "Failed to fetch tournament data" };
+  }
+}
+
+export async function getProfileByUsernameAndTag(username: string, tag: string) {
+  try {
+    const result = await db.query.profiles.findFirst({
+      where: and(
+        eq(profiles.username, username),
+        eq(profiles.tag, tag)
+      ),
+    });
+
+    if (!result) {
+      return { error: `No profile found for username: ${username} and tag: ${tag}` };
+    }
+
+    return { profile_data: result };
+  } catch (error) {
+    console.log(error)
+    return { error: 'Failed to fetch profile data' };
   }
 }

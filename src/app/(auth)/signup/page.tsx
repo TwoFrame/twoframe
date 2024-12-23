@@ -35,7 +35,7 @@ export default function SignUpPage() {
     if (state?.success == true) {
       router.push("/dashboard/tournaments/search")
     }
-  }, [state])
+  }, [state, router])
 
 
   if (loginCheck) {

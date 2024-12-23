@@ -1,0 +1,1 @@
+ALTER TABLE "profiles" ADD CONSTRAINT "unique_tag" UNIQUE("username","tag");

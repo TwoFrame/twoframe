@@ -10,9 +10,9 @@ export const profiles = pgTable('profiles', {
   user_id: uuid('user_id').primaryKey().references(() => users.id).notNull(),
   username: varchar('username', { length: 16 }).notNull(),
   tag: varchar('tag', { length: 6 }).notNull(),
-}, (t) => [{
-  uniqueTag: unique('unique_tag').on(t.username, t.tag),
-}]);
+}, (t) => [
+  unique('unique_tag').on(t.username, t.tag),
+]);
 
 export const tournaments = pgTable("tournaments", {
   id: uuid("id").defaultRandom().primaryKey(),

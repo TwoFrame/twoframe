@@ -5,6 +5,44 @@ import { SignupState } from "../types";
 import { redirect } from "next/navigation";
 import { createProfile } from "@/db/queries/insert";
 import { createClient } from "@/utils/supabase/server";
+import { getProfileByUsernameAndTag } from "@/db/queries/select";
+
+// Function to generate a random tag of length 6 (alphanumeric)
+function generateRandomTag(length: number = 6): string {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+async function checkTagExistence(username: string, tag: string) {
+  try {
+    const result = await getProfileByUsernameAndTag(username, tag);
+    return !result.error;
+  } catch (error) {
+    console.error('Error checking tag existence:', error);
+  }
+}
+
+async function generateUniqueTag(username: string) {
+  const defaultTag = '2frame';
+  let isUnique = false;
+  let tag = defaultTag; 
+
+  isUnique = !(await checkTagExistence(username, tag));
+
+  if (!isUnique) {
+    while (!isUnique) {
+      tag = generateRandomTag();
+      isUnique = !(await checkTagExistence(username, tag));
+    }
+  }
+
+  return tag;
+}
 
 export async function signup(
   prevState: SignupState | null,
@@ -31,13 +69,17 @@ export async function signup(
 
   // If something goes wrong with creating the user, redirect to an error page
   if (error || !data?.user) {
+    console.log(error)
     redirect("/error");
   }
+
+  // Generate a unique tag for the user
+  const uniqueTag = await generateUniqueTag(username);
   
-  // Create the user
   const { insert_error } = await createProfile({
-      user_id: data.user.id,
-      username: username,
+    user_id: data.user.id,
+    username: username,
+    tag: uniqueTag
   });
 
   if (insert_error) {
