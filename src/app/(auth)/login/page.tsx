@@ -5,12 +5,15 @@ import { login } from "@/app/(auth)/login/actions";
 import { useState, useEffect, useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import {Button} from "@nextui-org/button";
+import {Spinner} from "@nextui-org/spinner";
 
 export default function LoginPage() {
   const router = useRouter();
   const [state, formAction] = useActionState(login, null);
   const [loginCheck, setLoginCheck] = useState(true);
 
+  // If the user is already logged in, force redirect them back to the main page for now
   useEffect(() => {
     const checkUserLoggedIn = async () => {
       const supabase = createClient();
@@ -19,8 +22,11 @@ export default function LoginPage() {
       } = await supabase.auth.getUser();
 
       if (user) {
-        router.push("/");
+        console.log('going back to /')
+        router.push("/dashboard/tournaments/search")
+
       } else {
+        console.log("no user")
         setLoginCheck(false);
       }
     };
@@ -28,18 +34,32 @@ export default function LoginPage() {
     checkUserLoggedIn();
   }, [router]);
 
+  // Keep track of the login state
+  useEffect(()=> {
+    // TODO: go back to main page for now. Will have to navigate to a dashboard later on
+    if (state?.success == true) {
+      router.push("/dashboard/tournaments/search")
+    }
+  }, [state])
+
+
   if (loginCheck) {
-    return null; // Return null or a loading indicator while checking
+    return (
+      <section className="flex flex-col justify-center items-center">
+        <Spinner color="default"/>
+        <p className="text-color-light-grey mt-4">Checking credentials</p>
+      </section>
+      
+    )
   }
 
   return (
-    <div className="flex flex-col prose items-center relative left-1/2 -translate-x-1/2 top-1/4 -translate-y-1/4">
-      <h1 className="text-5xl font-extrabold">Login</h1>
-      <div className="relative card bg-neutral text-neutral-content w-96 border border-neutral-content">
-        <div className="card-body items-center text-center">
+    <section className="flex flex-col w-full items-center justify-center">
+      <h1 className="text-5xl font-extrabold text-white">Login</h1>
+        <div className="items-center text-center">
           <form
             action={formAction}
-            className="flex flex-col gap-4 w-64 sm:w-72"
+            className="flex flex-col gap-4 w-64 sm:w-72 mt-8"
           >
             <div className="flex flex-col gap-2">
               <input
@@ -61,16 +81,17 @@ export default function LoginPage() {
                 <p className="text-error text-xs">{state.errors.password}</p>
               )}
             </div>
-            <input type="submit" value="Login" className="btn btn-primary" />
+            <Button type="submit" className="text-white" size="md" radius="sm">
+              Log In
+            </Button>
           </form>
-          <p>
+          <p className="text-color-light-grey">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="no-underline text-accent">
+            <Link href="/signup" className="no-underline text-accent text-white">
               Sign up
             </Link>
           </p>
         </div>
-      </div>
-    </div>
+      </section>
   );
 }

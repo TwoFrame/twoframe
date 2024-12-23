@@ -2,10 +2,7 @@
 
 import { LoginSchema } from "@/app/_lib/schemas";
 import { LoginState } from "../types";
-
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-
 import { createClient } from "@/utils/supabase/server";
 
 export async function login(
@@ -21,22 +18,26 @@ export async function login(
   });
 
   if (!validationResult.success) {
+    console.log("Validation failed", validationResult.error.flatten().fieldErrors);
     return {
       errors: validationResult.error.flatten().fieldErrors,
       success: false,
     };
   }
 
-  // Console Info
+  // Sign in using supabase auth
   const { email, password } = validationResult.data;
-
-  // Attempt to sign in
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
+  // 
   if (error) {
+    console.log("Sign-in error:", error.message);
     redirect("/error");
   }
 
-  revalidatePath("/", "layout");
-  redirect("/");
+  // Return a successful login state back to the client
+  return {
+    errors: undefined,
+    success: true
+  }
 }

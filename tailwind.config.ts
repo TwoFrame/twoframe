@@ -1,22 +1,50 @@
+import {nextui} from '@nextui-org/theme';
 import type { Config } from "tailwindcss";
-import daisyui from "daisyui";
+import typography from '@tailwindcss/typography';
 
 const config: Config = {
+    darkMode: ["class"],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@nextui-org/theme/dist/components/(alert|button|date-picker|form|image|input|navbar|spinner|tabs|user|ripple|calendar|date-input|popover|avatar).js"
   ],
-  plugins: [require("@tailwindcss/typography"), require("daisyui")],
-  daisyui: {
-    themes: true, // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]
-    darkTheme: "dark", // name of one of the included themes for dark mode
-    base: true, // applies background color and foreground color for root element by default
-    styled: true, // include daisyUI colors and design decisions for all components
-    utils: true, // adds responsive and modifier utility classes
-    prefix: "", // prefix for daisyUI classnames (components, modifiers and responsive class names. Not colors)
-    logs: true, // Shows info about daisyUI version and used config in the console when building your CSS
-    themeRoot: ":root", // The element that receives theme color CSS variables
-  },
+  plugins: [typography,nextui({
+    addCommonColors: true,
+  }), require("tailwindcss-animate")],
+  theme: {
+  	extend: {
+  		fontFamily: {
+  			micro: [
+  				'micro',
+  				'sans'
+  			]
+  		},
+  		colors: {
+  			'color-light-grey': 'var(--color-light-grey)',
+  			'color-light-green': '(var--color-light-green)',
+  			'background-light-grey': 'var(--background-light-grey)',
+  			'background-default': 'var(--background-default)',
+  			'background-light-green': 'var(--background-light-green)',
+  			'blue-primary': 'var(--blue-primary)',
+  			'blue-secondary': 'var(--blue-secondary)',
+			
+			  sidebar: {
+				DEFAULT: 'hsl(var(--sidebar-background))',
+				foreground: 'hsl(var(--sidebar-foreground))',
+				primary: 'hsl(var(--sidebar-primary))',
+				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+				accent: 'hsl(var(--sidebar-accent))',
+				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+				border: 'hsl(var(--sidebar-border))',
+				ring: 'hsl(var(--sidebar-ring))'
+			}
+  		},
+
+
+  	}
+  }
 };
+
 export default config;
