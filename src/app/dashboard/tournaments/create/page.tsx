@@ -12,6 +12,8 @@ import {Alert} from "@nextui-org/alert";
 import {Textarea} from "@nextui-org/input";
 import {DateValue, getLocalTimeZone, today} from "@internationalized/date";
 import { TournamentCreateState } from "../types";
+import { useSidebar } from "@/components/ui/sidebar";
+import { PanelLeft } from "lucide-react";
 
 export default function CreateTournamentPage() {
   const router = useRouter();
@@ -44,6 +46,17 @@ export default function CreateTournamentPage() {
   const [failureDescription, setFailureDescription] = useState("");
   const [validationDescription, setValidationDescription] = useState({});
 
+    
+  const {
+    open,
+    setOpen,
+    openMobile,
+    setOpenMobile,
+    isMobile,
+    toggleSidebar,
+  } = useSidebar();
+
+  
     // Update text input values
     const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
@@ -149,17 +162,27 @@ export default function CreateTournamentPage() {
 
 
   return (
-    <section className="flex flex-col bg-background-default">
+    <section className="flex flex-col bg-background-default lg:w-3/4 h-screen">
 
       {/* Custom dashboard nav title bar that displays basic info */}
-      <div className="dashboard-nav flex items-center" >
+      <div className="dashboard-nav flex items-center justify-between w-3/4" >
         <h1 className="text-xl font-semibold">
           Create a Tournament
+          test
         </h1>
+
+        <Button onPress={()=>{
+            setOpenMobile(true)
+          }}
+          isIconOnly
+          variant="light"
+        >
+          <PanelLeft size={16}/>
+        </Button>
       </div>
 
 
-      <div className="max-w-xl p-4">
+      <div className="p-4 box-border max-w-xl">
 
       {isSuccessVisible && (
         <div className="w-full mx-auto flex items-center justify-center mb-2">
@@ -204,7 +227,7 @@ export default function CreateTournamentPage() {
       )}
 
        <Form
-        className="w-full max-w-xl flex flex-col gap-4"
+        className="w-full flex flex-col gap-4"
         validationBehavior="native"
         action={formAction}
       >
@@ -265,81 +288,7 @@ export default function CreateTournamentPage() {
           Submit
         </Button>
       </Form> 
-
-   
-      
-      
-
       </div>
-      {/* <div className="relative card bg-neutral text-neutral-content  w-[400px] sm:w-[500px] left-1/2 -translate-x-1/2 top-28 border border-neutral-content">
-        <div className="card-body items-center text-center">
-          <form action={formAction}>
-            <div className="flex flex-col gap-1">
-              <label className="form-control w-full max-w-xs">
-                <div className="label m-0 p-0 pl-1">
-                  <span className="label-text font-extrabold text-md">
-                    Tournament Title
-                  </span>
-                </div>
-                <input
-                  type="text"
-                  name="title"
-                  placeholder="My Tournament"
-                  className="input input-bordered w-full max-w-xs focus:outline-none"
-                  value={inputtedFormData.title}
-                  onChange={handleChange}
-                />
-                {state?.errors?.title && (
-                  <p className="text-error text-xs">{state.errors.title}</p>
-                )}
-              </label>
-              <label className="form-control w-full max-w-xs">
-                <div className="label m-0 p-0 pl-1">
-                  <span className="label-text font-extrabold text-md">
-                    Start Date
-                  </span>
-                </div>
-                <input
-                  type="datetime-local"
-                  name="start_date"
-                  className="input input-bordered w-full max-w-xs focus:outline-none"
-                  value={inputtedFormData.start_date}
-                  onChange={handleChange}
-                  required
-                />
-                {state?.errors?.start_date && (
-                  <p className="text-error text-xs">
-                    {state.errors.start_date}
-                  </p>
-                )}
-              </label>
-              <label className="form-control w-full max-w-xs">
-                <div className="label m-0 p-0 pl-1">
-                  <span className="label-text font-extrabold text-md">
-                    End Date
-                  </span>
-                </div>
-                <input
-                  type="datetime-local"
-                  name="end_date"
-                  className="input input-bordered w-full max-w-xs focus:outline-none"
-                  value={inputtedFormData.end_date}
-                  onChange={handleChange}
-                  required
-                />
-                {state?.errors?.end_date && (
-                  <p className="text-error text-xs">{state.errors.end_date}</p>
-                )}
-              </label>
-
-
-              <Button type="submit" variant="solid">
-                Submit
-              </Button>
-            </div>
-          </form>
-        </div>
-      </div> */}
     </section>
   );
 }

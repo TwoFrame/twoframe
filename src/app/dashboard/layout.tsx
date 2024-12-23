@@ -1,6 +1,6 @@
 "use client";
 
-import { Sidebar, SidebarFooter, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubItem, SidebarProvider } from "@/components/ui/sidebar";
+import { Sidebar, SidebarFooter, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubItem, SidebarProvider, useSidebar } from "@/components/ui/sidebar";
 import { User } from "@nextui-org/user";
 import "../styles/globals.css";
 import { usePathname } from "next/navigation";
@@ -9,10 +9,12 @@ import Image from "next/image";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Bolt, ChevronDown, Search, SquarePen, Star } from "lucide-react";
 import appLogo from '../../../public/app_logo.svg';
+import { useState } from "react";
 
 
 export default function DashboardLayout({children}: { children: React.ReactNode; }) {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <html lang="en" data-theme="dark" className="bg-background-default w-full overflow-hidden">
@@ -20,7 +22,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode;
         <SidebarProvider>
           <Sidebar style={{ borderRight: "none"} } >
             <SidebarHeader>
-                <Link className="inline-flex items-center gap-4 font-micro text-3xl text-white p-2" href="/">
+                <Link className="inline-flex w-fit items-center gap-4 font-micro text-3xl text-white p-2" href="/">
                   <Image alt="app logo" src={appLogo} width={32} height={32}/>
                   twoframe
                 </Link>
