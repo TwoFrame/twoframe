@@ -58,7 +58,7 @@ export default function DashboardNavBar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
 
-            <Collapsible defaultOpen className="my-1">
+            <Collapsible className="my-1">
               <SidebarMenuItem key="favorites">                        
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton  className="inline-flex items-center justify-between">
