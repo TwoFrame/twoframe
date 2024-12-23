@@ -31,7 +31,12 @@ export async function createTournamentAction(
   const endDateObject = Date.parse(formData.get("end_date") as string);
   if (isNaN(startDateObject) || isNaN(endDateObject)) {
     return {
-      validation_error: "One or more dates are empty. Provide valid inputs",
+      validation_error: {
+        start_date: isNaN(startDateObject)
+          ? ["Unreadable end date format"]
+          : [],
+        end_date: isNaN(endDateObject) ? ["Unreadable end date format"] : [],
+      },
       server_error: null, 
       success: false
     };
@@ -42,17 +47,20 @@ export async function createTournamentAction(
     title: formData.get("title"),
     start_date: new Date(formData.get("start_date") as string).toISOString(),
     end_date: new Date(formData.get("end_date") as string).toISOString(),
+    description: formData.get("description")
   });
 
-  if (!validationResult.success) {
+  if (validationResult.error) {
+    console.log('not all fields are valid')
+    console.log(validationResult.error.flatten().fieldErrors )
     return {
-      validation_error: "make sure all fields are properly formatted",
+      validation_error: validationResult.error.flatten().fieldErrors,
       server_error: null,
       success: false
     };
   }
 
-  const { title, start_date, end_date } = validationResult!.data;
+  const { title, start_date, end_date, description } = validationResult!.data;
 
   //we want to generate the slug next
   const { title_count, selecterror } = await getSlugNumber(slugify(title));
@@ -67,6 +75,7 @@ export async function createTournamentAction(
     start_date: start_date,
     end_date: end_date,
     registration_deadline: start_date,
+    description: description
   });
 
   if (insert_error) {

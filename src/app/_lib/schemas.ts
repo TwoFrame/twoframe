@@ -35,6 +35,7 @@ export const TournamentCreateSchema = z
       }),
     start_date: z.string().datetime(),
     end_date: z.string().datetime(),
+    description: z.string()
   })
   .refine((data) => new Date(data.start_date) > new Date(), {
     message: "Start date must be in the future",
