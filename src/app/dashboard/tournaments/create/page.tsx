@@ -48,12 +48,7 @@ export default function CreateTournamentPage() {
 
     
   const {
-    open,
-    setOpen,
-    openMobile,
     setOpenMobile,
-    isMobile,
-    toggleSidebar,
   } = useSidebar();
 
   
@@ -168,7 +163,6 @@ export default function CreateTournamentPage() {
       <div className="dashboard-nav flex items-center justify-between w-3/4" >
         <h1 className="text-xl font-semibold">
           Create a Tournament
-          test
         </h1>
 
         <Button onPress={()=>{
