@@ -3,7 +3,8 @@ export interface TournamentCreateState {
     title?: string[],
     start_date?: string[],
     end_date?: string[],
-    description?: string[]
+    description?: string[],
+    is_public?: string[]
   } | null;
   server_error?: any;
   success?: boolean;

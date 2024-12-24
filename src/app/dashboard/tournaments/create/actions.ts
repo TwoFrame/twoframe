@@ -47,7 +47,8 @@ export async function createTournamentAction(
     title: formData.get("title"),
     start_date: new Date(formData.get("start_date") as string).toISOString(),
     end_date: new Date(formData.get("end_date") as string).toISOString(),
-    description: formData.get("description")
+    description: formData.get("description"), 
+    is_public: new Boolean(formData.get("is_public") as string).valueOf()
   });
 
   if (validationResult.error) {
@@ -60,7 +61,7 @@ export async function createTournamentAction(
     };
   }
 
-  const { title, start_date, end_date, description } = validationResult!.data;
+  const { title, start_date, end_date, description, is_public } = validationResult!.data;
 
   //we want to generate the slug next
   const { title_count, selecterror } = await getSlugNumber(slugify(title));
@@ -75,7 +76,8 @@ export async function createTournamentAction(
     start_date: start_date,
     end_date: end_date,
     registration_deadline: start_date,
-    description: description
+    description: description,
+    public: is_public
   });
 
   if (insert_error) {
