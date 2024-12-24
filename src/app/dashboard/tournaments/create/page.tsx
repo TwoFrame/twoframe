@@ -3,17 +3,18 @@
 import { useState, useEffect, useActionState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
-import {createTournamentAction} from "./actions";
-import {Form} from "@nextui-org/form";
+import { createTournamentAction } from "./actions";
+import { Form } from "@nextui-org/form";
 import { Button } from "@nextui-org/button";
 import { DatePicker } from "@nextui-org/date-picker";
 import { Input } from "@nextui-org/input";
-import {Alert} from "@nextui-org/alert";
-import {Textarea} from "@nextui-org/input";
-import {DateValue, getLocalTimeZone, today} from "@internationalized/date";
+import { Alert } from "@nextui-org/alert";
+import { Textarea } from "@nextui-org/input";
+import { DateValue, getLocalTimeZone, today } from "@internationalized/date";
 import { TournamentCreateState } from "../types";
 import { useSidebar } from "@/components/ui/sidebar";
 import { PanelLeft } from "lucide-react";
+import { Switch } from "@nextui-org/switch";
 
 export default function CreateTournamentPage() {
   const router = useRouter();
@@ -25,11 +26,13 @@ export default function CreateTournamentPage() {
     start_date: DateValue | null;
     end_date: DateValue | null;
     description: string;
+    is_public: boolean;
   }>({
     title: "",
     start_date: null,
     end_date: null,
-    description: ""
+    description: "",
+    is_public: false
   });
 
   const [loginCheck, setLoginCheck] = useState(true);
@@ -46,50 +49,61 @@ export default function CreateTournamentPage() {
   const [failureDescription, setFailureDescription] = useState("");
   const [validationDescription, setValidationDescription] = useState({});
 
-    
+
   const {
     setOpenMobile,
   } = useSidebar();
 
-  
-    // Update text input values
-    const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    };
-  
-    // Update Date Picker values for start_date
-    const handleStartDateChange = (value: DateValue | null) => {
-      if (value == null) {
-        return
-      }
-      setFormData((prevData) => ({
-        ...prevData,
-        start_date: value,
-      }));
-    };
-  
-    // Update Date Picker values for end_date
-    const handleEndDateChange = (value: DateValue | null) => {
-      if (value == null) {
-        return
-      }
-      setFormData((prevData) => ({
-        ...prevData,
-        end_date: value,
-      }));
-    };
-  
+
+  // Update input values
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    console.log(name + ": " + value)
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // Update Date Picker values for start_date
+  const handleStartDateChange = (value: DateValue | null) => {
+    if (value == null) {
+      return
+    }
+    setFormData((prevData) => ({
+      ...prevData,
+      start_date: value,
+    }));
+  };
+
+  // Update Date Picker values for end_date
+  const handleEndDateChange = (value: DateValue | null) => {
+    if (value == null) {
+      return
+    }
+    setFormData((prevData) => ({
+      ...prevData,
+      end_date: value,
+    }));
+  };
+
+  // Update public visibility 
+  const handlePublicChange = (value: boolean) => {
+    console.log("is_public: " + value)
+
+    setFormData((prevData) => ({
+      ...prevData,
+      is_public: value,
+    }));
+  };
 
   const resetForm = () => {
     setFormData({
       title: "",
       start_date: null,
       end_date: null,
-      description: ""
+      description: "",
+      is_public: false
     })
   }
 
@@ -125,7 +139,7 @@ export default function CreateTournamentPage() {
   }, [router]);
 
   // Listen for status udpates on tournament creation from the actions file
-  useEffect(()=> {
+  useEffect(() => {
     console.log("form action state changed")
     if (state?.success == true) {
       console.log("setting success alert to visible")
@@ -167,127 +181,138 @@ export default function CreateTournamentPage() {
         </h1>
 
         {/* Opens the mobile sidebar */}
-        <Button onPress={()=>{
-            setOpenMobile(true)
-          }}
+        <Button onPress={() => {
+          setOpenMobile(true)
+        }}
           isIconOnly
           variant="light"
           radius="sm"
           className="flex justify-center lg:hidden"
         >
-          <PanelLeft size={16}/>
+          <PanelLeft size={16} />
         </Button>
       </section>
 
       {/* Content under the dashboard navbar with content padding and a custom max width */}
       <section className="p-4 max-w-xl">
 
-      {isSuccessVisible && (
-        <div className="w-full mx-auto flex items-center justify-center mb-2">
-           <Alert
-            color="success"
-            description={successDescription}
-            isVisible={isSuccessVisible}
-            title={successTitle}
-            variant="faded"
-            onClose={() => setIsSuccessVisible(false)}
-          />
-        </div>
-      )}
-
-      {isFailureVisible && (
-        <div className="w-full mx-auto flex items-center justify-center mb-2">
-          <Alert
-            color="danger"
-            description={failureDescription}
-            isVisible={isFailureVisible}
-            title={failureTitle}
-            variant="faded"
-            onClose={() => setIsFailureVisible(false)}
-          />
+        {isSuccessVisible && (
+          <div className="w-full mx-auto flex items-center justify-center mb-2">
+            <Alert
+              color="success"
+              description={successDescription}
+              isVisible={isSuccessVisible}
+              title={successTitle}
+              variant="faded"
+              onClose={() => setIsSuccessVisible(false)}
+            />
           </div>
         )}
 
-      {isValidationErrorVisible && (
+        {isFailureVisible && (
+          <div className="w-full mx-auto flex items-center justify-center mb-2">
+            <Alert
+              color="danger"
+              description={failureDescription}
+              isVisible={isFailureVisible}
+              title={failureTitle}
+              variant="faded"
+              onClose={() => setIsFailureVisible(false)}
+            />
+          </div>
+        )}
 
-        <div className="w-full mx-auto flex items-center justify-center mb-2">
-          <Alert
-          color="warning"
-          isVisible={isValidationErrorVisible}
-          title={validationTitle}
-          variant="faded"
-          onClose={() => setIsValidationErrorVisible(false)}
-          >
-            {/* @ts-ignore */}
-            <p className="whitespace-pre-wrap text-sm">{validationDescription}</p>
-            {/** @types/react complains about using {} in a React.Node so this error is suppressed */}
-          </Alert>
-        </div>
-      )}
+        {isValidationErrorVisible && (
 
-       <Form
-        className="w-full flex flex-col gap-4"
-        validationBehavior="native"
-        action={formAction}
-      >
-        <Input
-          isRequired
-          label="Tournament name"
-          labelPlacement="outside"
-          name="title"
-          type="text"
-          radius="sm"
-          onChange={handleTextChange}
-          value={formData.title}
-        />
+          <div className="w-full mx-auto flex items-center justify-center mb-2">
+            <Alert
+              color="warning"
+              isVisible={isValidationErrorVisible}
+              title={validationTitle}
+              variant="faded"
+              onClose={() => setIsValidationErrorVisible(false)}
+            >
+              {/* @ts-ignore */}
+              <p className="whitespace-pre-wrap text-sm">{validationDescription}</p>
+              {/** @types/react complains about using {} in a React.Node so this error is suppressed */}
+            </Alert>
+          </div>
+        )}
 
-        <DatePicker
-          isRequired
-          disableAnimation
-          name="start_date"
-          granularity="minute"
-          label="Start date"
-          radius="sm"
-          minValue={today(getLocalTimeZone())}
-          onChange={handleStartDateChange}
-          value={formData.start_date}
-        />
+        <Form
+          className="w-full flex flex-col gap-4"
+          validationBehavior="native"
+          action={formAction}
+        >
+          <Input
+            isRequired
+            label="Tournament name"
+            labelPlacement="outside"
+            name="title"
+            type="text"
+            radius="sm"
+            onChange={handleInputChange}
+            value={formData.title}
+          />
 
-        <DatePicker
-          isRequired
-          disableAnimation
-          name="end_date"
-          granularity="minute"
-          label="End date"
-          radius="sm"
-          minValue={today(getLocalTimeZone())}
-          onChange={handleEndDateChange}
-          value={formData.end_date}
-        />
+          <DatePicker
+            isRequired
+            disableAnimation
+            name="start_date"
+            granularity="minute"
+            label="Start date"
+            radius="sm"
+            minValue={today(getLocalTimeZone())}
+            onChange={handleStartDateChange}
+            value={formData.start_date}
+          />
 
-        <Textarea
-          isRequired
-          isClearable
-          name="description"
-          className="col-span-12 md:col-span-6"
-          label="Description"
-          placeholder="Enter tournament description"
-          variant="flat"
-          onChange={handleTextChange}
-          onClear={()=> {
-            setFormData((prevData) => ({
-              ...prevData,
-              description: ""
-            }));
-          }
-          }
-          value={formData.description}
-        />
+          <DatePicker
+            isRequired
+            disableAnimation
+            name="end_date"
+            granularity="minute"
+            label="End date"
+            radius="sm"
+            minValue={today(getLocalTimeZone())}
+            onChange={handleEndDateChange}
+            value={formData.end_date}
+          />
 
-        <Button type="submit" variant="solid" radius="sm">
-          Submit
-        </Button>
-      </Form> 
+          <Textarea
+            isRequired
+            isClearable
+            name="description"
+            className="col-span-12 md:col-span-6"
+            label="Description"
+            placeholder="Enter tournament description"
+            variant="flat"
+            onChange={handleInputChange}
+            onClear={() => {
+              setFormData((prevData) => ({
+                ...prevData,
+                description: ""
+              }));
+            }
+            }
+            value={formData.description}
+          />
+
+          <div className = "bg-background-light-grey rounded-xl p-4 w-full flex justify-between items-center">
+            <div className="flex flex-col gap-1">
+              <p className="text-tiny">Make public</p>
+              <p className="text-sm text-color-light-grey">
+                Users will be able to see the tournament once published.
+              </p>
+            </div>
+            <Switch name="is_public" onValueChange={handlePublicChange} value={String(formData.is_public)}/>
+          </div>
+         
+
+          <Button type="submit" variant="solid" radius="sm">
+            Submit
+          </Button>
+        </Form>
       </section>
     </section>
   );
