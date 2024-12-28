@@ -156,7 +156,7 @@ export default function CreateTournamentPage() {
       if (state?.server_error != null) {
         console.log("setting failure alert to visible")
         setIsFailureVisible(true)
-        setFailureDescription(state.server_error)
+        console.log(state.server_error)
         return
       }
     }
@@ -176,7 +176,7 @@ export default function CreateTournamentPage() {
       {/* Custom dashboard nav title bar that displays basic info */}
       <section className="dashboard-nav flex items-center justify-between" >
 
-        <h1 className="text-xl font-semibold">
+        <h1 className="text-lg font-semibold">
           Create a Tournament
         </h1>
 
