@@ -9,3 +9,17 @@ export interface TournamentCreateState {
   server_error?: any;
   success?: boolean;
 }
+
+
+export interface TournamentData {
+  public: boolean | null;
+  id: string;
+  owner_id: string;
+  createdAt: Date;
+  title: string;
+  description: string | null;
+  start_date: string;
+  end_date: string;
+  registration_deadline: string;
+  slug: string;
+}
