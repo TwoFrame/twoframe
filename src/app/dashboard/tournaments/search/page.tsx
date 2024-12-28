@@ -14,7 +14,7 @@ export default function SearchPage() {
     <section className="flex flex-col bg-background-default h-screen w-full">
 
       <section className="dashboard-nav flex items-center justify-between w-full" >
-        <h1 className="text-xl font-semibold">
+        <h1 className="text-lg font-semibold">
           Search for tournaments
         </h1>
 
