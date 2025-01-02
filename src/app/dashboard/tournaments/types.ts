@@ -15,7 +15,7 @@ export interface TournamentData {
   public: boolean | null;
   id: string;
   owner_id: string;
-  createdAt: Date;
+  created_at: Date;
   title: string;
   description: string | null;
   start_date: string;
