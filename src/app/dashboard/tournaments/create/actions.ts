@@ -1,7 +1,7 @@
 "use server";
 
 import { TournamentCreateSchema } from "@/app/_lib/schemas";
-import { TournamentCreateState } from "../../types";
+import { TournamentCreateState } from "../types";
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
