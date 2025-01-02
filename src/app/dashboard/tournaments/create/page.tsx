@@ -11,7 +11,7 @@ import { Input } from "@nextui-org/input";
 import { Alert } from "@nextui-org/alert";
 import { Textarea } from "@nextui-org/input";
 import { DateValue, getLocalTimeZone, today } from "@internationalized/date";
-import { TournamentCreateState } from "../types";
+import { TournamentCreateState } from "../../types";
 import { useSidebar } from "@/components/ui/sidebar";
 import { PanelLeft } from "lucide-react";
 import { Switch } from "@nextui-org/switch";
