@@ -4,8 +4,11 @@
 
 /* Defines global app colors and themes*/
 :root {
+
     --color-light-grey: #838383;
     --color-light-green: #22B122;
+    --color-light-blue: #74C0FF;
+    --color-lime: #AAFF5A;
 
     --background-dark-grey: #1B1B1B;
     --background-light-grey: #282828;
