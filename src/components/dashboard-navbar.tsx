@@ -25,7 +25,7 @@ export default function DashboardNavBar() {
 
 
     return (
-    <Sidebar style={{ borderRight: "none"} } >
+    <Sidebar style={{ borderRight: "none", height: "100%"} }>
     <SidebarHeader>
         <Link className="inline-flex w-fit items-center gap-4 font-micro text-3xl text-white p-2" href="/" onClick={()=>setOpenMobile(false)}>
           <Image alt="app logo" src={appLogo} width={32} height={32}/>
@@ -82,10 +82,10 @@ export default function DashboardNavBar() {
             </Collapsible>
         
             <SidebarMenuItem key="manage" className="my-1">
-              <SidebarMenuButton isActive={pathname == "/dashboard/tournaments/manage"} >
-                <SidebarLink href="/dashboard/tournaments/manage">
+              <SidebarMenuButton isActive={pathname == "/dashboard/tournaments/collections"} >
+                <SidebarLink href="/dashboard/tournaments/collections">
                     <Bolt size={16}/>
-                    <span>Manage</span>
+                    <span>Collections</span>
                 </SidebarLink>
 
               </SidebarMenuButton>
@@ -104,10 +104,10 @@ export default function DashboardNavBar() {
           }}
           description={
             <Link href="https://x.com/jrgarciadev">
-              @williammm
+              @testUserName
             </Link>
           }
-          name="William"
+          name="Test User"
         />
       </section>
      
