@@ -41,8 +41,8 @@ export default function DashboardNavBar() {
         <SidebarMenu>
 
             <SidebarMenuItem key="search" className="my-1">
-              <SidebarMenuButton isActive={pathname == "/dashboard/tournaments/search"}>
-              <SidebarLink href="/dashboard/tournaments/search">
+              <SidebarMenuButton isActive={pathname.startsWith("/dashboard/tournaments/explore")}>
+              <SidebarLink href="/dashboard/tournaments/explore">
                 <Search size={16}/>
                 <span>Explore</span>
               </SidebarLink>
@@ -50,7 +50,7 @@ export default function DashboardNavBar() {
             </SidebarMenuItem>
 
             <SidebarMenuItem key="create" className="my-1">
-              <SidebarMenuButton isActive={pathname == "/dashboard/tournaments/create"} >
+              <SidebarMenuButton isActive={pathname.startsWith("/dashboard/tournaments/create")} >
               <SidebarLink href="/dashboard/tournaments/create">
                 <SquarePen size={16}/>
                 <span>Create</span>
@@ -58,6 +58,7 @@ export default function DashboardNavBar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
 
+            {/** 
             <Collapsible className="my-1">
               <SidebarMenuItem key="favorites">                        
                   <CollapsibleTrigger asChild>
@@ -80,6 +81,7 @@ export default function DashboardNavBar() {
                   </SidebarMenuSub>
               </CollapsibleContent>
             </Collapsible>
+            */}
         
             <SidebarMenuItem key="manage" className="my-1">
               <SidebarMenuButton isActive={pathname == "/dashboard/tournaments/collections"} >
