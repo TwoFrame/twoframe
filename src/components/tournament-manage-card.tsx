@@ -13,8 +13,13 @@ import {
 import {Divider} from "@nextui-org/divider";
 import { Calendar, Ellipsis, Eye, Trash } from "lucide-react";
 import { useEffect } from "react";
+import { formatDateRange, formatTimestampWithDate } from "@/app/_lib/functions";
 
 
+/**
+ * Tournament card that is displayed in the managed sections of the Collections Page
+ * @param tournament the tournament data
+ */
 export default function TournamentManageCard({tournament}: {tournament: TournamentData}) {
 
     const {isOpen, onOpen, onClose} = useDisclosure();
@@ -22,33 +27,6 @@ export default function TournamentManageCard({tournament}: {tournament: Tourname
     useEffect(()=> {
         console.log(tournament.created_at)
     }, [])
-
-    function formatDateRange(start_date: string, end_date: string) {
-        const startDate = new Date(start_date);
-        const endDate = new Date(end_date);
-
-        // Get the month abbreviation
-        const monthFormatter = new Intl.DateTimeFormat('en-US', { month: 'short' });
-        const startMonth = monthFormatter.format(startDate);
-        const endMonth = monthFormatter.format(endDate);
-    
-        // Get the day
-        const startDay = startDate.getDate();
-        const endDay = endDate.getDate();
-
-        // Check if months are different
-        if (startMonth !== endMonth) {
-            return `${startMonth} ${startDay} - ${endMonth} ${endDay}`;
-        } else {
-            return `${startMonth} ${startDay} - ${endDay}`;
-        }
-    }
-
-    function formatTimestampWithDate(timeStamp: Date): string {
-        const formatter = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' });
-        console.log(timeStamp)
-        return formatter.format(timeStamp); // Example output: "Dec 27 at 5:40 PM
-    }
 
     return (
         <>
@@ -72,6 +50,7 @@ export default function TournamentManageCard({tournament}: {tournament: Tourname
                 )}
             </ModalContent>
         </Modal>
+        
         <Card className="w-full mb-6" radius="md">
             <CardHeader className="flex justify-between">
                 <PublicChip is_public={tournament.public!}/>
