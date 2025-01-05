@@ -63,7 +63,7 @@ export default function TournamentManageCard({tournament}: {tournament: Tourname
                         </Button>
                     </DropdownTrigger>
                     <DropdownMenu aria-label="Tournament Card Actions">
-                        <DropdownItem key="view" startContent={<Eye size={16}/>} href={`/dashboard/manage/${tournament.slug}`}>
+                        <DropdownItem key="view" startContent={<Eye size={16}/>} href={`/dashboard/manage/${tournament.slug}/details`}>
                             View
                         </DropdownItem>
                         <DropdownItem key="delete" startContent={<Trash size={16}/>} onPress={onOpen}>
