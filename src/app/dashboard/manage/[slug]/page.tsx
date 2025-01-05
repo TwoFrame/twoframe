@@ -11,13 +11,12 @@ export default async function TournamentPage({
 
   if (tournament_data) {
     return (
-      <div>
-        <h1>Tournament: {tournament_data.title}</h1>
+      <section className="p-4">
         <p>
           Start Date: {new Date(tournament_data.start_date).toLocaleString()}
         </p>
         <p>End Date: {new Date(tournament_data.end_date).toLocaleString()}</p>
-      </div>
+      </section>
     );
   }
 
