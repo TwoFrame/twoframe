@@ -5,12 +5,12 @@ import { Button } from "@nextui-org/button"
 import { Tabs, Tab } from "@nextui-org/tabs"
 import { PanelLeft, LayoutGrid, Rows3 } from "lucide-react"
 import { useEffect, useState } from "react";
-import { fetchManaged } from "./utils";
+import { fetchManagedTournaments } from "./actions";
 import { createClient } from "@/utils/supabase/client";
 import { TournamentData } from "../types";
 import TournamentManageCard from "@/components/tournament-manage-card";
 
-export default function ManagePage(){
+export default function CollectionsPage(){
   const { setOpenMobile } = useSidebar();
 
   const [selected, setSelected] = useState("participating");
@@ -28,7 +28,7 @@ export default function ManagePage(){
     if (!user) {
       return
     }
-    const result = await fetchManaged(0, user.id)
+    const result = await fetchManagedTournaments(0, user.id)
     console.log(result)
     setManagedTournaments(result ?? [])
   }
