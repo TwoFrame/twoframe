@@ -14,6 +14,7 @@ import {Divider} from "@nextui-org/divider";
 import { Calendar, Ellipsis, Eye, Trash } from "lucide-react";
 import { useEffect } from "react";
 import { formatDateRange, formatTimestampWithDate } from "@/app/_lib/functions";
+import PublicChip from "./public-chip";
 
 
 /**
@@ -90,13 +91,4 @@ export default function TournamentManageCard({tournament}: {tournament: Tourname
         </Card>
         </>
     );
-}
-
-function PublicChip({is_public} : {is_public: boolean}) {
-    return (
-        <>
-        {is_public && <p className="text-xs font-semibold text-color-lime bg-background-light-green py-1 px-2 rounded-md">public</p>}
-        {!is_public && <p className="text-xs font-semibold text-color-light-blue bg-primary py-1 px-2 rounded-md">private</p>}
-        </>
-    )
 }
