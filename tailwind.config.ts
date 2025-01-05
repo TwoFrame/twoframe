@@ -8,7 +8,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@nextui-org/theme/dist/components/(alert|button|card|date-picker|divider|dropdown|form|image|input|modal|navbar|spinner|toggle|tabs|user|ripple|calendar|date-input|popover|menu|avatar).js"
+    "./node_modules/@nextui-org/theme/dist/components/(alert|breadcrumbs|button|card|date-picker|divider|dropdown|form|image|input|modal|navbar|skeleton|spinner|toggle|tabs|user|ripple|calendar|date-input|popover|menu|avatar).js"
   ],
   plugins: [typography,nextui({
     addCommonColors: true,
