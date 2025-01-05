@@ -48,6 +48,7 @@ export const slugs = pgTable("slugs", {
 
 
 export type InsertProfile = typeof profiles.$inferInsert;
+export type InsertEntrant = typeof entrants.$inferInsert;
 
 export type InsertTournament = typeof tournaments.$inferInsert;
 export type SelectTournament = typeof tournaments.$inferSelect;
