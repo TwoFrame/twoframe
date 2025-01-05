@@ -23,3 +23,7 @@ export interface TournamentData {
   registration_deadline: string;
   slug: string;
 }
+
+export type TournamentContextType = {
+  tournament: TournamentData | null;
+};
