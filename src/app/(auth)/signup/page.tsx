@@ -20,7 +20,7 @@ export default function SignUpPage() {
       } = await supabase.auth.getUser();
 
       if (user) {
-        router.push("/dashboard/tournaments/search")
+        router.push("/dashboard/tournaments/explore")
       } else {
         setLoginCheck(false);
       }
@@ -33,7 +33,7 @@ export default function SignUpPage() {
   useEffect(()=> {
     // TODO: go back to main page for now. Will have to navigate to a dashboard later on
     if (state?.success == true) {
-      router.push("/dashboard/tournaments/search")
+      router.push("/dashboard/tournaments/explore")
     }
   }, [state, router])
 

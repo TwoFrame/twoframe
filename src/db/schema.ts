@@ -17,7 +17,7 @@ export const profiles = pgTable('profiles', {
 export const tournaments = pgTable("tournaments", {
   id: uuid("id").defaultRandom().primaryKey(),
   owner_id: uuid('owner_id').references(() => profiles.user_id).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
   title: varchar("title", { length: 48 }).notNull(),
   description: varchar("description", { length: 500}),
   start_date: timestamp("start_date", { mode: "string" }).notNull(),
@@ -48,6 +48,7 @@ export const slugs = pgTable("slugs", {
 
 
 export type InsertProfile = typeof profiles.$inferInsert;
+export type InsertEntrant = typeof entrants.$inferInsert;
 
 export type InsertTournament = typeof tournaments.$inferInsert;
 export type SelectTournament = typeof tournaments.$inferSelect;

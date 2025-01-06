@@ -23,7 +23,7 @@ export default function LoginPage() {
 
       if (user) {
         console.log('going back to /')
-        router.push("/dashboard/tournaments/search")
+        router.push("/dashboard/tournaments/explore")
 
       } else {
         console.log("no user")
@@ -38,7 +38,7 @@ export default function LoginPage() {
   useEffect(()=> {
     // TODO: go back to main page for now. Will have to navigate to a dashboard later on
     if (state?.success == true) {
-      router.push("/dashboard/tournaments/search")
+      router.push("/dashboard/tournaments/explore")
     }
   }, [state, router])
 

@@ -6,6 +6,8 @@ import {
   profiles,
   tournaments,
   slugs,
+  InsertEntrant,
+  entrants,
 } from "../schema";
 
 export async function createProfile(data: InsertProfile) {
@@ -35,5 +37,15 @@ export async function createSlugBase(data: InsertSlugBase) {
     return { insertedSlugBase };
   } catch (error) {
     return { insert_error: error };
+  }
+}
+
+
+export async function registerForTournament(data: InsertEntrant)  {
+  try {
+    const insertedEntrant = await db.insert(entrants).values(data)
+    return {insertedEntrant}
+  } catch (error) {
+    return {insert_error: error}
   }
 }

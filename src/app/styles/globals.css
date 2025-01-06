@@ -4,8 +4,11 @@
 
 /* Defines global app colors and themes*/
 :root {
+
     --color-light-grey: #838383;
     --color-light-green: #22B122;
+    --color-light-blue: #74C0FF;
+    --color-lime: #AAFF5A;
 
     --background-dark-grey: #1B1B1B;
     --background-light-grey: #282828;
@@ -41,6 +44,9 @@ html {
         --sidebar-accent-foreground: 240 4.8% 95.9%;
         --sidebar-border: 240 3.7% 15.9%;
         --sidebar-ring: black;
+
+        /* Overriding the primary variable */
+        --primary: var(--blue-primary);
     }
      
 }  
@@ -48,6 +54,6 @@ html {
 
 @layer utilities {
     .dashboard-nav {
-        @apply h-[80px] border-b-1 border-b-background-light-grey p-4 bg-background-default w-screen;
+        @apply h-[80px] border-b-1 border-b-background-light-grey p-4 bg-background-default;
     }
 }

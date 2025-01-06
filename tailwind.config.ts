@@ -8,7 +8,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@nextui-org/theme/dist/components/(alert|button|date-picker|form|image|input|navbar|spinner|tabs|user|ripple|calendar|date-input|popover|avatar).js"
+    "./node_modules/@nextui-org/theme/dist/components/(alert|breadcrumbs|button|card|date-picker|divider|dropdown|form|image|input|modal|navbar|skeleton|spinner|toggle|tabs|user|ripple|calendar|date-input|popover|menu|avatar).js"
   ],
   plugins: [typography,nextui({
     addCommonColors: true,
@@ -22,15 +22,24 @@ const config: Config = {
   			]
   		},
   		colors: {
-  			'color-light-grey': 'var(--color-light-grey)',
-  			'color-light-green': '(var--color-light-green)',
-  			'background-light-grey': 'var(--background-light-grey)',
-  			'background-default': 'var(--background-default)',
-  			'background-light-green': 'var(--background-light-green)',
-  			'blue-primary': 'var(--blue-primary)',
-  			'blue-secondary': 'var(--blue-secondary)',
+			color: {
+				'light-grey': 'var(--color-light-grey)',
+				'light-green': 'var(--color-light-green)',
+				'light-blue': 'var(--color-light-blue)',
+				lime: 'var(--color-lime)',
+
+			},
+			background: {
+				'light-grey':  'var(--background-light-grey)',
+				'dark-grey': 'var(--background-dark-grey)',
+				'light-green': 'var(--background-light-green)',
+				default: 'var(--background-default)',
+			},
+
+			'primary': 'var(--blue-primary)',
+			'secondary': 'var(--blue-secondary)',
 			
-			  sidebar: {
+			sidebar: {
 				DEFAULT: 'hsl(var(--sidebar-background))',
 				foreground: 'hsl(var(--sidebar-foreground))',
 				primary: 'hsl(var(--sidebar-primary))',
@@ -41,8 +50,6 @@ const config: Config = {
 				ring: 'hsl(var(--sidebar-ring))'
 			}
   		},
-
-
   	}
   }
 };

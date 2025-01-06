@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
-import { db } from "../db";
-import { tournaments, slugs, profiles } from "../schema";
+import { db} from "../db";
+import { tournaments, slugs, profiles,} from "../schema";
 
 export async function getSlugNumber(slug: string) {
   try {
@@ -17,6 +17,20 @@ export async function getSlugNumber(slug: string) {
   }
 }
 
+
+// Temporary function to retreive all tournaments for the explore page
+export async function getAllTournaments() {
+  try {
+    const result = await db.query.tournaments.findMany({
+      where: eq(tournaments.public, true)
+    })
+    return {tournament_data: result}
+  } catch(error) {
+    console.log(error)
+    return { error: "Failed to fetch tournament data" };
+  }
+}
+
 export async function getTournamentBySlug(slug: string) {
   try {
     const result = await db.query.tournaments.findFirst({
@@ -26,6 +40,26 @@ export async function getTournamentBySlug(slug: string) {
       return { error: "No tournament found" };
     }
     return { tournament_data: result };
+  } catch (error) {
+    console.log(error)
+    return { error: "Failed to fetch tournament data" };
+  }
+}
+
+export async function getPageOfManagedTournaments(page: number, user_id: string) {
+
+  try {
+    const result = await db.query.tournaments.findMany({
+      where: eq(tournaments.owner_id, user_id),
+      // TODO: Add pagination later on 
+      // limit: 6,
+      // offset: page,
+    }); 
+
+    if (!result) {
+      return {error: "User has not created any tournaments"};
+    }
+    return {tournament_data: result};
   } catch (error) {
     console.log(error)
     return { error: "Failed to fetch tournament data" };

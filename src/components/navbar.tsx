@@ -68,7 +68,7 @@ export default function NavigationBar() {
       {user ? (
         <div className="flex space-x-2">
           <NavbarItem className="text-white" onClick={handleLogout}>
-            <Button as={Link} href="/dashboard/tournaments/search" variant="light" radius="sm" >
+            <Button as={Link} href="/dashboard/tournaments/explore" variant="light" radius="sm" >
               Dashboard
             </Button>
           </NavbarItem>
