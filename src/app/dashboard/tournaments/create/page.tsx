@@ -44,7 +44,7 @@ export default function CreateTournamentPage() {
   const failureTitle = "Something went wrong";
   const validationTitle = "Some fields are not valid"
 
-  const successDescription = "Visit the Collections page to add brackets and other details!";
+  const successDescription = "Visit the Collections page to add events and other details!";
   const [failureDescription, setFailureDescription] = useState("");
   const [validationDescription, setValidationDescription] = useState({});
 

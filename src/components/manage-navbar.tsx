@@ -43,7 +43,7 @@ export default function ManageNavigationBar() {
 
             <NavbarContent justify="center">
                 <Tabs key="tournament_type" aria-label="Options" variant="light" color="primary" className="flex flex-col mx-0" classNames={{cursor: "bg-background-dark-grey"}} selectedKey={pathname}>
-                    <Tab  as={Link} key={`/dashboard/manage/${context?.tournament?.slug}/brackets`} title="Brackets" className="w-fit" href={`/dashboard/manage/${context?.tournament?.slug}/brackets`}/>
+                    <Tab  as={Link} key={`/dashboard/manage/${context?.tournament?.slug}/events`} title="Events" className="w-fit" href={`/dashboard/manage/${context?.tournament?.slug}/events`}/>
                     <Tab  as={Link} key={`/dashboard/manage/${context?.tournament?.slug}/details`} title="Details" className="w-fit" href={`/dashboard/manage/${context?.tournament?.slug}/details`}/>
                 </Tabs>                
             </NavbarContent>

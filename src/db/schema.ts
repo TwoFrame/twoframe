@@ -32,7 +32,8 @@ export const events = pgTable("events", {
   id: uuid("id").defaultRandom().primaryKey(),
   tournament_id: uuid('tournament_id').references(() => tournaments.id).notNull(),
   title: varchar("title", { length: 48 }),
-
+  serialized_bracket: text("serialized_bracket"),
+  completed : boolean("finished").default(false)
 });
 
 export const entrants = pgTable("entrants", {
@@ -55,3 +56,5 @@ export type SelectTournament = typeof tournaments.$inferSelect;
 
 export type InsertSlugBase = typeof slugs.$inferInsert;
 export type SelectSlugBase = typeof slugs.$inferSelect;
+
+export type InsertEvent = typeof events.$inferInsert;

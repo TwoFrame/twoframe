@@ -2,9 +2,11 @@ import { db } from "../db";
 import {
   InsertProfile,
   InsertTournament,
+  InsertEvent,
   InsertSlugBase,
   profiles,
   tournaments,
+  events,
   slugs,
   InsertEntrant,
   entrants,
@@ -47,5 +49,15 @@ export async function registerForTournament(data: InsertEntrant)  {
     return {insertedEntrant}
   } catch (error) {
     return {insert_error: error}
+  }
+}
+
+export async function createEvent(data: InsertEvent) {
+  try {
+    const insertedEvent = await db.insert(events).values(data);
+
+    return { insertedEvent };
+  } catch (error) {
+    return { insert_error: error };
   }
 }

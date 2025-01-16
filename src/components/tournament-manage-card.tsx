@@ -40,7 +40,7 @@ export default function TournamentManageCard({tournament}: {tournament: Tourname
                         </ModalHeader>
 
                         <ModalBody>
-                            <p className="text-color-light-grey">This will clear all the data including brackets. You cannot revert this action once it's complete.</p>
+                            <p className="text-color-light-grey">This will clear all the data including events. You cannot revert this action once it's complete.</p>
                         </ModalBody>
 
                         <ModalFooter>
