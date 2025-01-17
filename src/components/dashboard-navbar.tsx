@@ -12,18 +12,39 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import SidebarLink from "./sidebar-link";
 
+import { createClient } from "@/utils/supabase/client";
+import { useEffect } from "react";
+import { fetchUserProfilePicture } from "./actions";
+
 
 export default function DashboardNavBar() {
     const pathname = usePathname();
     const router = useRouter();
     const [isNavigating, setIsNavigating] = useState(false);
+    const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
     const {
     state,
     setOpenMobile,
     } = useSidebar();
 
+    const handleFetchUser = async() => {
+      const supabase = await createClient();
+      const { data: { user }} = await supabase.auth.getUser();
+      
+      if (!user) {
+        return
+      }
+      const result = await fetchUserProfilePicture(user.id)
+  
+      setProfilePicture(result);
+    }
 
+    
+    useEffect(()=> {
+      handleFetchUser()
+    },[])
+    
     return (
     <Sidebar style={{ borderRight: "none", height: "100%"} }>
     <SidebarHeader>
@@ -102,10 +123,10 @@ export default function DashboardNavBar() {
       <section className="px-2">
          <User
           avatarProps={{
-            src: "https://avatars.githubusercontent.com/u/30373425?v=4",
+            src: profilePicture ?? "http://127.0.0.1:54321/storage/v1/object/public/profile-pics/xT7DmZL.png",
           }}
           description={
-            <Link href="https://x.com/jrgarciadev">
+            <Link href={profilePicture ?? 'http://127.0.0.1:54321/storage/v1/object/public/profile-pics/xT7DmZL.png'}>
               @testUserName
             </Link>
           }

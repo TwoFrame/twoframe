@@ -10,6 +10,7 @@ export const profiles = pgTable('profiles', {
   user_id: uuid('user_id').primaryKey().references(() => users.id).notNull(),
   username: varchar('username', { length: 16 }).notNull(),
   tag: varchar('tag', { length: 6 }).notNull(),
+  picture_url: varchar({ length: 2048 }),
 }, (t) => [
   unique('unique_tag').on(t.username, t.tag),
 ]);

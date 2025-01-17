@@ -85,3 +85,16 @@ export async function getProfileByUsernameAndTag(username: string, tag: string) 
     return { error: 'Failed to fetch profile data' };
   }
 }
+
+export async function getPictureUrl(user_id: string) {
+  try {
+    const result = await db.query.profiles.findFirst({
+      where: eq(profiles.user_id, user_id),
+    });
+
+    return { picture_url: result ? result.picture_url : null };
+  } catch (error) {
+    console.error(error);
+    return { error: null }; 
+  }
+}
