@@ -1,0 +1,17 @@
+-- DO $$
+-- BEGIN
+--     -- Check if the type "game" exists before creating it
+--     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'game') THEN
+--         CREATE TYPE "public"."game" AS ENUM('super_smash_bros_ultimate', 'super_smash_bros_melee', 'street_fighter_6', 'tekken_8');
+--     END IF;
+-- END $$;
+
+-- ALTER TABLE "events" ALTER COLUMN "title" SET DATA TYPE varchar(30);--> statement-breakpoint
+-- ALTER TABLE "events" ALTER COLUMN "title" SET NOT NULL;--> statement-breakpoint
+-- ALTER TABLE "events" ALTER COLUMN "serialized_bracket" SET DEFAULT '';--> statement-breakpoint
+-- ALTER TABLE "events" ADD COLUMN "game" "game";--> statement-breakpoint
+-- ALTER TABLE "events" ADD COLUMN "entrant_limit" smallint NOT NULL;--> statement-breakpoint
+-- ALTER TABLE "events" ADD COLUMN "start_date" timestamp NOT NULL;--> statement-breakpoint
+-- ALTER TABLE "events" ADD COLUMN "rules" varchar(2000) DEFAULT '' NOT NULL;--> statement-breakpoint
+-- ALTER TABLE "events" ADD COLUMN "attendees" smallint DEFAULT 0 NOT NULL;--> statement-breakpoint
+-- ALTER TABLE "events" ADD COLUMN "slug" text NOT NULL;

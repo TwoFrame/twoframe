@@ -4,56 +4,52 @@
 
 /* Defines global app colors and themes*/
 :root {
+  --color-light-grey: #838383;
+  --color-light-green: #22b122;
+  --color-light-blue: #74c0ff;
+  --color-lime: #aaff5a;
 
-    --color-light-grey: #838383;
-    --color-light-green: #22B122;
-    --color-light-blue: #74C0FF;
-    --color-lime: #AAFF5A;
+  --background-dark-grey: #1b1b1b;
+  --background-light-grey: #282828;
+  --background-default: #0e0b15;
+  --background-light-green: #22b122;
 
-    --background-dark-grey: #1B1B1B;
-    --background-light-grey: #282828;
-    --background-default: #0E0B15;
-    --background-light-green: #22B122;
-    
-    --blue-primary: #4724E3;
-    --blue-secondary: #2E188F;
+  --blue-primary: #4724e3;
+  --blue-secondary: #2e188f;
 }
 
 html {
-    scrollbar-gutter: stable;
+  scrollbar-gutter: stable;
 }
 
-
-@layer  {
-    @font-face {
-        font-family: "micro";
-        font-weight: normal;
-        font-display: "swap";
-        /* Always make sure your custom font file uses the .woff extension*/
-        src: url(../../fonts/Micro5-Regular.woff) format('woff');
-    }
+@layer {
+  @font-face {
+    font-family: "micro";
+    font-weight: normal;
+    font-display: "swap";
+    /* Always make sure your custom font file uses the .woff extension*/
+    src: url(../../fonts/Micro5-Regular.woff) format("woff");
+  }
 }
 
 @layer base {
-    :root {
-        --sidebar-background: 240 5.9% 10%;
-        --sidebar-foreground: 240 4.8% 95.9%;
-        --sidebar-primary: 224.3 76.3% 48%;
-        --sidebar-primary-foreground: 0 0% 100%;
-        --sidebar-accent: 240 3.7% 15.9%;
-        --sidebar-accent-foreground: 240 4.8% 95.9%;
-        --sidebar-border: 240 3.7% 15.9%;
-        --sidebar-ring: black;
+  :root {
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: black;
 
-        /* Overriding the primary variable */
-        --primary: var(--blue-primary);
-    }
-     
-}  
-
+    /* Overriding the primary variable */
+    --primary: var(--blue-primary);
+  }
+}
 
 @layer utilities {
-    .dashboard-nav {
-        @apply h-[80px] border-b-1 border-b-background-light-grey p-4 bg-background-default;
-    }
+  .dashboard-nav {
+    @apply h-[80px] border-b-1 border-b-background-light-grey p-4 bg-background-default;
+  }
 }

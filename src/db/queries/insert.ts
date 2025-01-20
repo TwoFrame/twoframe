@@ -42,13 +42,12 @@ export async function createSlugBase(data: InsertSlugBase) {
   }
 }
 
-
-export async function registerForTournament(data: InsertEntrant)  {
+export async function registerForTournament(data: InsertEntrant) {
   try {
-    const insertedEntrant = await db.insert(entrants).values(data)
-    return {insertedEntrant}
+    const insertedEntrant = await db.insert(entrants).values(data);
+    return { insertedEntrant };
   } catch (error) {
-    return {insert_error: error}
+    return { insert_error: error };
   }
 }
 

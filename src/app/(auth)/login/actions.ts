@@ -18,7 +18,10 @@ export async function login(
   });
 
   if (!validationResult.success) {
-    console.log("Validation failed", validationResult.error.flatten().fieldErrors);
+    console.log(
+      "Validation failed",
+      validationResult.error.flatten().fieldErrors,
+    );
     return {
       errors: validationResult.error.flatten().fieldErrors,
       success: false,
@@ -29,7 +32,7 @@ export async function login(
   const { email, password } = validationResult.data;
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-  // 
+  //
   if (error) {
     console.log("Sign-in error:", error.message);
     redirect("/error");
@@ -38,6 +41,6 @@ export async function login(
   // Return a successful login state back to the client
   return {
     errors: undefined,
-    success: true
-  }
+    success: true,
+  };
 }

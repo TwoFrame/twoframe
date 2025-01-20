@@ -20,7 +20,7 @@ export default function SignUpPage() {
       } = await supabase.auth.getUser();
 
       if (user) {
-        router.push("/dashboard/tournaments/explore")
+        router.push("/dashboard/tournaments/explore");
       } else {
         setLoginCheck(false);
       }
@@ -30,24 +30,22 @@ export default function SignUpPage() {
   }, [router]);
 
   // Keep track of the sign up state
-  useEffect(()=> {
+  useEffect(() => {
     // TODO: go back to main page for now. Will have to navigate to a dashboard later on
     if (state?.success == true) {
-      router.push("/dashboard/tournaments/explore")
+      router.push("/dashboard/tournaments/explore");
     }
-  }, [state, router])
-
+  }, [state, router]);
 
   if (loginCheck) {
     return (
       <section className="flex flex-col justify-center items-center">
-        <Spinner color="default"/>
+        <Spinner color="default" />
         <p className="text-color-light-grey mt-4">Checking credentials</p>
       </section>
-      
-    )
+    );
   }
-  
+
   return (
     <section className="flex flex-col w-full items-center justify-center">
       <h1 className="text-5xl font-extrabold text-white">Sign up</h1>
@@ -103,7 +101,11 @@ export default function SignUpPage() {
                 <p className="text-error text-xs">{state.errors.cpassword}</p>
               )}
             </div>
-            <input type="submit" value="Sign Up" className="text-color-light-grey" />
+            <input
+              type="submit"
+              value="Sign Up"
+              className="text-color-light-grey"
+            />
           </form>
           <p className="text-color-light-grey">
             Already have an account?{" "}

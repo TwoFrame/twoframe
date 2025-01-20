@@ -1,64 +1,73 @@
 "use client";
 
-import Link from "next/link";
-import { useContext, useEffect, useState } from "react";
+import { useContext} from "react";
 import {
-    Navbar,
-    NavbarBrand,
-    NavbarContent,
-    NavbarItem
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
 } from "@nextui-org/navbar";
-import { Button } from "@nextui-org/button";
-import PublicChip from "./public-chip";
 import TournamentContext from "@/app/dashboard/manage/[slug]/context";
 import { User } from "@nextui-org/user";
-import { Skeleton } from "@nextui-org/skeleton";
-import { Tabs, Tab } from "@nextui-org/tabs";
 import { usePathname } from "next/navigation";
-
-
+import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/breadcrumbs";
+import Link from "next/link";
+import Image from "next/image";
+import appLogo from "../../public/app_logo.svg";
 
 export default function ManageNavigationBar() {
-    const context = useContext(TournamentContext);
-    const pathname = usePathname();
+  const context = useContext(TournamentContext);
+  const paths = usePathname();
+  const pathNames = paths.split("/").filter((path) => path);
 
-    return (
-        <Navbar maxWidth="full" height="80px" className="bg-background-default justify-between border-b-1 border-b-background-light-grey">
-            <NavbarBrand>
-                <span className="flex gap-4 items-center">
+  return (
+    <Navbar
+      maxWidth="full"
+      height="100px"
+      className="bg-background-default justify-between border-b-1 border-b-background-light-grey"
+    >
+      <NavbarBrand>
+        <Link className="mr-6"href={"/dashboard/tournaments/collections"}>
+          <Image alt="app logo" src={appLogo} width={32} height={32} />
+        </Link>
+        <Breadcrumbs color="primary">
+          {pathNames.map((segment, index) => {
+            if (index == 0) {
+              return ;
+            }
+            // Build href dynamically, ignoring the first breadcrumb href
+            const href =
+              index === 0
+                ? "/dashboard/tournaments/collections"
+                : `/${pathNames.slice(0, index + 1).join("/")}`;
 
-                    {context?.tournament != null ?
-                    <>
-                        <PublicChip is_public={context?.tournament?.public!}/>
-                        <h1>{context?.tournament?.slug}</h1>
-                    </>
-                    :
-                    <div className="flex gap-4 items-center">
-                        <Skeleton className="flex rounded-md w-12 h-4" />
-                        <Skeleton className="flex rounded-md w-12 h-4" />
-                    </div>
-                    }
-                </span>
-            </NavbarBrand>
+            if (index == 1) {
+              return (
+                <BreadcrumbItem key={index}>
+                  <h1 className="font-semibold text-[12px] sm:text-lg">
+                    {segment}
+                  </h1>
+                </BreadcrumbItem>
+              );
+            }
+            return (
+              <BreadcrumbItem key={index} href={href}>
+                <h1 className="font-semibold text-[12px] sm:text-lg">
+                  {segment}
+                </h1>
+              </BreadcrumbItem>
+            );
+          })}
+        </Breadcrumbs>
+      </NavbarBrand>
 
-            <NavbarContent justify="center">
-                <Tabs key="tournament_type" aria-label="Options" variant="light" color="primary" className="flex flex-col mx-0" classNames={{cursor: "bg-background-dark-grey"}} selectedKey={pathname}>
-                    <Tab  as={Link} key={`/dashboard/manage/${context?.tournament?.slug}/events`} title="Events" className="w-fit" href={`/dashboard/manage/${context?.tournament?.slug}/events`}/>
-                    <Tab  as={Link} key={`/dashboard/manage/${context?.tournament?.slug}/details`} title="Details" className="w-fit" href={`/dashboard/manage/${context?.tournament?.slug}/details`}/>
-                </Tabs>                
-            </NavbarContent>
-            
-
-            <NavbarContent justify="end">
-                <User
-                    avatarProps={{
-                        src: "https://avatars.githubusercontent.com/u/30373425?v=4",
-                    }}
-                    name=""
-                />
-            </NavbarContent>
-
-        </Navbar>
-
-    );
+      <NavbarContent justify="end">
+        <User
+          avatarProps={{
+            src: "https://avatars.githubusercontent.com/u/30373425?v=4",
+          }}
+          name=""
+        />
+      </NavbarContent>
+    </Navbar>
+  );
 }

@@ -37,8 +37,8 @@ export async function createTournamentAction(
           : [],
         end_date: isNaN(endDateObject) ? ["Unreadable end date format"] : [],
       },
-      server_error: null, 
-      success: false
+      server_error: null,
+      success: false,
     };
   }
 
@@ -47,21 +47,22 @@ export async function createTournamentAction(
     title: formData.get("title"),
     start_date: new Date(formData.get("start_date") as string).toISOString(),
     end_date: new Date(formData.get("end_date") as string).toISOString(),
-    description: formData.get("description"), 
-    is_public: new Boolean(formData.get("is_public") as string).valueOf()
+    description: formData.get("description"),
+    is_public: new Boolean(formData.get("is_public") as string).valueOf(),
   });
 
   if (validationResult.error) {
-    console.log('not all fields are valid')
-    console.log(validationResult.error.flatten().fieldErrors )
+    console.log("not all fields are valid");
+    console.log(validationResult.error.flatten().fieldErrors);
     return {
       validation_error: validationResult.error.flatten().fieldErrors,
       server_error: null,
-      success: false
+      success: false,
     };
   }
 
-  const { title, start_date, end_date, description, is_public } = validationResult!.data;
+  const { title, start_date, end_date, description, is_public } =
+    validationResult!.data;
 
   //we want to generate the slug next
   const { title_count, selecterror } = await getSlugNumber(slugify(title));
@@ -77,15 +78,15 @@ export async function createTournamentAction(
     end_date: end_date,
     registration_deadline: start_date,
     description: description,
-    public: is_public
+    public: is_public,
   });
 
   if (insert_error) {
     return {
       validation_error: null,
       server_error: insert_error,
-      success: false
-    }
+      success: false,
+    };
   }
 
   //now that our tournament has been inserted, we need to now make sure the slugtable is updated as well
@@ -99,8 +100,8 @@ export async function createTournamentAction(
       return {
         validation_error: null,
         server_error: insert_error,
-        success: false
-      }
+        success: false,
+      };
     }
   } else {
     //slug_base already exists, just increment
@@ -111,15 +112,15 @@ export async function createTournamentAction(
       return {
         validation_error: null,
         server_error: update_error,
-        success: false
-      }
+        success: false,
+      };
     }
   }
 
-  console.log("Successful insertion")
+  console.log("Successful insertion");
   return {
     validation_error: null,
     server_error: null,
-    success: true
-  }
+    success: true,
+  };
 }

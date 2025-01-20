@@ -34,12 +34,8 @@
           "tableFrom": "profiles",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -124,12 +120,8 @@
           "name": "tournaments_owner_id_profiles_user_id_fk",
           "tableFrom": "tournaments",
           "tableTo": "profiles",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -139,9 +131,7 @@
         "tournaments_slug_unique": {
           "name": "tournaments_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},

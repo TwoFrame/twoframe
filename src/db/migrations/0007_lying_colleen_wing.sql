@@ -1,0 +1,1 @@
+ALTER TABLE "events" ADD COLUMN "attendees" smallint DEFAULT 0 NOT NULL;

@@ -1,6 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { config } from "dotenv";
 
 // Nextjs will thwow an error complaining about using middleware in the Edge Runtime if this line is included
 // config({ path: "./.env", override: true });

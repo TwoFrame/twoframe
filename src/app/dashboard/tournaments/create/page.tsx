@@ -31,33 +31,31 @@ export default function CreateTournamentPage() {
     start_date: null,
     end_date: null,
     description: "",
-    is_public: false
+    is_public: false,
   });
 
   const [loginCheck, setLoginCheck] = useState(true);
 
   const [isSuccessVisible, setIsSuccessVisible] = useState(false);
-  const [isValidationErrorVisible, setIsValidationErrorVisible] = useState(false);
+  const [isValidationErrorVisible, setIsValidationErrorVisible] =
+    useState(false);
   const [isFailureVisible, setIsFailureVisible] = useState(false);
 
   const successTitle = "Successful creation";
   const failureTitle = "Something went wrong";
-  const validationTitle = "Some fields are not valid"
+  const validationTitle = "Some fields are not valid";
 
-  const successDescription = "Visit the Collections page to add events and other details!";
+  const successDescription =
+    "Visit the Collections page to add events and other details!";
   const [failureDescription, setFailureDescription] = useState("");
   const [validationDescription, setValidationDescription] = useState({});
 
-
-  const {
-    setOpenMobile,
-  } = useSidebar();
-
+  const { setOpenMobile } = useSidebar();
 
   // Update input values
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    console.log(name + ": " + value)
+    console.log(name + ": " + value);
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -67,7 +65,7 @@ export default function CreateTournamentPage() {
   // Update Date Picker values for start_date
   const handleStartDateChange = (value: DateValue | null) => {
     if (value == null) {
-      return
+      return;
     }
     setFormData((prevData) => ({
       ...prevData,
@@ -78,7 +76,7 @@ export default function CreateTournamentPage() {
   // Update Date Picker values for end_date
   const handleEndDateChange = (value: DateValue | null) => {
     if (value == null) {
-      return
+      return;
     }
     setFormData((prevData) => ({
       ...prevData,
@@ -86,9 +84,9 @@ export default function CreateTournamentPage() {
     }));
   };
 
-  // Update public visibility 
+  // Update public visibility
   const handlePublicChange = (value: boolean) => {
-    console.log("is_public: " + value)
+    console.log("is_public: " + value);
 
     setFormData((prevData) => ({
       ...prevData,
@@ -102,9 +100,9 @@ export default function CreateTournamentPage() {
       start_date: null,
       end_date: null,
       description: "",
-      is_public: false
-    })
-  }
+      is_public: false,
+    });
+  };
 
   const formatValidationError = (errors: {
     [key: string]: string[] | undefined;
@@ -117,7 +115,6 @@ export default function CreateTournamentPage() {
       })
       .join("\n"); // Use empty join as newlines are already added
   };
-
 
   // Check if user is already logged in when page loads
   useEffect(() => {
@@ -139,50 +136,42 @@ export default function CreateTournamentPage() {
 
   // Listen for status udpates on tournament creation from the actions file
   useEffect(() => {
-    console.log("form action state changed")
+    console.log("form action state changed");
     if (state?.success == true) {
-      console.log("setting success alert to visible")
-      resetForm()
-      setIsSuccessVisible(true)
-    }
-    else if (state?.success == false) {
+      console.log("setting success alert to visible");
+      resetForm();
+      setIsSuccessVisible(true);
+    } else if (state?.success == false) {
       if (state?.validation_error != null) {
-        console.log("setting validation alert to visible")
-        setIsValidationErrorVisible(true)
-        setValidationDescription(formatValidationError(state.validation_error))
-        return
+        console.log("setting validation alert to visible");
+        setIsValidationErrorVisible(true);
+        setValidationDescription(formatValidationError(state.validation_error));
+        return;
       }
       if (state?.server_error != null) {
-        console.log("setting failure alert to visible")
-        setIsFailureVisible(true)
-        console.log(state.server_error)
-        return
+        console.log("setting failure alert to visible");
+        setIsFailureVisible(true);
+        console.log(state.server_error);
+        return;
       }
     }
-
-  }, [state])
-
-
+  }, [state]);
 
   if (loginCheck) {
     return null;
   }
 
-
   return (
     <section className="flex flex-col bg-background-default h-screen w-full">
-
       {/* Custom dashboard nav title bar that displays basic info */}
-      <section className="dashboard-nav flex items-center justify-between" >
-
-        <h1 className="text-lg font-semibold">
-          Create a Tournament
-        </h1>
+      <section className="dashboard-nav flex items-center justify-between">
+        <h1 className="text-lg font-semibold">Create a Tournament</h1>
 
         {/* Opens the mobile sidebar */}
-        <Button onPress={() => {
-          setOpenMobile(true)
-        }}
+        <Button
+          onPress={() => {
+            setOpenMobile(true);
+          }}
           isIconOnly
           variant="light"
           radius="sm"
@@ -194,7 +183,6 @@ export default function CreateTournamentPage() {
 
       {/* Content under the dashboard navbar with content padding and a custom max width */}
       <section className="p-4 max-w-xl">
-
         {isSuccessVisible && (
           <div className="w-full mx-auto flex items-center justify-center mb-2">
             <Alert
@@ -222,7 +210,6 @@ export default function CreateTournamentPage() {
         )}
 
         {isValidationErrorVisible && (
-
           <div className="w-full mx-auto flex items-center justify-center mb-2">
             <Alert
               color="warning"
@@ -232,7 +219,9 @@ export default function CreateTournamentPage() {
               onClose={() => setIsValidationErrorVisible(false)}
             >
               {/* @ts-ignore */}
-              <p className="whitespace-pre-wrap text-sm">{validationDescription}</p>
+              <p className="whitespace-pre-wrap text-sm">
+                {validationDescription}
+              </p>
               {/** @types/react complains about using {} in a React.Node so this error is suppressed */}
             </Alert>
           </div>
@@ -290,23 +279,25 @@ export default function CreateTournamentPage() {
             onClear={() => {
               setFormData((prevData) => ({
                 ...prevData,
-                description: ""
+                description: "",
               }));
-            }
-            }
+            }}
             value={formData.description}
           />
 
-          <div className = "bg-background-light-grey rounded-xl p-4 w-full flex justify-between items-center">
+          <div className="bg-background-light-grey rounded-xl p-4 w-full flex justify-between items-center">
             <div className="flex flex-col gap-1">
               <p className="text-tiny">Make public</p>
               <p className="text-sm text-color-light-grey">
                 Users will be able to see the tournament once published.
               </p>
             </div>
-            <Switch name="is_public" onValueChange={handlePublicChange} value={String(formData.is_public)}/>
+            <Switch
+              name="is_public"
+              onValueChange={handlePublicChange}
+              value={String(formData.is_public)}
+            />
           </div>
-         
 
           <Button type="submit" variant="solid" radius="sm">
             Submit

@@ -36,7 +36,7 @@ export const TournamentCreateSchema = z
     start_date: z.string().datetime(),
     end_date: z.string().datetime(),
     description: z.string(),
-    is_public: z.boolean()
+    is_public: z.boolean(),
   })
   .refine((data) => new Date(data.start_date) > new Date(), {
     message: "Start date must be in the future",
@@ -46,3 +46,37 @@ export const TournamentCreateSchema = z
     message: "End date must be after start date",
     path: ["end_date"],
   });
+
+export const GAMES = [
+  "super_smash_bros_ultimate",
+  "super_smash_bros_melee",
+  "street_fighter_6",
+  "tekken_8",
+] as const;
+export const EventCreateSchema = z.object({
+  tournament_id: z.string(),
+  title: z
+    .string()
+    .min(4, {
+      message: "Event title must at least be 4 characters long",
+    })
+    .max(32, {
+      message: "Event title must be at most 30 characters long",
+    }),
+  game: z.enum(GAMES, { message: "Not a valid game" }),
+  entrant_limit: z.string().refine(
+    (val) => {
+      const num = parseInt(val, 10);
+      return !isNaN(num) && num >= 2 && num <= 128;
+    },
+    {
+      message:
+        "Event cannot have less than 2 entrants for more than 128 entrants",
+    },
+  ),
+  //start date no zod check, just run a custom one in the action
+  start_date: z.string().datetime(),
+  rules: z.string().max(2000, {
+    message: "Rules cannot be more than 300 chars long",
+  }),
+});

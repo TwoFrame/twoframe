@@ -27,12 +27,8 @@
           "name": "entrants_user_id_profiles_user_id_fk",
           "tableFrom": "entrants",
           "tableTo": "profiles",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -40,12 +36,8 @@
           "name": "entrants_event_id_events_id_fk",
           "tableFrom": "entrants",
           "tableTo": "events",
-          "columnsFrom": [
-            "event_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["event_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -86,12 +78,8 @@
           "name": "events_tournament_id_tournaments_id_fk",
           "tableFrom": "events",
           "tableTo": "tournaments",
-          "columnsFrom": [
-            "tournament_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tournament_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -132,12 +120,8 @@
           "tableFrom": "profiles",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -248,12 +232,8 @@
           "name": "tournaments_owner_id_profiles_user_id_fk",
           "tableFrom": "tournaments",
           "tableTo": "profiles",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -263,9 +243,7 @@
         "tournaments_slug_unique": {
           "name": "tournaments_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},

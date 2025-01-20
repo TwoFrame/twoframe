@@ -29,6 +29,55 @@
       "when": 1737005325648,
       "tag": "0003_thankful_runaways",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1737256316658,
+      "tag": "0004_closed_ironclad",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1737257104016,
+      "tag": "0005_foamy_mastermind",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1737257465661,
+      "tag": "0006_tricky_silver_fox",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1737257540527,
+      "tag": "0007_lying_colleen_wing",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1737265840480,
+      "tag": "0008_plain_luckman",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1737360240104,
+      "tag": "0009_luxuriant_talkback",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1737360402976,
+      "tag": "0010_jittery_kree",
+      "breakpoints": true
     }
   ]
 }

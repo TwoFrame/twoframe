@@ -9,22 +9,23 @@ import { getTournamentBySlug } from "@/db/queries/select";
 import { fetchTournamentBySlug } from "./actions";
 import TournamentContext from "./context";
 
-
-export default function DashboardLayout({ children }: { children: React.ReactNode; }) {
-
-  const params = useParams<{ slug: string }>()
+export default function ManageLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const params = useParams<{ slug: string }>();
   const [tournament, setTournament] = useState<TournamentData | null>(null);
-  
-  const handleFetchBySlug = async () => {
-    const result = await fetchTournamentBySlug(params.slug)
-    if (result) {
-      setTournament(result)
-    }
-  }
 
+  const handleFetchBySlug = async () => {
+    const result = await fetchTournamentBySlug(params.slug);
+    if (result) {
+      setTournament(result);
+    }
+  };
   useEffect(() => {
-    handleFetchBySlug()
-  }, [])
+    handleFetchBySlug();
+  }, []);
 
   return (
     <html lang="en" data-theme="dark" className="bg-background-default w-full">
@@ -35,9 +36,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {children}
           </TournamentContext.Provider>
         </main>
-
       </body>
     </html>
-
   );
 }
