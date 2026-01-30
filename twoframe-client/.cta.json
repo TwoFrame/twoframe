@@ -1,6 +1,6 @@
 {
   "projectName": "twoframe-client",
-  "mode": "code-router",
+  "mode": "file-router",
   "typescript": true,
   "tailwind": true,
   "packageManager": "npm",
