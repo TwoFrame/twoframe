@@ -1,39 +1,29 @@
 import { createFileRoute } from '@tanstack/react-router'
-import logo from '../logo.svg'
+import { Button } from '@/components/ui/button'
+
 
 export const Route = createFileRoute('/')({
-  component: App,
+  component: LandingPage,
 })
 
-function App() {
+function LandingPage() {
   return (
-    <div className="text-center">
-      <header className="min-h-screen flex flex-col items-center justify-center bg-[#282c34] text-white text-[calc(10px+2vmin)]">
-        <img
-          src={logo}
-          className="h-[40vmin] pointer-events-none animate-[spin_20s_linear_infinite]"
-          alt="logo"
-        />
-        <p>
-          Edit <code>src/routes/index.tsx</code> and save to reload.
+    <main className="min-h-screen bg-background text-foreground">
+      <section className="mx-auto flex max-w-6xl flex-col items-center px-6 py-24 text-center">
+        <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
+          TwoFrame
+        </h1>
+
+        <p className="mt-4 max-w-xl text-muted-foreground">
+          Tournament
         </p>
-        <a
-          className="text-[#61dafb] hover:underline"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <a
-          className="text-[#61dafb] hover:underline"
-          href="https://tanstack.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn TanStack
-        </a>
-      </header>
-    </div>
+
+        <div className="mt-8 flex gap-4">
+          <Button size="lg">Create or edit</Button>
+          <Button size="lg">Join</Button>
+        </div>
+      </section>
+
+    </main>
   )
 }
