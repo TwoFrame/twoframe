@@ -2,7 +2,7 @@
   "projectName": "twoframe-client",
   "mode": "file-router",
   "typescript": true,
-  "tailwind": false,
+  "tailwind": true,
   "packageManager": "npm",
   "git": true,
   "install": true,
@@ -10,6 +10,7 @@
   "version": 1,
   "framework": "react-cra",
   "chosenAddOns": [
+    "shadcn",
     "start"
   ]
 }

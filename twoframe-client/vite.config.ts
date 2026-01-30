@@ -5,6 +5,8 @@ import viteReact from '@vitejs/plugin-react'
 import viteTsConfigPaths from 'vite-tsconfig-paths'
 import { fileURLToPath, URL } from 'url'
 
+import tailwindcss from '@tailwindcss/vite'
+
 const config = defineConfig({
   resolve: {
     alias: {
@@ -17,7 +19,7 @@ const config = defineConfig({
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],
     }),
-
+    tailwindcss(),
     tanstackStart(),
     viteReact(),
   ],
