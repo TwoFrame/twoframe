@@ -33,6 +33,8 @@ class CreateTournamentResponse(BaseModel):
     attendee_code: str
 
 
-class JoinTournamentPayload(BaseModel):
+class AttendeeJoinPayload(BaseModel):
     attendee_code: str
-    name: str
+
+class AdminJoinPayload(BaseModel):
+    admin_code: str
