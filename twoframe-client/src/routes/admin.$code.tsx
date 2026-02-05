@@ -1,25 +1,25 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 
-export const Route = createFileRoute('/admin/$code')({
+export const Route = createFileRoute("/admin/$code")({
   component: AdminPage,
-})
+});
 
 function AdminPage() {
-  const { code } = Route.useParams()
-  const [tournament, setTournament] = useState<any>(null)
+  const { code } = Route.useParams();
+  const [tournament, setTournament] = useState<any>(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/tournament/admin', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    fetch(`${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/admin`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ admin_code: code }),
     })
-      .then(res => res.json())
-      .then(setTournament)
-  }, [code])
+      .then((res) => res.json())
+      .then(setTournament);
+  }, [code]);
 
-  if (!tournament) return <div>Loading...</div>
+  if (!tournament) return <div>Loading...</div>;
 
   return (
     <div className="p-8">
@@ -35,5 +35,5 @@ function AdminPage() {
         <p className="text-xl">{tournament.admin_code}</p>
       </div>
     </div>
-  )
+  );
 }

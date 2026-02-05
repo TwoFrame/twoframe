@@ -8,80 +8,80 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as CreateRouteImport } from './routes/create'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AdminCodeRouteImport } from './routes/admin.$code'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as CreateRouteImport } from "./routes/create";
+import { Route as IndexRouteImport } from "./routes/index";
+import { Route as AdminCodeRouteImport } from "./routes/admin.$code";
 
 const CreateRoute = CreateRouteImport.update({
-  id: '/create',
-  path: '/create',
+  id: "/create",
+  path: "/create",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AdminCodeRoute = AdminCodeRouteImport.update({
-  id: '/admin/$code',
-  path: '/admin/$code',
+  id: "/admin/$code",
+  path: "/admin/$code",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/create': typeof CreateRoute
-  '/admin/$code': typeof AdminCodeRoute
+  "/": typeof IndexRoute;
+  "/create": typeof CreateRoute;
+  "/admin/$code": typeof AdminCodeRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/create': typeof CreateRoute
-  '/admin/$code': typeof AdminCodeRoute
+  "/": typeof IndexRoute;
+  "/create": typeof CreateRoute;
+  "/admin/$code": typeof AdminCodeRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/create': typeof CreateRoute
-  '/admin/$code': typeof AdminCodeRoute
+  __root__: typeof rootRouteImport;
+  "/": typeof IndexRoute;
+  "/create": typeof CreateRoute;
+  "/admin/$code": typeof AdminCodeRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/create' | '/admin/$code'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/create' | '/admin/$code'
-  id: '__root__' | '/' | '/create' | '/admin/$code'
-  fileRoutesById: FileRoutesById
+  fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths: "/" | "/create" | "/admin/$code";
+  fileRoutesByTo: FileRoutesByTo;
+  to: "/" | "/create" | "/admin/$code";
+  id: "__root__" | "/" | "/create" | "/admin/$code";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  CreateRoute: typeof CreateRoute
-  AdminCodeRoute: typeof AdminCodeRoute
+  IndexRoute: typeof IndexRoute;
+  CreateRoute: typeof CreateRoute;
+  AdminCodeRoute: typeof AdminCodeRoute;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/create': {
-      id: '/create'
-      path: '/create'
-      fullPath: '/create'
-      preLoaderRoute: typeof CreateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/$code': {
-      id: '/admin/$code'
-      path: '/admin/$code'
-      fullPath: '/admin/$code'
-      preLoaderRoute: typeof AdminCodeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+    "/create": {
+      id: "/create";
+      path: "/create";
+      fullPath: "/create";
+      preLoaderRoute: typeof CreateRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/admin/$code": {
+      id: "/admin/$code";
+      path: "/admin/$code";
+      fullPath: "/admin/$code";
+      preLoaderRoute: typeof AdminCodeRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
   }
 }
 
@@ -89,7 +89,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CreateRoute: CreateRoute,
   AdminCodeRoute: AdminCodeRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
