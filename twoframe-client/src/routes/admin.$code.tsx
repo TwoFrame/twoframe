@@ -25,13 +25,14 @@ function AdminPage() {
     <div className="p-8">
       <h1 className="text-3xl font-bold">{tournament.name}</h1>
       <p className="text-muted-foreground">{tournament.date}</p>
+      <p>State: {tournament.state}</p>
 
       <div className="mt-6 p-4 border rounded">
         <h2 className="font-semibold">Attendee Join Code</h2>
         <p className="text-xl">{tournament.attendee_code}</p>
       </div>
       <div className="mt-6 p-4 border rounded">
-        <h2 className="font-semibold">Admin Join Code</h2>
+        <h2 className="font-semibold">Admin Code</h2>
         <p className="text-xl">{tournament.admin_code}</p>
       </div>
     </div>

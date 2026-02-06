@@ -6,7 +6,7 @@ from botocore.exceptions import ClientError
 from src.models.tournament import (
     CreateTournamentPayload,
     CreateTournamentResponse,
-    AttendeeJoinPayload,
+    CreateAttendeePayload,
     AdminJoinPayload,
 )
 from src.dynamodb.client import dynamodb_client
@@ -24,6 +24,17 @@ app.add_middleware(
 @app.get("/")
 def health_check():
     return {"status": "ok"}
+
+@app.get("/tournament/{id}")
+def get_tournament(id: str):
+    tournament = dynamodb_client.get_tournament(id)
+    if not tournament:
+        raise HTTPException(status_code=404, detail="Tournament not found")
+    return {
+        "date": tournament["date"],
+        "tournament_id": tournament["tournament_id"],
+        "name": tournament["name"],
+    }
 
 @app.post("/tournament", response_model=CreateTournamentResponse)
 def create_tournament(payload: CreateTournamentPayload):
@@ -53,24 +64,27 @@ def join_as_admin(payload: AdminJoinPayload):
 
     return tournament
 
-@app.post("/tournament/join")
-def join_as_attendee(payload: AttendeeJoinPayload):
+@app.post("/attendee")
+def create_attendee(payload: CreateAttendeePayload):
     tournament = dynamodb_client.get_tournament_by_attendee_code(
         payload.attendee_code
     )
 
     if not tournament:
         raise HTTPException(status_code=404, detail="Invalid attendee code")
+    
+    if tournament["state"] != "open":
+        raise HTTPException(status_code=403, detail="Tournament not accepting new attendees")
 
     try:
-        attendee = dynamodb_client.add_attendee(
-            tournament_id=tournament["tournament_id"],
+        attendee = dynamodb_client.create_attendee(
             name=payload.name,
+            attendee_code=payload.attendee_code,
+            tournament_id=tournament["tournament_id"],
         )
     except ClientError:
         raise HTTPException(status_code=500, detail="Could not join tournament")
 
     return {
-        "tournament": tournament,
-        "attendee": attendee,
+        "attendee": attendee
     }

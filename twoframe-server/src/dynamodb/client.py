@@ -30,6 +30,7 @@ class DynamoDBClient:
             attendee_code="".join(
                 random.choices(string.ascii_uppercase + string.digits, k=8)
             ),
+            state="open"
         )
 
         self.tournament_table.put_item(
@@ -38,6 +39,12 @@ class DynamoDBClient:
         )
 
         return tournament
+
+    def get_tournament(self, tournament_id: str):
+        response = self.tournament_table.get_item(
+            Key={"tournament_id": tournament_id}
+        )
+        return response.get("Item", None)
 
     def get_tournament_by_admin_code(self, admin_code: str):
         response = self.tournament_table.scan(
@@ -58,7 +65,10 @@ class DynamoDBClient:
     # -------------------------
     # Attendee
     # -------------------------
-    def add_attendee(self, tournament_id: str, name: str) -> Attendee:
+    def create_attendee(self, name: str, attendee_code: str, tournament_id: str) -> Attendee:
+        #first has to check that code is valid
+        tournament = self.get_tournament_by_attendee_code(attendee_code)
+        
         attendee = Attendee(
             tournament_id=tournament_id,
             attendee_id=str(uuid4()),

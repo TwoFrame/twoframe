@@ -19,9 +19,11 @@ function LandingPage() {
 
         <div className="mt-8 flex gap-4">
           <Button size="lg" onClick={() => navigate({ to: "/create" })}>
-            Create or edit
+            Create
           </Button>
-          <Button size="lg">Join</Button>
+          <Button size="lg" onClick={() => navigate({ to: "/join" })}>
+            Join
+          </Button>
         </div>
       </section>
     </main>

@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Literal
 
 # -------------------------
 # Tables
@@ -10,6 +11,7 @@ class Tournament(BaseModel):
     date: str
     admin_code: str
     attendee_code: str
+    state: Literal['open', 'playing', 'finished']
 
 
 class Attendee(BaseModel):
@@ -33,7 +35,8 @@ class CreateTournamentResponse(BaseModel):
     attendee_code: str
 
 
-class AttendeeJoinPayload(BaseModel):
+class CreateAttendeePayload(BaseModel):
+    name: str
     attendee_code: str
 
 class AdminJoinPayload(BaseModel):

@@ -8,88 +8,130 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as CreateRouteImport } from "./routes/create";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as AdminCodeRouteImport } from "./routes/admin.$code";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as JoinRouteImport } from './routes/join'
+import { Route as CreateRouteImport } from './routes/create'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as TournamentIdRouteImport } from './routes/tournament.$id'
+import { Route as AdminCodeRouteImport } from './routes/admin.$code'
 
+const JoinRoute = JoinRouteImport.update({
+  id: '/join',
+  path: '/join',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CreateRoute = CreateRouteImport.update({
-  id: "/create",
-  path: "/create",
+  id: '/create',
+  path: '/create',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
+const TournamentIdRoute = TournamentIdRouteImport.update({
+  id: '/tournament/$id',
+  path: '/tournament/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminCodeRoute = AdminCodeRouteImport.update({
-  id: "/admin/$code",
-  path: "/admin/$code",
+  id: '/admin/$code',
+  path: '/admin/$code',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/create": typeof CreateRoute;
-  "/admin/$code": typeof AdminCodeRoute;
+  '/': typeof IndexRoute
+  '/create': typeof CreateRoute
+  '/join': typeof JoinRoute
+  '/admin/$code': typeof AdminCodeRoute
+  '/tournament/$id': typeof TournamentIdRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/create": typeof CreateRoute;
-  "/admin/$code": typeof AdminCodeRoute;
+  '/': typeof IndexRoute
+  '/create': typeof CreateRoute
+  '/join': typeof JoinRoute
+  '/admin/$code': typeof AdminCodeRoute
+  '/tournament/$id': typeof TournamentIdRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/create": typeof CreateRoute;
-  "/admin/$code": typeof AdminCodeRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/create': typeof CreateRoute
+  '/join': typeof JoinRoute
+  '/admin/$code': typeof AdminCodeRoute
+  '/tournament/$id': typeof TournamentIdRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/create" | "/admin/$code";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/create" | "/admin/$code";
-  id: "__root__" | "/" | "/create" | "/admin/$code";
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/create' | '/join' | '/admin/$code' | '/tournament/$id'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/create' | '/join' | '/admin/$code' | '/tournament/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/create'
+    | '/join'
+    | '/admin/$code'
+    | '/tournament/$id'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  CreateRoute: typeof CreateRoute;
-  AdminCodeRoute: typeof AdminCodeRoute;
+  IndexRoute: typeof IndexRoute
+  CreateRoute: typeof CreateRoute
+  JoinRoute: typeof JoinRoute
+  AdminCodeRoute: typeof AdminCodeRoute
+  TournamentIdRoute: typeof TournamentIdRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/create": {
-      id: "/create";
-      path: "/create";
-      fullPath: "/create";
-      preLoaderRoute: typeof CreateRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/admin/$code": {
-      id: "/admin/$code";
-      path: "/admin/$code";
-      fullPath: "/admin/$code";
-      preLoaderRoute: typeof AdminCodeRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+    '/join': {
+      id: '/join'
+      path: '/join'
+      fullPath: '/join'
+      preLoaderRoute: typeof JoinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create': {
+      id: '/create'
+      path: '/create'
+      fullPath: '/create'
+      preLoaderRoute: typeof CreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tournament/$id': {
+      id: '/tournament/$id'
+      path: '/tournament/$id'
+      fullPath: '/tournament/$id'
+      preLoaderRoute: typeof TournamentIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/$code': {
+      id: '/admin/$code'
+      path: '/admin/$code'
+      fullPath: '/admin/$code'
+      preLoaderRoute: typeof AdminCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CreateRoute: CreateRoute,
+  JoinRoute: JoinRoute,
   AdminCodeRoute: AdminCodeRoute,
-};
+  TournamentIdRoute: TournamentIdRoute,
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
