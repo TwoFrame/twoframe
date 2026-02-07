@@ -30,7 +30,7 @@ class DynamoDBClient:
             attendee_code="".join(
                 random.choices(string.ascii_uppercase + string.digits, k=8)
             ),
-            state="open"
+            state="accepting"
         )
 
         self.tournament_table.put_item(

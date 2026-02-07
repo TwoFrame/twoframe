@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import ChangeTournamentStateForm from "@/components/tournamentStateForm";
 import {useQuery} from "@tanstack/react-query";
-import Bracket from "@/components/bracket";
+import SkeletonBracket from "@/components/SkeletonBracket";
 
 export const Route = createFileRoute("/admin/$code")({
   component: AdminPage,
@@ -70,12 +69,12 @@ function AdminPage() {
               </li>
             ))}
           </ul>
+          <div className="mt-6 p-4 border rounded">
+            <h2 className="text-2xl font-bold">Bracket</h2>
+          </div>
+          <SkeletonBracket numAttendees={attendees.data.attendees.length} />
         </>
       )}
-      <div className="mt-6 p-4 border rounded">
-        <h2 className="text-2xl font-bold">Bracket</h2>
-      </div>
-      <Bracket />
     </div>
   );
 }

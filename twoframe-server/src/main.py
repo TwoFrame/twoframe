@@ -72,7 +72,7 @@ def create_attendee(payload: CreateAttendeePayload):
     if not tournament:
         raise HTTPException(status_code=404, detail="Invalid attendee code")
     
-    if tournament["state"] != "open":
+    if tournament["state"] != "accepting":
         raise HTTPException(status_code=403, detail="Tournament not accepting new attendees")
 
     try:
