@@ -11,7 +11,7 @@ class Tournament(BaseModel):
     date: str
     admin_code: str
     attendee_code: str
-    state: Literal['open', 'playing', 'finished']
+    state: Literal["open", "playing", "finished"]
 
 
 class Attendee(BaseModel):

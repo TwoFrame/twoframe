@@ -36,6 +36,17 @@ def get_tournament(id: str):
         "name": tournament["name"],
     }
 
+@app.get("/tournament/admin/{code}")
+def get_tournament_by_admin_code(code: str):
+    tournament = dynamodb_client.get_tournament_by_admin_code(
+        code
+    )
+
+    if not tournament:
+        raise HTTPException(status_code=404, detail="Invalid admin code")
+
+    return tournament
+
 @app.post("/tournament", response_model=CreateTournamentResponse)
 def create_tournament(payload: CreateTournamentPayload):
     try:
@@ -51,18 +62,6 @@ def create_tournament(payload: CreateTournamentPayload):
         admin_code=tournament.admin_code,
         attendee_code=tournament.attendee_code,
     )
-
-
-@app.post("/tournament/admin")
-def join_as_admin(payload: AdminJoinPayload):
-    tournament = dynamodb_client.get_tournament_by_admin_code(
-        payload.admin_code
-    )
-
-    if not tournament:
-        raise HTTPException(status_code=404, detail="Invalid admin code")
-
-    return tournament
 
 @app.post("/attendee")
 def create_attendee(payload: CreateAttendeePayload):
@@ -87,4 +86,18 @@ def create_attendee(payload: CreateAttendeePayload):
 
     return {
         "attendee": attendee
+    }
+
+@app.get("/tournament/{id}/attendees")
+def get_attendees(id: str):
+    attendees = dynamodb_client.get_attendees(id)
+    return {
+        "attendees": attendees
+    }
+
+@app.post("/tournament/{id}/state")
+def update_tournament_state(id: str, state: str):
+
+    return {
+        "tournament": tournament
     }

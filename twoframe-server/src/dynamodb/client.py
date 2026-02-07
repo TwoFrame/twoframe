@@ -62,6 +62,13 @@ class DynamoDBClient:
         items = response.get("Items", [])
         return items[0] if items else None
 
+    def update_tournament_state(self, tournament_id: str, new_state: str):
+        self.tournament_table.update_item(
+            Key={"tournament_id": tournament_id},
+            UpdateExpression="SET state = :state",
+            ExpressionAttributeValues={ ":state": state },
+        )
+
     # -------------------------
     # Attendee
     # -------------------------
@@ -81,6 +88,13 @@ class DynamoDBClient:
         )
 
         return attendee
+    
+    def get_attendees(self, tournament_id:str):
+        response = self.attendee_table.scan(
+            FilterExpression="tournament_id = :id",
+            ExpressionAttributeValues={ ":id": tournament_id },
+        )
+        return response.get("Items", [])
 
 
 # singleton
