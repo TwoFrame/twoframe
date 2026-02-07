@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import ChangeTournamentStateForm from "@/components/tournamentStateForm";
 import {useQuery} from "@tanstack/react-query";
-import SkeletonBracket from "@/components/SkeletonBracket";
+import Bracket from "@/components/TournamentBracket";
+import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/admin/$code")({
   component: AdminPage,
@@ -29,6 +30,7 @@ function AdminPage() {
       const response = await fetch(`${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/${tournamentId}/attendees`, {
       method: "GET"})
       const data = await response.json();
+      console.log(data);
       return data;
     },
     enabled: !!(tournamentId)
@@ -48,8 +50,11 @@ function AdminPage() {
     <div className="p-8">
       <h1 className="text-3xl font-bold">{tournament.data.name}</h1>
       <p className="text-muted-foreground">{tournament.data.date}</p>
-      <p>Tournament Status: {tournament.data.state}</p>
-      <ChangeTournamentStateForm />
+      <div className="flex items-center gap-2">
+        <p>Status:</p>
+        <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300" variant={tournament.data.state == "open" ? "default" : "secondary"}>{tournament.data.state}</Badge>
+      </div>
+      <ChangeTournamentStateForm id={tournament.data.tournament_id} code={tournament.data.admin_code} currentState={tournament.data.state} />
 
       <div className="mt-6 p-4 border rounded">
         <h2 className="font-semibold">Attendee Join Code</h2>
@@ -69,10 +74,9 @@ function AdminPage() {
               </li>
             ))}
           </ul>
-          <div className="mt-6 p-4 border rounded">
-            <h2 className="text-2xl font-bold">Bracket</h2>
-          </div>
-          <SkeletonBracket numAttendees={attendees.data.attendees.length} />
+          {(tournament.data.state == "playing" || tournament.data.state == "completed") &&
+          <Bracket numAttendees={attendees.data.attendees.length} />
+          }
         </>
       )}
     </div>

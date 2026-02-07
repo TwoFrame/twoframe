@@ -1,10 +1,11 @@
 import uuid
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from botocore.exceptions import ClientError
 
 from src.models.tournament import (
     CreateTournamentPayload,
+    UpdateTournamentStatePayload,
     CreateTournamentResponse,
     CreateAttendeePayload,
     AdminJoinPayload,
@@ -72,7 +73,7 @@ def create_attendee(payload: CreateAttendeePayload):
     if not tournament:
         raise HTTPException(status_code=404, detail="Invalid attendee code")
     
-    if tournament["state"] != "accepting":
+    if tournament["state"] != "open":
         raise HTTPException(status_code=403, detail="Tournament not accepting new attendees")
 
     try:
@@ -95,9 +96,24 @@ def get_attendees(id: str):
         "attendees": attendees
     }
 
-@app.post("/tournament/{id}/state")
-def update_tournament_state(id: str, state: str):
+@app.put("/tournament/{id}/state")
+def update_tournament_state(payload: UpdateTournamentStatePayload):
+    #make sure tournament exists
+    tournament = dynamodb_client.get_tournament(payload.tournament_id)
+    if not tournament:
+        raise HTTPException(status_code=404, detail="Tournament not found")
+    
+    #make sure the state transition is valid
+    if payload.state == "playing" and tournament["state"] != "open":
+        raise HTTPException(status_code=403, detail="Tournament cannot be transitioned to playing. Current state: " + tournament["state"])
+    if payload.state == "completed" and tournament["state"] != "playing":
+        raise HTTPException(status_code=403, detail="Tournament cannot be transitioned to completed. Current state: " + tournament["state"])
+    
+    tournament = dynamodb_client.update_tournament_state(
+        tournament_id=payload.tournament_id,
+        new_state=payload.state,
+    )
 
     return {
-        "tournament": tournament
+        "message": "Tournament state updated"
     }

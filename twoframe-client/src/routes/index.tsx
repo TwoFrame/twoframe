@@ -15,7 +15,7 @@ function LandingPage() {
           TwoFrame
         </h1>
 
-        <p className="mt-4 max-w-xl text-muted-foreground">Tournament</p>
+        <p className="mt-4 max-w-xl text-muted-foreground">Simple tournament management</p>
 
         <div className="mt-8 flex gap-4">
           <Button size="lg" onClick={() => navigate({ to: "/create" })}>

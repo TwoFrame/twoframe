@@ -11,7 +11,7 @@ class Tournament(BaseModel):
     date: str
     admin_code: str
     attendee_code: str
-    state: Literal["accepting", "playing", "finished"]
+    state: Literal["open", "playing", "completed"]
 
 
 class Attendee(BaseModel):
@@ -33,6 +33,10 @@ class CreateTournamentResponse(BaseModel):
     tournament_id: str
     admin_code: str
     attendee_code: str
+
+class UpdateTournamentStatePayload(BaseModel):
+    tournament_id: str
+    state: Literal["playing", "completed"]
 
 
 class CreateAttendeePayload(BaseModel):

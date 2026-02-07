@@ -121,7 +121,7 @@ const generateSkeletonBracketNodesAndEdges = (attendees: number) => {
 
 
 }
-export default function SkeletonBracket({numAttendees}: {numAttendees: number}) {
+export default function Bracket({numAttendees}: {numAttendees: number}) {
   const nodesAndEdges = useMemo(() => {
     let result = generateSkeletonBracketNodesAndEdges(numAttendees)
     
@@ -129,10 +129,16 @@ export default function SkeletonBracket({numAttendees}: {numAttendees: number}) 
   }, []);
   return (
     <div className="h-[500px] w-full border">
-      <ReactFlow nodes={nodesAndEdges.nodes as any} edges={nodesAndEdges.edges as any} nodeTypes={{
-  bracketNode: BracketNode,
-  roundLabelNode: RoundLabelNode,
-}} maxZoom={4} minZoom={0.1}>
+      <ReactFlow 
+      nodes={nodesAndEdges.nodes as any} 
+      edges={nodesAndEdges.edges as any} 
+      nodeTypes={{
+        bracketNode: BracketNode,
+        roundLabelNode: RoundLabelNode,
+      }} 
+      maxZoom={4} 
+      minZoom={0.1}
+      fitView>
         <Background bgColor="var(--secondary-foreground)" />
         <Controls />
       </ReactFlow>

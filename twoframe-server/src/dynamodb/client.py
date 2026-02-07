@@ -30,7 +30,7 @@ class DynamoDBClient:
             attendee_code="".join(
                 random.choices(string.ascii_uppercase + string.digits, k=8)
             ),
-            state="accepting"
+            state="open"
         )
 
         self.tournament_table.put_item(
@@ -63,11 +63,27 @@ class DynamoDBClient:
         return items[0] if items else None
 
     def update_tournament_state(self, tournament_id: str, new_state: str):
-        self.tournament_table.update_item(
-            Key={"tournament_id": tournament_id},
-            UpdateExpression="SET state = :state",
-            ExpressionAttributeValues={ ":state": state },
-        )
+        if new_state == "playing":
+            # When starting tournament, initialize bracket field
+            self.tournament_table.update_item(
+                Key={"tournament_id": tournament_id},
+                UpdateExpression="SET #state = :state, bracket = :bracket", 
+                ExpressionAttributeNames={"#state": "state"},
+                ExpressionAttributeValues={
+                    ":state": new_state,
+                    ":bracket": ""
+                },
+            )
+        else:
+            # For other state transitions (e.g., completed), only update state
+            self.tournament_table.update_item(
+                Key={"tournament_id": tournament_id},
+                UpdateExpression="SET #state = :state",
+                ExpressionAttributeNames={"#state": "state"},
+                ExpressionAttributeValues={
+                    ":state": new_state
+                },
+            )
 
     # -------------------------
     # Attendee
