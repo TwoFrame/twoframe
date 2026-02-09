@@ -30,14 +30,15 @@ export default function MatchNode({
       tournament_id: string;
     }[];
     state: "playing" | "completed";
+    readOnly?: boolean;
   };
 }) {
   const [open, setOpen] = useState(false);
-  const isCompleted = data.state === "completed";
+  const isReadOnly = data.readOnly || data.state === "completed";
 
   const matchNodeContent = (
     <div
-      className={`relative bg-secondary grid grid-cols-[85fr_15fr] grid-rows-2 ${!isCompleted ? "hover:cursor-pointer hover:bg-secondary/80" : ""}`}
+      className={`relative bg-secondary grid grid-cols-[85fr_15fr] grid-rows-2 ${!isReadOnly ? "hover:cursor-pointer hover:bg-secondary/80" : ""}`}
       style={{
         width: `${NODE_WIDTH}px`,
         height: `${NODE_HEIGHT}px`,
@@ -76,7 +77,7 @@ export default function MatchNode({
   return (
     <>
       <Handle type="target" position={Position.Left} />
-      {isCompleted ? (
+      {isReadOnly ? (
         matchNodeContent
       ) : (
         <Dialog open={open} onOpenChange={setOpen}>

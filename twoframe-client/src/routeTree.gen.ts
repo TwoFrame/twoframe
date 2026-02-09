@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as CreateRouteImport } from './routes/create'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TournamentIdRouteImport } from './routes/tournament.$id'
 import { Route as AdminCodeRouteImport } from './routes/admin.$code'
 
 const JoinRoute = JoinRouteImport.update({
@@ -29,6 +30,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TournamentIdRoute = TournamentIdRouteImport.update({
+  id: '/tournament/$id',
+  path: '/tournament/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminCodeRoute = AdminCodeRouteImport.update({
   id: '/admin/$code',
   path: '/admin/$code',
@@ -40,12 +46,14 @@ export interface FileRoutesByFullPath {
   '/create': typeof CreateRoute
   '/join': typeof JoinRoute
   '/admin/$code': typeof AdminCodeRoute
+  '/tournament/$id': typeof TournamentIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/create': typeof CreateRoute
   '/join': typeof JoinRoute
   '/admin/$code': typeof AdminCodeRoute
+  '/tournament/$id': typeof TournamentIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,20 @@ export interface FileRoutesById {
   '/create': typeof CreateRoute
   '/join': typeof JoinRoute
   '/admin/$code': typeof AdminCodeRoute
+  '/tournament/$id': typeof TournamentIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/create' | '/join' | '/admin/$code'
+  fullPaths: '/' | '/create' | '/join' | '/admin/$code' | '/tournament/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/create' | '/join' | '/admin/$code'
-  id: '__root__' | '/' | '/create' | '/join' | '/admin/$code'
+  to: '/' | '/create' | '/join' | '/admin/$code' | '/tournament/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/create'
+    | '/join'
+    | '/admin/$code'
+    | '/tournament/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +82,7 @@ export interface RootRouteChildren {
   CreateRoute: typeof CreateRoute
   JoinRoute: typeof JoinRoute
   AdminCodeRoute: typeof AdminCodeRoute
+  TournamentIdRoute: typeof TournamentIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -92,6 +108,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tournament/$id': {
+      id: '/tournament/$id'
+      path: '/tournament/$id'
+      fullPath: '/tournament/$id'
+      preLoaderRoute: typeof TournamentIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/$code': {
       id: '/admin/$code'
       path: '/admin/$code'
@@ -107,6 +130,7 @@ const rootRouteChildren: RootRouteChildren = {
   CreateRoute: CreateRoute,
   JoinRoute: JoinRoute,
   AdminCodeRoute: AdminCodeRoute,
+  TournamentIdRoute: TournamentIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
