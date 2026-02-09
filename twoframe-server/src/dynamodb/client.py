@@ -2,9 +2,12 @@ import boto3
 import random
 import string
 from uuid import uuid4
+from typing import Optional
+import json
 
 from src.config import settings
 from src.models.tournament import Tournament, Attendee
+from src.utils.bracket import generate_bracket
 
 class DynamoDBClient:
     def __init__(self):
@@ -30,6 +33,7 @@ class DynamoDBClient:
             attendee_code="".join(
                 random.choices(string.ascii_uppercase + string.digits, k=8)
             ),
+            state="open"
         )
 
         self.tournament_table.put_item(
@@ -38,6 +42,12 @@ class DynamoDBClient:
         )
 
         return tournament
+
+    def get_tournament(self, tournament_id: str):
+        response = self.tournament_table.get_item(
+            Key={"tournament_id": tournament_id}
+        )
+        return response.get("Item", None)
 
     def get_tournament_by_admin_code(self, admin_code: str):
         response = self.tournament_table.scan(
@@ -55,10 +65,45 @@ class DynamoDBClient:
         items = response.get("Items", [])
         return items[0] if items else None
 
+    def update_tournament_state(self, tournament_id: str, new_state: str, num_attendees: Optional[int] = None):
+        if new_state == "playing":
+            #need to generate bracket first
+            nodes, edges = generate_bracket(num_attendees)
+
+            serialized_bracket = {
+                "nodes": nodes,
+                "edges": edges,
+            }
+            
+            
+            # When starting tournament, initialize bracket field
+            self.tournament_table.update_item(
+                Key={"tournament_id": tournament_id},
+                UpdateExpression="SET #state = :state, bracket = :bracket", 
+                ExpressionAttributeNames={"#state": "state"},
+                ExpressionAttributeValues={
+                    ":state": new_state,
+                    ":bracket": json.dumps(serialized_bracket)
+                },
+            )
+        else:
+            # For other state transitions (e.g., completed), only update state
+            self.tournament_table.update_item(
+                Key={"tournament_id": tournament_id},
+                UpdateExpression="SET #state = :state",
+                ExpressionAttributeNames={"#state": "state"},
+                ExpressionAttributeValues={
+                    ":state": new_state
+                },
+            )
+
     # -------------------------
     # Attendee
     # -------------------------
-    def add_attendee(self, tournament_id: str, name: str) -> Attendee:
+    def create_attendee(self, name: str, attendee_code: str, tournament_id: str) -> Attendee:
+        #first has to check that code is valid
+        tournament = self.get_tournament_by_attendee_code(attendee_code)
+        
         attendee = Attendee(
             tournament_id=tournament_id,
             attendee_id=str(uuid4()),
@@ -71,7 +116,22 @@ class DynamoDBClient:
         )
 
         return attendee
-
-
+    
+    def get_attendees(self, tournament_id:str):
+        response = self.attendee_table.scan(
+            FilterExpression="tournament_id = :id",
+            ExpressionAttributeValues={ ":id": tournament_id },
+        )
+        return response.get("Items", [])
+    
+    def update_bracket(self, tournament_id: str, bracket: str):
+        self.tournament_table.update_item(
+            Key={"tournament_id": tournament_id},
+            UpdateExpression="SET bracket = :bracket",
+            ExpressionAttributeValues={
+                ":bracket": bracket
+            },
+        )
+        
 # singleton
 dynamodb_client = DynamoDBClient()

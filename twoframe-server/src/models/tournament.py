@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Literal
 
 # -------------------------
 # Tables
@@ -10,6 +11,7 @@ class Tournament(BaseModel):
     date: str
     admin_code: str
     attendee_code: str
+    state: Literal["open", "playing", "completed"]
 
 
 class Attendee(BaseModel):
@@ -32,9 +34,19 @@ class CreateTournamentResponse(BaseModel):
     admin_code: str
     attendee_code: str
 
+class UpdateTournamentStatePayload(BaseModel):
+    tournament_id: str
+    state: Literal["playing", "completed"]
 
-class AttendeeJoinPayload(BaseModel):
+
+class CreateAttendeePayload(BaseModel):
+    name: str
     attendee_code: str
 
-class AdminJoinPayload(BaseModel):
+class UpdateMatchPayload(BaseModel):
     admin_code: str
+    player1: str | None
+    player2: str | None
+    score1: int 
+    score2: int
+    winner: Literal[1, 2] | None
