@@ -2,9 +2,12 @@ import boto3
 import random
 import string
 from uuid import uuid4
+from typing import Optional
+import json
 
 from src.config import settings
 from src.models.tournament import Tournament, Attendee
+from src.utils.bracket import generate_bracket
 
 class DynamoDBClient:
     def __init__(self):
@@ -62,8 +65,17 @@ class DynamoDBClient:
         items = response.get("Items", [])
         return items[0] if items else None
 
-    def update_tournament_state(self, tournament_id: str, new_state: str):
+    def update_tournament_state(self, tournament_id: str, new_state: str, num_attendees: Optional[int] = None):
         if new_state == "playing":
+            #need to generate bracket first
+            nodes, edges = generate_bracket(num_attendees)
+
+            serialized_bracket = {
+                "nodes": nodes,
+                "edges": edges,
+            }
+            
+            
             # When starting tournament, initialize bracket field
             self.tournament_table.update_item(
                 Key={"tournament_id": tournament_id},
@@ -71,7 +83,7 @@ class DynamoDBClient:
                 ExpressionAttributeNames={"#state": "state"},
                 ExpressionAttributeValues={
                     ":state": new_state,
-                    ":bracket": ""
+                    ":bracket": json.dumps(serialized_bracket)
                 },
             )
         else:
@@ -111,7 +123,15 @@ class DynamoDBClient:
             ExpressionAttributeValues={ ":id": tournament_id },
         )
         return response.get("Items", [])
-
-
+    
+    def update_bracket(self, tournament_id: str, bracket: str):
+        self.tournament_table.update_item(
+            Key={"tournament_id": tournament_id},
+            UpdateExpression="SET bracket = :bracket",
+            ExpressionAttributeValues={
+                ":bracket": bracket
+            },
+        )
+        
 # singleton
 dynamodb_client = DynamoDBClient()

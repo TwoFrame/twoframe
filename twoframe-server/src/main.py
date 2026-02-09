@@ -1,4 +1,5 @@
-import uuid
+# import uuid
+import json
 from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from botocore.exceptions import ClientError
@@ -7,8 +8,8 @@ from src.models.tournament import (
     CreateTournamentPayload,
     UpdateTournamentStatePayload,
     CreateTournamentResponse,
+    UpdateMatchPayload,
     CreateAttendeePayload,
-    AdminJoinPayload,
 )
 from src.dynamodb.client import dynamodb_client
 
@@ -109,11 +110,55 @@ def update_tournament_state(payload: UpdateTournamentStatePayload):
     if payload.state == "completed" and tournament["state"] != "playing":
         raise HTTPException(status_code=403, detail="Tournament cannot be transitioned to completed. Current state: " + tournament["state"])
     
-    tournament = dynamodb_client.update_tournament_state(
-        tournament_id=payload.tournament_id,
-        new_state=payload.state,
-    )
+    if payload.state == "playing":
+        attendees = dynamodb_client.get_attendees(payload.tournament_id)
+        tournament = dynamodb_client.update_tournament_state(
+            tournament_id=payload.tournament_id,
+            new_state=payload.state,
+            num_attendees=len(attendees)
+        )
+    else:
+        tournament = dynamodb_client.update_tournament_state(
+            tournament_id=payload.tournament_id,
+            new_state=payload.state,
+        )
 
     return {
         "message": "Tournament state updated"
     }
+
+@app.put("/tournament/{tournament_id}/match/{match_id}")
+def update_tournament_match(tournament_id: str, match_id: str, payload: UpdateMatchPayload):
+    #make sure the tournament exists and admin code is valid
+    tournament = dynamodb_client.get_tournament(tournament_id)
+    if not tournament:
+        raise HTTPException(status_code=404, detail="Tournament not found")
+    #make sure tournament is in "playing" state or edits are not allowed
+    if tournament["state"] != "playing":
+        raise HTTPException(status_code=403, detail="Edits to tournament matches are only allowed when tournament is in 'playing' state")
+    #make sure admin code matches
+    if tournament["admin_code"] != payload.admin_code:
+        raise HTTPException(status_code=403, detail="Invalid admin code")
+
+    # make sure the match exists by extracting serialized bracket and finding match by id
+    bracket = json.loads(tournament["bracket"])
+    found = False
+    for node in bracket["nodes"]:
+        # match found, update it
+        if node["id"] == match_id:
+            found = True
+            node["data"]["player1"] = payload.player1
+            node["data"]["player2"] = payload.player2
+            node["data"]["score1"] = payload.score1
+            node["data"]["score2"] = payload.score2
+            node["data"]["winner"] = payload.winner
+            dynamodb_client.update_bracket(tournament_id, json.dumps(bracket))
+            return {
+                "message": "Match updated"
+            }
+            
+    if not found:
+        raise HTTPException(status_code=404, detail="Match not found")
+    
+
+    
