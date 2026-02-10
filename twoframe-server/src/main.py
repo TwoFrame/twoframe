@@ -32,18 +32,14 @@ def get_tournament(id: str):
     tournament = dynamodb_client.get_tournament(id)
     if not tournament:
         raise HTTPException(status_code=404, detail="Tournament not found")
-    return {
-        "date": tournament["date"],
-        "tournament_id": tournament["tournament_id"],
-        "name": tournament["name"],
-    }
+    
+    # Remove sensitive information before returning
+    response = {k: v for k, v in tournament.items() if k not in ["admin_code", "attendee_code"]}
+    return response 
 
 @app.get("/tournament/admin/{code}")
 def get_tournament_by_admin_code(code: str):
-    tournament = dynamodb_client.get_tournament_by_admin_code(
-        code
-    )
-
+    tournament = dynamodb_client.get_tournament_by_admin_code(code)
     if not tournament:
         raise HTTPException(status_code=404, detail="Invalid admin code")
 

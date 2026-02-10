@@ -6,6 +6,7 @@ import RoundLabelNode from "./RoundLabelNode";
 export default function Bracket({
   tournament,
   attendees,
+  readOnly = false,
 }: {
   tournament: any;
   attendees: {
@@ -13,6 +14,7 @@ export default function Bracket({
     attendee_id: string;
     name: string;
   }[];
+  readOnly?: boolean;
 }) {
   const parsedBracket = JSON.parse(tournament.data.bracket);
   const finalNodes = [];
@@ -24,6 +26,7 @@ export default function Bracket({
         ...parsedBracket.nodes[i].data,
         attendees,
         state: tournament.data.state,
+        readOnly,
       },
     });
   }
