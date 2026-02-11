@@ -1,3 +1,13 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { JoinTournamentForm } from "@/components/join/addAttendeeForm"; 
 import { createFileRoute } from "@tanstack/react-router";
 import ChangeTournamentStateForm from "@/components/TournamentStateUpdate";
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +22,7 @@ export const Route = createFileRoute("/admin/$code")({
 
 
 function AdminPage() {
+  const [open, setOpen] = useState(false);
   const { code } = Route.useParams();
   
 
@@ -72,6 +83,27 @@ function AdminPage() {
         code={tournament.data.admin_code}
         currentState={tournament.data.state}
       />
+
+      <div className="mt-4">
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button>Add Attendee</Button>
+          </DialogTrigger>
+
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add Attendee</DialogTitle>
+            </DialogHeader>
+
+            <JoinTournamentForm
+              onSuccess={() => {
+                setOpen(false);
+                attendeesQuery.refetch();
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+      </div>
 
       <div className="mt-6 p-4 border rounded">
         <h2 className="font-semibold">Attendee Join Code</h2>
