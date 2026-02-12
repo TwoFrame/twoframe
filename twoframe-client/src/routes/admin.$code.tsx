@@ -10,9 +10,10 @@ import {
 import { JoinTournamentForm } from "@/components/join/addAttendeeForm"; 
 import { createFileRoute } from "@tanstack/react-router";
 import ChangeTournamentStateForm from "@/components/TournamentStateUpdate";
-import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import Bracket from "@/components/bracket/Bracket";
+import { useTournament } from "@/hooks/admin/useGetTournament";
+import { useAttendees } from "@/hooks/admin/useGetAttendees";
 
 
 //TODO: USE CONTEXT INSTEAD OF PASSING A BUNCH OF TOUNRAMENT DATA TO ALL THE REACT FLOW NODES
@@ -26,37 +27,11 @@ function AdminPage() {
   const { code } = Route.useParams();
   
 
-  const tournament = useQuery({
-    queryKey: ["tournament", code],
-    queryFn: async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/admin/${code}`,
-        {
-          method: "GET",
-        },
-      );
-      return await response.json();
-    },
-  });
+  const tournament = useTournament(code);
 
   const tournamentId = tournament?.data?.tournament_id;
 
-  //this query is dependent on the first query which grabs the tournament
-  //once the tournament is succesfully grabbed, we can perform a fetch of the attendees
-  const attendeesQuery = useQuery({
-    queryKey: ["attendees", code],
-    queryFn: async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/${tournamentId}/attendees`,
-        {
-          method: "GET",
-        },
-      );
-      const data = await response.json();
-      return data;
-    },
-    enabled: !!tournamentId,
-  });
+  const attendeesQuery = useAttendees(code, tournamentId);
 
   if (tournament.isError) {
     return <div>Something went wrong.</div>;

@@ -1,4 +1,4 @@
-import { useAddAttendee } from "@/hooks/useAddAttendee";
+import { useAddAttendee } from "@/hooks/join/useAddAttendee";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useForm} from "@tanstack/react-form";
