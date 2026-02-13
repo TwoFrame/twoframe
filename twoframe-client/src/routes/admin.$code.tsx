@@ -9,11 +9,10 @@ import {
 } from "@/components/ui/dialog";
 import { JoinTournamentForm } from "@/components/join/addAttendeeForm"; 
 import { createFileRoute } from "@tanstack/react-router";
-import ChangeTournamentStateForm from "@/components/TournamentStateUpdate";
-import { Badge } from "@/components/ui/badge";
 import Bracket from "@/components/bracket/Bracket";
 import { useTournament } from "@/hooks/admin/useGetTournament";
 import { useAttendees } from "@/hooks/admin/useGetAttendees";
+import { TournamentHeader } from "@/components/admin/TournamentHeader";
 
 
 //TODO: USE CONTEXT INSTEAD OF PASSING A BUNCH OF TOUNRAMENT DATA TO ALL THE REACT FLOW NODES
@@ -42,22 +41,7 @@ function AdminPage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-3xl font-bold">{tournament.data.name}</h1>
-      <p className="text-muted-foreground">{tournament.data.date}</p>
-      <div className="flex items-center gap-2">
-        <p>Status:</p>
-        <Badge
-          className="bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
-          variant={tournament.data.state == "open" ? "default" : "secondary"}
-        >
-          {tournament.data.state}
-        </Badge>
-      </div>
-      <ChangeTournamentStateForm
-        id={tournament.data.tournament_id}
-        code={tournament.data.admin_code}
-        currentState={tournament.data.state}
-      />
+      <TournamentHeader tournament={tournament.data} />
 
       <div className="mt-4">
         <Dialog open={open} onOpenChange={setOpen}>
