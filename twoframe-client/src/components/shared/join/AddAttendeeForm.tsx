@@ -1,14 +1,14 @@
-import { useAddAttendee } from "@/hooks/join/useAddAttendee";
+import { useAddAttendee } from "@/components/shared/join/useAddAttendee";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useForm} from "@tanstack/react-form";
-import { formOpts } from "./attendeeForm";
+import { formOpts } from "./attendeeForm.schema.";
 
 interface Props {
     onSuccess?: () => void;
 }
 
-export function JoinTournamentForm( { onSuccess }: Props) {
+export function AddAttendeeForm( { onSuccess }: Props) {
   const mutation = useAddAttendee();
   const form = useForm({
     ...formOpts,

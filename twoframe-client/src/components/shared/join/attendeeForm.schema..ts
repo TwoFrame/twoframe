@@ -6,7 +6,7 @@ export interface JoinFormEntry {
   name: string;
 }
 
-export const joinFormSchema = z.object({
+export const attendeeFormSchema = z.object({
   name: z
     .string()
     .min(1, "Enter your name")
@@ -20,8 +20,8 @@ export const formOpts = formOptions({
     attendee_code: "",
   },
   validators: {
-    onMount: joinFormSchema,
+    onMount: attendeeFormSchema,
     // onBlur: joinFormSchema,
-    onChange: joinFormSchema,
+    onChange: attendeeFormSchema,
   },
 });

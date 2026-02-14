@@ -6,9 +6,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "./ui/button";
+import { Button } from "../../../components/ui/button";
 import { useMutation } from "@tanstack/react-query";
-import { Spinner } from "./ui/spinner";
+import { Spinner } from "../../../components/ui/spinner";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 

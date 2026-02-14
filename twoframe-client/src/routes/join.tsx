@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
-import { JoinTournamentForm } from "@/components/join/addAttendeeForm"; 
+import { AddAttendeeForm } from "@/components/shared/join/AddAttendeeForm";
 import {
   Card,
   CardHeader,
@@ -25,7 +25,7 @@ function JoinTournamentPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          < JoinTournamentForm />
+          < AddAttendeeForm />
         </CardContent>
       </Card>
     </div>

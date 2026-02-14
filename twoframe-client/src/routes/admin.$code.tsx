@@ -7,12 +7,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { JoinTournamentForm } from "@/components/join/addAttendeeForm"; 
+import { AddAttendeeForm } from "@/components/shared/join/AddAttendeeForm"; 
 import { createFileRoute } from "@tanstack/react-router";
-import Bracket from "@/components/bracket/Bracket";
-import { useTournament } from "@/hooks/admin/useGetTournament";
-import { useAttendees } from "@/hooks/admin/useGetAttendees";
-import { TournamentHeader } from "@/components/admin/TournamentHeader";
+import Bracket from "@/features/bracket/components/Bracket";
+import { useGetTournament } from "@/features/admin/hooks/useGetTournament";
+import { useGetAttendees } from "@/features/admin/hooks/useGetAttendees";
+import { TournamentHeader } from "@/features/admin/components/TournamentHeader";
 
 
 //TODO: USE CONTEXT INSTEAD OF PASSING A BUNCH OF TOUNRAMENT DATA TO ALL THE REACT FLOW NODES
@@ -26,11 +26,11 @@ function AdminPage() {
   const { code } = Route.useParams();
   
 
-  const tournament = useTournament(code);
+  const tournament = useGetTournament(code);
 
   const tournamentId = tournament?.data?.tournament_id;
 
-  const attendeesQuery = useAttendees(code, tournamentId);
+  const attendeesQuery = useGetAttendees(code, tournamentId);
 
   if (tournament.isError) {
     return <div>Something went wrong.</div>;
@@ -54,7 +54,7 @@ function AdminPage() {
               <DialogTitle>Add Attendee</DialogTitle>
             </DialogHeader>
 
-            <JoinTournamentForm
+            <AddAttendeeForm
               onSuccess={() => {
                 setOpen(false);
                 attendeesQuery.refetch();

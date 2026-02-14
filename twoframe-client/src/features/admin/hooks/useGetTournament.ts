@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-export function useTournament(code: string) {
+export function useGetTournament(code: string) {
   return useQuery({
     queryKey: ["tournament", code],
     queryFn: async () => {

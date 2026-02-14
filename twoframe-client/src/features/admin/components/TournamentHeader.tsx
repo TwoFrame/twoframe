@@ -1,4 +1,4 @@
-import ChangeTournamentStateForm from "@/components/TournamentStateUpdate";
+import ChangeTournamentStateForm from "@/features/admin/components/TournamentStateUpdate";
 import { Badge } from "@/components/ui/badge";
 
 type Tournament = {
