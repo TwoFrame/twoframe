@@ -1,11 +1,6 @@
 import { z } from "zod";
 import { formOptions} from "@tanstack/react-form";
 
-export interface JoinFormEntry {
-  attendee_code: string;
-  name: string;
-}
-
 export const attendeeFormSchema = z.object({
   name: z
     .string()

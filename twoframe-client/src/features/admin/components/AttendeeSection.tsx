@@ -12,7 +12,7 @@ type Props = {
 };
 
 
-export function AttendeeSection({ attendees, tournament}: Props){
+export function TournamentSection({ attendees, tournament}: Props){
     return (
         <>
           <h2 className="text-2xl font-bold">

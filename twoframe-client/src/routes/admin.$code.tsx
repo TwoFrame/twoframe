@@ -1,7 +1,7 @@
 import { AddAttendeeDialog } from "@/features/admin/components/AddAttendeeDialog";
 import { TournamentCodes } from "@/features/admin/components/TournamentCodes";
 import { createFileRoute } from "@tanstack/react-router";
-import { AttendeeSection } from "@/features/admin/components/AttendeeSection";
+import { TournamentSection } from "@/features/admin/components/AttendeeSection";
 import { useGetTournament } from "@/features/admin/hooks/useGetTournament";
 import { useGetAttendees } from "@/features/admin/hooks/useGetAttendees";
 import { TournamentHeader } from "@/features/admin/components/TournamentHeader";
@@ -46,7 +46,7 @@ function AdminPage() {
       />
 
       {attendeesQuery.data && (
-        <AttendeeSection
+        <TournamentSection
           attendees={attendeesQuery.data.attendees}
           tournament={tournament}
           />
