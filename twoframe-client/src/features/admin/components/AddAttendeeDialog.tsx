@@ -10,29 +10,29 @@ import {
 import { AddAttendeeForm } from "@/components/shared/join/AddAttendeeForm";
 
 type Props = {
-    onSuccess: () => void;
+  onSuccess: () => void;
 };
 
 export function AddAttendeeDialog({ onSuccess }: Props) {
-    const [open, setOpen] = useState(false);
-    return (
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button>Add Attendee</Button>
-          </DialogTrigger>
+  const [open, setOpen] = useState(false);
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button>Add Attendee</Button>
+      </DialogTrigger>
 
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add Attendee</DialogTitle>
-            </DialogHeader>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Add Attendee</DialogTitle>
+        </DialogHeader>
 
-            <AddAttendeeForm
-              onSuccess={() => {
-                setOpen(false);
-                onSuccess();
-              }}
-            />
-          </DialogContent>
-        </Dialog>
-    )
+        <AddAttendeeForm
+          onSuccess={() => {
+            setOpen(false);
+            onSuccess();
+          }}
+        />
+      </DialogContent>
+    </Dialog>
+  );
 }

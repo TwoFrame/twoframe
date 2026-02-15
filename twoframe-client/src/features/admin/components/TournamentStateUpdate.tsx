@@ -49,9 +49,7 @@ export default function ChangeTournamentStateForm({
     //}
   });
   if (currentState === "completed") {
-    return (
-      <></>
-    );
+    return <></>;
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>

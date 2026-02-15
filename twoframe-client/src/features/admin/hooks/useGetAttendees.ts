@@ -7,7 +7,7 @@ export function useGetAttendees(code: string, tournamentId?: string) {
     queryKey: ["attendees", code],
     queryFn: async () => {
       const response = await fetch(
-        `${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/${tournamentId}/attendees`
+        `${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/${tournamentId}/attendees`,
       );
       return response.json();
     },

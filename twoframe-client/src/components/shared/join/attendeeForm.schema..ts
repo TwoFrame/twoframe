@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { formOptions} from "@tanstack/react-form";
+import { formOptions } from "@tanstack/react-form";
 
 export const attendeeFormSchema = z.object({
   name: z

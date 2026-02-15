@@ -6,16 +6,13 @@ import { useGetTournament } from "@/features/admin/hooks/useGetTournament";
 import { useGetAttendees } from "@/features/admin/hooks/useGetAttendees";
 import { TournamentHeader } from "@/features/admin/components/TournamentHeader";
 
-
 //TODO: USE CONTEXT INSTEAD OF PASSING A BUNCH OF TOUNRAMENT DATA TO ALL THE REACT FLOW NODES
 export const Route = createFileRoute("/admin/$code")({
   component: AdminPage,
 });
 
-
 function AdminPage() {
   const { code } = Route.useParams();
-  
 
   const tournament = useGetTournament(code);
 
@@ -35,9 +32,7 @@ function AdminPage() {
       <TournamentHeader tournament={tournament.data} />
 
       <div className="mt-4">
-        <AddAttendeeDialog
-          onSuccess={() => attendeesQuery.refetch()}
-        />
+        <AddAttendeeDialog onSuccess={() => attendeesQuery.refetch()} />
       </div>
 
       <TournamentCodes
@@ -49,7 +44,7 @@ function AdminPage() {
         <TournamentSection
           attendees={attendeesQuery.data.attendees}
           tournament={tournament}
-          />
+        />
       )}
     </div>
   );

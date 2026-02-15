@@ -1,6 +1,6 @@
 # import uuid
 import json
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from botocore.exceptions import ClientError
 
@@ -23,19 +23,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/")
 def health_check():
     return {"status": "ok"}
+
 
 @app.get("/tournament/{id}")
 def get_tournament(id: str):
     tournament = dynamodb_client.get_tournament(id)
     if not tournament:
         raise HTTPException(status_code=404, detail="Tournament not found")
-    
+
     # Remove sensitive information before returning
-    response = {k: v for k, v in tournament.items() if k not in ["admin_code", "attendee_code"]}
-    return response 
+    response = {
+        k: v for k, v in tournament.items() if k not in ["admin_code", "attendee_code"]
+    }
+    return response
+
 
 @app.get("/tournament/admin/{code}")
 def get_tournament_by_admin_code(code: str):
@@ -45,6 +50,7 @@ def get_tournament_by_admin_code(code: str):
 
     return tournament
 
+
 @app.post("/tournament", response_model=CreateTournamentResponse)
 def create_tournament(payload: CreateTournamentPayload):
     try:
@@ -52,7 +58,7 @@ def create_tournament(payload: CreateTournamentPayload):
             name=payload.name,
             date=payload.date,
         )
-    except ClientError as e:
+    except ClientError:
         raise HTTPException(status_code=500, detail="Could not create tournament")
 
     return CreateTournamentResponse(
@@ -61,17 +67,18 @@ def create_tournament(payload: CreateTournamentPayload):
         attendee_code=tournament.attendee_code,
     )
 
+
 @app.post("/attendee")
 def create_attendee(payload: CreateAttendeePayload):
-    tournament = dynamodb_client.get_tournament_by_attendee_code(
-        payload.attendee_code
-    )
+    tournament = dynamodb_client.get_tournament_by_attendee_code(payload.attendee_code)
 
     if not tournament:
         raise HTTPException(status_code=404, detail="Invalid attendee code")
-    
+
     if tournament["state"] != "open":
-        raise HTTPException(status_code=403, detail="Tournament not accepting new attendees")
+        raise HTTPException(
+            status_code=403, detail="Tournament not accepting new attendees"
+        )
 
     try:
         attendee = dynamodb_client.create_attendee(
@@ -82,36 +89,42 @@ def create_attendee(payload: CreateAttendeePayload):
     except ClientError:
         raise HTTPException(status_code=500, detail="Could not join tournament")
 
-    return {
-        "attendee": attendee
-    }
+    return {"attendee": attendee}
+
 
 @app.get("/tournament/{id}/attendees")
 def get_attendees(id: str):
     attendees = dynamodb_client.get_attendees(id)
-    return {
-        "attendees": attendees
-    }
+    return {"attendees": attendees}
+
 
 @app.put("/tournament/{id}/state")
 def update_tournament_state(payload: UpdateTournamentStatePayload):
-    #make sure tournament exists
+    # make sure tournament exists
     tournament = dynamodb_client.get_tournament(payload.tournament_id)
     if not tournament:
         raise HTTPException(status_code=404, detail="Tournament not found")
-    
-    #make sure the state transition is valid
+
+    # make sure the state transition is valid
     if payload.state == "playing" and tournament["state"] != "open":
-        raise HTTPException(status_code=403, detail="Tournament cannot be transitioned to playing. Current state: " + tournament["state"])
+        raise HTTPException(
+            status_code=403,
+            detail="Tournament cannot be transitioned to playing. Current state: "
+            + tournament["state"],
+        )
     if payload.state == "completed" and tournament["state"] != "playing":
-        raise HTTPException(status_code=403, detail="Tournament cannot be transitioned to completed. Current state: " + tournament["state"])
-    
+        raise HTTPException(
+            status_code=403,
+            detail="Tournament cannot be transitioned to completed. Current state: "
+            + tournament["state"],
+        )
+
     if payload.state == "playing":
         attendees = dynamodb_client.get_attendees(payload.tournament_id)
         tournament = dynamodb_client.update_tournament_state(
             tournament_id=payload.tournament_id,
             new_state=payload.state,
-            num_attendees=len(attendees)
+            num_attendees=len(attendees),
         )
     else:
         tournament = dynamodb_client.update_tournament_state(
@@ -119,20 +132,24 @@ def update_tournament_state(payload: UpdateTournamentStatePayload):
             new_state=payload.state,
         )
 
-    return {
-        "message": "Tournament state updated"
-    }
+    return {"message": "Tournament state updated"}
+
 
 @app.put("/tournament/{tournament_id}/match/{match_id}")
-def update_tournament_match(tournament_id: str, match_id: str, payload: UpdateMatchPayload):
-    #make sure the tournament exists and admin code is valid
+def update_tournament_match(
+    tournament_id: str, match_id: str, payload: UpdateMatchPayload
+):
+    # make sure the tournament exists and admin code is valid
     tournament = dynamodb_client.get_tournament(tournament_id)
     if not tournament:
         raise HTTPException(status_code=404, detail="Tournament not found")
-    #make sure tournament is in "playing" state or edits are not allowed
+    # make sure tournament is in "playing" state or edits are not allowed
     if tournament["state"] != "playing":
-        raise HTTPException(status_code=403, detail="Edits to tournament matches are only allowed when tournament is in 'playing' state")
-    #make sure admin code matches
+        raise HTTPException(
+            status_code=403,
+            detail="Edits to tournament matches are only allowed when tournament is in 'playing' state",
+        )
+    # make sure admin code matches
     if tournament["admin_code"] != payload.admin_code:
         raise HTTPException(status_code=403, detail="Invalid admin code")
 
@@ -149,12 +166,7 @@ def update_tournament_match(tournament_id: str, match_id: str, payload: UpdateMa
             node["data"]["score2"] = payload.score2
             node["data"]["winner"] = payload.winner
             dynamodb_client.update_bracket(tournament_id, json.dumps(bracket))
-            return {
-                "message": "Match updated"
-            }
-            
+            return {"message": "Match updated"}
+
     if not found:
         raise HTTPException(status_code=404, detail="Match not found")
-    
-
-    

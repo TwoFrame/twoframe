@@ -25,7 +25,7 @@ function JoinTournamentPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          < AddAttendeeForm />
+          <AddAttendeeForm />
         </CardContent>
       </Card>
     </div>
