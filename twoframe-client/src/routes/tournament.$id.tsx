@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import Bracket from '@/components/bracket/Bracket';
+import Bracket from '@/features/bracket/components/Bracket';
 
 export const Route = createFileRoute("/tournament/$id")({
     component: TournamentPage,

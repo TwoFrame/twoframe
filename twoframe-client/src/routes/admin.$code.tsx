@@ -1,15 +1,7 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { AddAttendeeForm } from "@/components/shared/join/AddAttendeeForm"; 
+import { AddAttendeeDialog } from "@/features/admin/components/AddAttendeeDialog";
+import { TournamentCodes } from "@/features/admin/components/TournamentCodes";
 import { createFileRoute } from "@tanstack/react-router";
-import Bracket from "@/features/bracket/components/Bracket";
+import { AttendeeSection } from "@/features/admin/components/AttendeeSection";
 import { useGetTournament } from "@/features/admin/hooks/useGetTournament";
 import { useGetAttendees } from "@/features/admin/hooks/useGetAttendees";
 import { TournamentHeader } from "@/features/admin/components/TournamentHeader";
@@ -22,7 +14,6 @@ export const Route = createFileRoute("/admin/$code")({
 
 
 function AdminPage() {
-  const [open, setOpen] = useState(false);
   const { code } = Route.useParams();
   
 
@@ -44,58 +35,21 @@ function AdminPage() {
       <TournamentHeader tournament={tournament.data} />
 
       <div className="mt-4">
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button>Add Attendee</Button>
-          </DialogTrigger>
-
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add Attendee</DialogTitle>
-            </DialogHeader>
-
-            <AddAttendeeForm
-              onSuccess={() => {
-                setOpen(false);
-                attendeesQuery.refetch();
-              }}
-            />
-          </DialogContent>
-        </Dialog>
+        <AddAttendeeDialog
+          onSuccess={() => attendeesQuery.refetch()}
+        />
       </div>
 
-      <div className="mt-6 p-4 border rounded">
-        <h2 className="font-semibold">Attendee Join Code</h2>
-        <p className="text-xl">{tournament.data.attendee_code}</p>
-      </div>
-      <div className="mt-6 p-4 border rounded">
-        <h2 className="font-semibold">Admin Code</h2>
-        <p className="text-xl">{tournament.data.admin_code}</p>
-      </div>
+      <TournamentCodes
+        attendeeCode={tournament.data.attendee_code}
+        adminCode={tournament.data.admin_code}
+      />
+
       {attendeesQuery.data && (
-        <>
-          <h2 className="text-2xl font-bold">
-            Attendees: {attendeesQuery.data.attendees.length}
-          </h2>
-          <ul>
-            {attendeesQuery.data.attendees.map(
-              (attendee: {
-                name: string;
-                tournament_id: string;
-                attendee_id: string;
-              }) => (
-                <li key={attendee.attendee_id}>{attendee.name}</li>
-              ),
-            )}
-          </ul>
-          {(tournament.data.state == "playing" ||
-            tournament.data.state == "completed") && (
-            <Bracket
-              tournament={tournament}
-              attendees={attendeesQuery.data.attendees}
-            />
-          )}
-        </>
+        <AttendeeSection
+          attendees={attendeesQuery.data.attendees}
+          tournament={tournament}
+          />
       )}
     </div>
   );
