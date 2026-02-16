@@ -9,6 +9,13 @@ export const attendeeFormSchema = z.object({
   attendee_code: z.string().length(8, "Invalid code"),
 });
 
+export const attendeeFormSchemaWithoutCode = z.object({
+  name: z
+    .string()
+    .min(1, "Enter your name")
+    .max(32, "Name must be less than 32 characters"),
+});
+
 export const formOpts = formOptions({
   defaultValues: {
     name: "",
@@ -16,7 +23,16 @@ export const formOpts = formOptions({
   },
   validators: {
     onMount: attendeeFormSchema,
-    // onBlur: joinFormSchema,
     onChange: attendeeFormSchema,
+  },
+});
+
+export const formOptsWithoutCode = formOptions({
+  defaultValues: {
+    name: "",
+  },
+  validators: {
+    onMount: attendeeFormSchemaWithoutCode,
+    onChange: attendeeFormSchemaWithoutCode,
   },
 });

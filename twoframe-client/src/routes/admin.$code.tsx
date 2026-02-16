@@ -20,20 +20,24 @@ function AdminPage() {
 
   const attendeesQuery = useGetAttendees(code, tournamentId);
 
-  if (tournament.isError) {
+  if (tournament.isError) { 
     return <div>Something went wrong.</div>;
   }
   if (tournament.isLoading) {
     return <div>Loading...</div>;
   }
 
+  const canAddAttendees = tournament.data.state === "open";
+
   return (
     <div className="p-8">
       <TournamentHeader tournament={tournament.data} />
 
-      <div className="mt-4">
-        <AddAttendeeDialog onSuccess={() => attendeesQuery.refetch()} />
-      </div>
+      {canAddAttendees && (
+        <div className="mt-4">
+          <AddAttendeeDialog onSuccess={() => attendeesQuery.refetch()} attendeeCode={tournament.data.attendee_code}/>
+        </div>
+      )}
 
       <TournamentCodes
         attendeeCode={tournament.data.attendee_code}

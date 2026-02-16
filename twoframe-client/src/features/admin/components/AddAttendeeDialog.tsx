@@ -11,9 +11,10 @@ import { AddAttendeeForm } from "@/components/shared/join/AddAttendeeForm";
 
 type Props = {
   onSuccess: () => void;
+  attendeeCode?: string;
 };
 
-export function AddAttendeeDialog({ onSuccess }: Props) {
+export function AddAttendeeDialog({ onSuccess, attendeeCode }: Props) {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -31,6 +32,8 @@ export function AddAttendeeDialog({ onSuccess }: Props) {
             setOpen(false);
             onSuccess();
           }}
+          requireCode={false}
+          attendeeCode = {attendeeCode}
         />
       </DialogContent>
     </Dialog>
