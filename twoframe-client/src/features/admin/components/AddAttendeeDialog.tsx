@@ -33,7 +33,7 @@ export function AddAttendeeDialog({ onSuccess, attendeeCode }: Props) {
             onSuccess?.(code);
           }}
           requireCode={false}
-          attendeeCode = {attendeeCode}
+          attendeeCode={attendeeCode}
         />
       </DialogContent>
     </Dialog>

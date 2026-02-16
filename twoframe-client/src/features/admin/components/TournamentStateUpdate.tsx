@@ -56,7 +56,7 @@ export default function ChangeTournamentStateForm({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button disabled = {currentState === "open" && !canStart}>
+        <Button disabled={currentState === "open" && !canStart}>
           {currentState === "open" ? "Start Tournament" : "End Tournament"}
         </Button>
       </DialogTrigger>

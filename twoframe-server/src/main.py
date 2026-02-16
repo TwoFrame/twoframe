@@ -50,12 +50,13 @@ def get_tournament_by_admin_code(code: str):
 
     return tournament
 
+
 @app.get("/tournament/attendee/{code}")
 def get_tournament_by_attendee_code(code: str):
     tournament = dynamodb_client.get_tournament_by_attendee_code(code)
     if not tournament:
         raise HTTPException(status_code=404, detail="Invalid attendee code")
-    
+
     response = {k: v for k, v in tournament.items() if k != "admin_code"}
     return response
 
@@ -133,8 +134,7 @@ def update_tournament_state(payload: UpdateTournamentStatePayload):
 
         if len(attendees) == 0:
             raise HTTPException(
-                status_code=400, 
-                detail="Cannot start tournament with 0 attendees"
+                status_code=400, detail="Cannot start tournament with 0 attendees"
             )
         tournament = dynamodb_client.update_tournament_state(
             tournament_id=payload.tournament_id,

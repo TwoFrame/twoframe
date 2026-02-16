@@ -27,7 +27,7 @@ function JoinTournamentPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <AddAttendeeForm 
+          <AddAttendeeForm
             onSuccess={(attendeeCode: string) => {
               navigate({
                 to: "/tournament/$attendeeCode",

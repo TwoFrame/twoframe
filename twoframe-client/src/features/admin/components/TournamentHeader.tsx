@@ -15,7 +15,10 @@ type TournamentHeaderProps = {
   canStartTournament: boolean;
 };
 
-export function TournamentHeader({ tournament, canStartTournament }: TournamentHeaderProps) {
+export function TournamentHeader({
+  tournament,
+  canStartTournament,
+}: TournamentHeaderProps) {
   return (
     <div>
       <h1 className="text-3xl font-bold">{tournament.name}</h1>

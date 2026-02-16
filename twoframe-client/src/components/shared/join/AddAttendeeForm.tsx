@@ -10,16 +10,22 @@ interface Props {
   attendeeCode?: string;
 }
 
-export function AddAttendeeForm({ onSuccess, requireCode = true, attendeeCode }: Props) {
+export function AddAttendeeForm({
+  onSuccess,
+  requireCode = true,
+  attendeeCode,
+}: Props) {
   const mutation = useAddAttendee();
   const form = useForm({
     ...(requireCode ? formOpts : formOptsWithoutCode),
     onSubmit: async ({ value }) => {
-      const payload = requireCode ? value : { ...value, attendee_code: attendeeCode };
+      const payload = requireCode
+        ? value
+        : { ...value, attendee_code: attendeeCode };
       await mutation.mutateAsync(payload);
       form.reset();
-      const passAttendeeCode = requireCode 
-        ? (value as any).attendee_code 
+      const passAttendeeCode = requireCode
+        ? (value as any).attendee_code
         : attendeeCode!;
       onSuccess?.(passAttendeeCode);
     },

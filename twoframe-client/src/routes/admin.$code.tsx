@@ -22,7 +22,7 @@ function AdminPage() {
 
   const canStart = (attendeesQuery.data?.attendees?.length ?? 0) > 0;
 
-  if (tournament.isError) { 
+  if (tournament.isError) {
     return <div>Something went wrong.</div>;
   }
   if (tournament.isLoading) {
@@ -33,11 +33,17 @@ function AdminPage() {
 
   return (
     <div className="p-8">
-      <TournamentHeader tournament={tournament.data} canStartTournament={canStart}/>
+      <TournamentHeader
+        tournament={tournament.data}
+        canStartTournament={canStart}
+      />
 
       {canAddAttendees && (
         <div className="mt-4">
-          <AddAttendeeDialog onSuccess={() => attendeesQuery.refetch()} attendeeCode={tournament.data.attendee_code}/>
+          <AddAttendeeDialog
+            onSuccess={() => attendeesQuery.refetch()}
+            attendeeCode={tournament.data.attendee_code}
+          />
         </div>
       )}
 
