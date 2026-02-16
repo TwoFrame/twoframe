@@ -12,9 +12,10 @@ type Tournament = {
 
 type TournamentHeaderProps = {
   tournament: Tournament;
+  canStartTournament: boolean;
 };
 
-export function TournamentHeader({ tournament }: TournamentHeaderProps) {
+export function TournamentHeader({ tournament, canStartTournament }: TournamentHeaderProps) {
   return (
     <div>
       <h1 className="text-3xl font-bold">{tournament.name}</h1>
@@ -32,6 +33,7 @@ export function TournamentHeader({ tournament }: TournamentHeaderProps) {
         id={tournament.tournament_id}
         code={tournament.admin_code}
         currentState={tournament.state}
+        canStart={canStartTournament}
       />
     </div>
   );

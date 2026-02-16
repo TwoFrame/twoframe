@@ -130,6 +130,12 @@ def update_tournament_state(payload: UpdateTournamentStatePayload):
 
     if payload.state == "playing":
         attendees = dynamodb_client.get_attendees(payload.tournament_id)
+
+        if len(attendees) == 0:
+            raise HTTPException(
+                status_code=400, 
+                detail="Cannot start tournament with 0 attendees"
+            )
         tournament = dynamodb_client.update_tournament_state(
             tournament_id=payload.tournament_id,
             new_state=payload.state,

@@ -20,6 +20,8 @@ function AdminPage() {
 
   const attendeesQuery = useGetAttendees(code, tournamentId);
 
+  const canStart = (attendeesQuery.data?.attendees?.length ?? 0) > 0;
+
   if (tournament.isError) { 
     return <div>Something went wrong.</div>;
   }
@@ -31,7 +33,7 @@ function AdminPage() {
 
   return (
     <div className="p-8">
-      <TournamentHeader tournament={tournament.data} />
+      <TournamentHeader tournament={tournament.data} canStartTournament={canStart}/>
 
       {canAddAttendees && (
         <div className="mt-4">

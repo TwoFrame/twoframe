@@ -16,10 +16,12 @@ export default function ChangeTournamentStateForm({
   id,
   code,
   currentState,
+  canStart,
 }: {
   id: string;
   code: string;
   currentState: "open" | "playing" | "completed";
+  canStart: Boolean;
 }) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -54,7 +56,7 @@ export default function ChangeTournamentStateForm({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button disabled = {currentState === "open" && !canStart}>
           {currentState === "open" ? "Start Tournament" : "End Tournament"}
         </Button>
       </DialogTrigger>
