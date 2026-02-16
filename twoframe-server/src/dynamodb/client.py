@@ -9,6 +9,7 @@ from src.config import settings
 from src.models.tournament import Tournament, Attendee
 from src.utils.bracket import generate_bracket
 
+
 class DynamoDBClient:
     def __init__(self):
         self.dynamodb = boto3.resource(
@@ -19,7 +20,6 @@ class DynamoDBClient:
         )
         self.tournament_table = self.dynamodb.Table(settings.tournament_table_name)
         self.attendee_table = self.dynamodb.Table(settings.attendee_table_name)
-
 
     # -------------------------
     # Tournament
@@ -33,7 +33,7 @@ class DynamoDBClient:
             attendee_code="".join(
                 random.choices(string.ascii_uppercase + string.digits, k=8)
             ),
-            state="open"
+            state="open",
         )
 
         self.tournament_table.put_item(
@@ -44,9 +44,7 @@ class DynamoDBClient:
         return tournament
 
     def get_tournament(self, tournament_id: str):
-        response = self.tournament_table.get_item(
-            Key={"tournament_id": tournament_id}
-        )
+        response = self.tournament_table.get_item(Key={"tournament_id": tournament_id})
         return response.get("Item", None)
 
     def get_tournament_by_admin_code(self, admin_code: str):
@@ -65,25 +63,26 @@ class DynamoDBClient:
         items = response.get("Items", [])
         return items[0] if items else None
 
-    def update_tournament_state(self, tournament_id: str, new_state: str, num_attendees: Optional[int] = None):
+    def update_tournament_state(
+        self, tournament_id: str, new_state: str, num_attendees: Optional[int] = None
+    ):
         if new_state == "playing":
-            #need to generate bracket first
+            # need to generate bracket first
             nodes, edges = generate_bracket(num_attendees)
 
             serialized_bracket = {
                 "nodes": nodes,
                 "edges": edges,
             }
-            
-            
+
             # When starting tournament, initialize bracket field
             self.tournament_table.update_item(
                 Key={"tournament_id": tournament_id},
-                UpdateExpression="SET #state = :state, bracket = :bracket", 
+                UpdateExpression="SET #state = :state, bracket = :bracket",
                 ExpressionAttributeNames={"#state": "state"},
                 ExpressionAttributeValues={
                     ":state": new_state,
-                    ":bracket": json.dumps(serialized_bracket)
+                    ":bracket": json.dumps(serialized_bracket),
                 },
             )
         else:
@@ -92,18 +91,18 @@ class DynamoDBClient:
                 Key={"tournament_id": tournament_id},
                 UpdateExpression="SET #state = :state",
                 ExpressionAttributeNames={"#state": "state"},
-                ExpressionAttributeValues={
-                    ":state": new_state
-                },
+                ExpressionAttributeValues={":state": new_state},
             )
 
     # -------------------------
     # Attendee
     # -------------------------
-    def create_attendee(self, name: str, attendee_code: str, tournament_id: str) -> Attendee:
-        #first has to check that code is valid
-        tournament = self.get_tournament_by_attendee_code(attendee_code)
-        
+    def create_attendee(
+        self, name: str, attendee_code: str, tournament_id: str
+    ) -> Attendee:
+        # first has to check that code is valid
+        self.get_tournament_by_attendee_code(attendee_code)
+
         attendee = Attendee(
             tournament_id=tournament_id,
             attendee_id=str(uuid4()),
@@ -116,22 +115,21 @@ class DynamoDBClient:
         )
 
         return attendee
-    
-    def get_attendees(self, tournament_id:str):
+
+    def get_attendees(self, tournament_id: str):
         response = self.attendee_table.scan(
             FilterExpression="tournament_id = :id",
-            ExpressionAttributeValues={ ":id": tournament_id },
+            ExpressionAttributeValues={":id": tournament_id},
         )
         return response.get("Items", [])
-    
+
     def update_bracket(self, tournament_id: str, bracket: str):
         self.tournament_table.update_item(
             Key={"tournament_id": tournament_id},
             UpdateExpression="SET bracket = :bracket",
-            ExpressionAttributeValues={
-                ":bracket": bracket
-            },
+            ExpressionAttributeValues={":bracket": bracket},
         )
-        
+
+
 # singleton
 dynamodb_client = DynamoDBClient()

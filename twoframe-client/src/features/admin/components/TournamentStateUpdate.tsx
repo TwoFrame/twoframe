@@ -6,9 +6,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "./ui/button";
+import { Button } from "../../../components/ui/button";
 import { useMutation } from "@tanstack/react-query";
-import { Spinner } from "./ui/spinner";
+import { Spinner } from "../../../components/ui/spinner";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -16,10 +16,12 @@ export default function ChangeTournamentStateForm({
   id,
   code,
   currentState,
+  canStart,
 }: {
   id: string;
   code: string;
   currentState: "open" | "playing" | "completed";
+  canStart: Boolean;
 }) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -49,14 +51,12 @@ export default function ChangeTournamentStateForm({
     //}
   });
   if (currentState === "completed") {
-    return (
-      <></>
-    );
+    return <></>;
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button disabled={currentState === "open" && !canStart}>
           {currentState === "open" ? "Start Tournament" : "End Tournament"}
         </Button>
       </DialogTrigger>

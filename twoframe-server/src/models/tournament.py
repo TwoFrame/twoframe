@@ -5,6 +5,7 @@ from typing import Literal
 # Tables
 # -------------------------
 
+
 class Tournament(BaseModel):
     tournament_id: str
     name: str
@@ -24,6 +25,7 @@ class Attendee(BaseModel):
 # API Payloads
 # -------------------------
 
+
 class CreateTournamentPayload(BaseModel):
     name: str
     date: str
@@ -34,6 +36,7 @@ class CreateTournamentResponse(BaseModel):
     admin_code: str
     attendee_code: str
 
+
 class UpdateTournamentStatePayload(BaseModel):
     tournament_id: str
     state: Literal["playing", "completed"]
@@ -43,10 +46,11 @@ class CreateAttendeePayload(BaseModel):
     name: str
     attendee_code: str
 
+
 class UpdateMatchPayload(BaseModel):
     admin_code: str
     player1: str | None
     player2: str | None
-    score1: int 
+    score1: int
     score2: int
     winner: Literal[1, 2] | None
