@@ -20,7 +20,7 @@ function AdminPage() {
 
   const attendeesQuery = useGetAttendees(code, tournamentId);
 
-  const canStart = (attendeesQuery.data?.attendees?.length ?? 0) > 0;
+  const canStart = (attendeesQuery.data?.attendees?.length ?? 0) >= 2;;
 
   if (tournament.isError) {
     return <div>Something went wrong.</div>;
