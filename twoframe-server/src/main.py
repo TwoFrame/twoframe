@@ -50,6 +50,15 @@ def get_tournament_by_admin_code(code: str):
 
     return tournament
 
+@app.get("/tournament/attendee/{code}")
+def get_tournament_by_attendee_code(code: str):
+    tournament = dynamodb_client.get_tournament_by_attendee_code(code)
+    if not tournament:
+        raise HTTPException(status_code=404, detail="Invalid attendee code")
+    
+    response = {k: v for k, v in tournament.items() if k != "admin_code"}
+    return response
+
 
 @app.post("/tournament", response_model=CreateTournamentResponse)
 def create_tournament(payload: CreateTournamentPayload):

@@ -5,7 +5,7 @@ import { useForm } from "@tanstack/react-form";
 import { formOpts } from "./attendeeForm.schema.";
 import { formOptsWithoutCode } from "./attendeeForm.schema.";
 interface Props {
-  onSuccess?: () => void;
+  onSuccess?: (attendeeCode: string) => void;
   requireCode?: boolean;
   attendeeCode?: string;
 }
@@ -18,7 +18,10 @@ export function AddAttendeeForm({ onSuccess, requireCode = true, attendeeCode }:
       const payload = requireCode ? value : { ...value, attendee_code: attendeeCode };
       await mutation.mutateAsync(payload);
       form.reset();
-      onSuccess?.();
+      const passAttendeeCode = requireCode 
+        ? (value as any).attendee_code 
+        : attendeeCode!;
+      onSuccess?.(passAttendeeCode);
     },
   });
 

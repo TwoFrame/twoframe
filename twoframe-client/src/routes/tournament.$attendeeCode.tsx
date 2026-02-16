@@ -2,18 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import Bracket from "@/features/bracket/components/Bracket";
 
-export const Route = createFileRoute("/tournament/$id")({
+export const Route = createFileRoute("/tournament/$attendeeCode")({
   component: TournamentPage,
 });
 
 function TournamentPage() {
-  const { id } = Route.useParams();
+  const { attendeeCode } = Route.useParams();
 
   const tournament = useQuery({
-    queryKey: ["tournament", id],
+    queryKey: ["tournament", attendeeCode],
     queryFn: async () => {
       const response = await fetch(
-        `${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/${id}`,
+        `${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/attendee/${attendeeCode}`,
         {
           method: "GET",
         },

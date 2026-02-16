@@ -10,7 +10,7 @@ import {
 import { AddAttendeeForm } from "@/components/shared/join/AddAttendeeForm";
 
 type Props = {
-  onSuccess: () => void;
+  onSuccess?: (attendeeCode?: string) => void;
   attendeeCode?: string;
 };
 
@@ -28,9 +28,9 @@ export function AddAttendeeDialog({ onSuccess, attendeeCode }: Props) {
         </DialogHeader>
 
         <AddAttendeeForm
-          onSuccess={() => {
+          onSuccess={(code) => {
             setOpen(false);
-            onSuccess();
+            onSuccess?.(code);
           }}
           requireCode={false}
           attendeeCode = {attendeeCode}

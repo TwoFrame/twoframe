@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
 import { AddAttendeeForm } from "@/components/shared/join/AddAttendeeForm";
 import {
@@ -14,6 +14,8 @@ export const Route = createFileRoute("/join")({
 });
 
 function JoinTournamentPage() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen flex items-center justify-center py-8">
       <Toaster />
@@ -25,7 +27,14 @@ function JoinTournamentPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <AddAttendeeForm />
+          <AddAttendeeForm 
+            onSuccess={(attendeeCode: string) => {
+              navigate({
+                to: "/tournament/$attendeeCode",
+                params: { attendeeCode },
+              });
+            }}
+          />
         </CardContent>
       </Card>
     </div>
