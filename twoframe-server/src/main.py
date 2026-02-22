@@ -181,16 +181,39 @@ def update_tournament_match(
         curr["data"]["score1"] = payload.score1
         curr["data"]["score2"] = payload.score2
         curr["data"]["winner"] = payload.winner
-        curr = bracket["nodes"].get(curr["data"]["nextMatchId"], None)
-        
-        if payload.winner and payload.player:
-            while curr:
-                curr["data"]["player1"] = payload.player1
-                curr["data"]["player2"] = payload.player2
-                curr["data"]["score1"] = payload.score1
-                curr["data"]["score2"] = payload.score2
-                curr["data"]["winner"] = payload.winner
-                curr = bracket["nodes"].get(curr["data"]["nextMatchId"], None)
+
+        if payload.winner:
+            prevNodeId = match_id
+            updatedPlayer = curr["data"]["player1"] if curr["data"]["winner"] == 1 else curr["data"]["player2"]
+            nextNode = bracket["nodes"].get(curr["data"]["target"], None)
+
+            while nextNode:
+                edge = bracket["edges"].get(prevNodeId + "-" + nextNode["id"], None)
+                if not edge:
+                    break
+                playerKey = "player" + str(edge["targetPlayer"])
+                nextNode["data"][playerKey] = updatedPlayer
+
+                if playerKey in nextNode["data"].get("playerSources", {}):
+                    source = nextNode["data"]["playerSources"][playerKey]
+                    nextNode["data"]["playerSources"][playerKey] = (source[0], True)
+                
+                allSourcesTrue = all(
+                    src[1] for src in nextNode["data"].get("playerSources", {}).values()
+                )
+                nextNode["data"]["controllable"] = allSourcesTrue
+
+                hasWinner = nextNode["data"].get("winner") is not None
+
+                if not (allSourcesTrue and hasWinner):
+                    break
+
+                updatedPlayer = (
+                    nextNode["data"]["player1"] if nextNode["data"]["winner"] == 1 
+                    else nextNode["data"]["player2"]
+                )
+                prevNodeId = nextNode["id"]
+                nextNode = bracket["nodes"].get(nextNode["data"]["target"], None)
 
 
     dynamodb_client.update_bracket(tournament_id, json.dumps(bracket))

@@ -24,8 +24,8 @@ export default function MatchNode({
     score1: number;
     score2: number;
     winner: 1 | 2 | null;
+    controllable: boolean;
     final?: boolean;
-    control: boolean;
     attendees: {
       name: string;
       attendee_id: string;
@@ -35,7 +35,7 @@ export default function MatchNode({
   };
 }) {
   const [open, setOpen] = useState(false);
-  const controllable = data.state === "playing" && data.control;;
+  const controllable = data.state === "playing" && data.controllable;
 
   const matchNodeContent = (
     <div
@@ -77,7 +77,7 @@ export default function MatchNode({
 
   return (
     <>
-      {data.round !== 1 && <Handle type="target" position={Position.Left} />}
+      <Handle type="target" position={Position.Left} />
       {controllable ? (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>{matchNodeContent}</DialogTrigger>
@@ -89,10 +89,10 @@ export default function MatchNode({
             <MatchForm data={data} setOpen={setOpen} />
           </DialogContent>
         </Dialog>
-      ) : ( 
+      ) : (
         matchNodeContent
       )}
-      {!data.final && <Handle type="source" position={Position.Right} />}
+      <Handle type="source" position={Position.Right} />
     </>
   );
 }

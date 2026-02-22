@@ -34,10 +34,9 @@ def generate_bracket(attendees: int):
             "score1": 0,
             "score2": 0,
             "winner": None,
-            "nextMatchId": None,
-            "sourceMatchIds": [],
+            "target": None,
+            "playerSources": {},
             "final": True,
-            "control": False
         },
         "type": "bracketNode",
     }))
@@ -47,7 +46,7 @@ def generate_bracket(attendees: int):
     while len(q) > 0:
         seeds, node = q.popleft()
         currRound = node["data"]["round"]
-        prevRound = currRound - 1
+        newRound = currRound - 1
         yChange = idealYRangeInFirstRound / (2 ** (totalRounds - currRound+2))
         nodes[node["id"]] = node
 
@@ -60,8 +59,8 @@ def generate_bracket(attendees: int):
 
         byeFound = False
         for i in range(len(seeds)):
-            currMatchId = f"R{prevRound}M{newMatchNumbers[i]}"
-            newSeeds = (seeds[i], 2 ** (totalRounds + 1 - prevRound) + 1 - seeds[i])
+            newMatchId = f"R{newRound}M{newMatchNumbers[i]}"
+            newSeeds = (seeds[i], 2 ** (totalRounds + 1 - newRound) + 1 - seeds[i])
             if max(newSeeds) > attendees:
                 byeFound = True
                 continue
@@ -69,37 +68,41 @@ def generate_bracket(attendees: int):
                 (
                     newSeeds,
                     {
-                        "id": currMatchId,
+                        "id": newMatchId,
                         "position": {
-                            "x": calculate_node_x(prevRound),
+                            "x": calculate_node_x(newRound),
                             "y": node["position"]["y"] if byeFound else node["position"]["y"] + signs[i] * yChange
                         },
                         "data": {
-                            "round": prevRound,
+                            "round": newRound,
                             "match": newMatchNumbers[i],
                             "player1": None,
                             "player2": None,
                             "score1": 0,
                             "score2": 0,    
                             "winner": None,
-                            "nextMatchId": node["id"],
-                            "sourceMatchIds": [],
-                            "control": True if prevRound == 1 else False
+                            "target": node["id"],
+                            "playerSources": {}
                         },
                         "type": "bracketNode",
                     }
                 )
             )
-            nodes[node["id"]]["data"]["sourceMatchIds"].append(currMatchId)
-
-            edges[f"{currMatchId}-{node["id"]}"] = {
-                "id": f"{currMatchId}-{node["id"]}",
-                "source": currMatchId,
+            node["data"]["playerSources"][f"player{i + 1}"] = (newMatchId, False)
+            
+            edges[f"{newMatchId}-{node["id"]}"] = {
+                "id": f"{newMatchId}-{node["id"]}",
+                "source": newMatchId,
                 "target": node["id"],
                 "type": "smoothstep",
+                "targetPlayer": 1 if i == 0 else 2,
                 "animated": True
             }
 
+
+    for node in nodes.values():
+        if node["type"] == "bracketNode":
+            node["data"]["controllable"] = len(node["data"].get("playerSources", {})) == 0
 
     for i in range(totalRounds):
         nodes[f"RL{i + 1}"] = {
