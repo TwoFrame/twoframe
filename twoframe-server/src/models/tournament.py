@@ -54,3 +54,7 @@ class UpdateMatchPayload(BaseModel):
     score1: int | None
     score2: int | None
     winner: Literal[1, 2] | None
+
+class UndoPlayerSourcePayload(BaseModel):
+    admin_code: str
+    player_source: Literal["player1", "player2"]

@@ -1,12 +1,15 @@
 import { ReactFlow, Background, Controls } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import MatchNode from "./node/MatchNode";
+import AdminMatchNode from "./node/AdminMatchNode";
+import DisplayMatchNode from "./node/DisplayMatchNode";
 import RoundLabelNode from "./node/RoundLabelNode";
 
 export default function Bracket({
+  readOnly,
   tournament,
   attendees,
 }: {
+  readOnly: boolean;
   tournament: any;
   attendees: {
     tournament_id: string;
@@ -14,9 +17,7 @@ export default function Bracket({
     name: string;
   }[];
 }) {
-  // console.log(tournament.data.bracket);
   const deserializedBracket = JSON.parse(tournament.data.bracket);
-  console.log(deserializedBracket);
   const finalNodes = [];
   for (const key of Object.keys(deserializedBracket.nodes)) {
     finalNodes.push({
@@ -39,7 +40,7 @@ export default function Bracket({
         nodes={finalNodes}
         edges={finalEdges}
         nodeTypes={{
-          bracketNode: MatchNode,
+          bracketNode: readOnly ? DisplayMatchNode : AdminMatchNode,
           roundLabelNode: RoundLabelNode,
         }}
         maxZoom={4}

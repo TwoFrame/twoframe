@@ -43,7 +43,7 @@ export default function ChangeTournamentStateForm({
     onSuccess: () => {
       setOpen(false);
       queryClient.invalidateQueries({
-        queryKey: ["tournament", code],
+        queryKey: ["tournament", "admin", code],
       });
     },
     //TODO: handle failed tournament status update

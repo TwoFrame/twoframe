@@ -99,11 +99,6 @@ def generate_bracket(attendees: int):
                 "animated": True
             }
 
-
-    for node in nodes.values():
-        if node["type"] == "bracketNode":
-            node["data"]["controllable"] = len(node["data"].get("playerSources", {})) == 0
-
     for i in range(totalRounds):
         nodes[f"RL{i + 1}"] = {
             "id": f"RL{i + 1}",

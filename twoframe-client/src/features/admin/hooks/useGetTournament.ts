@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 
-export function useGetTournament(code: string) {
+export function useGetTournamentWithAdminCode(adminCode: string) {
   return useQuery({
-    queryKey: ["tournament", code],
+    queryKey: ["tournament", "admin", adminCode],
     queryFn: async () => {
       const response = await fetch(
-        `${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/admin/${code}`,
+        `${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/admin/${adminCode}`,
       );
-      return response.json();
+      let result = await response.json();
+      return result;
     },
   });
 }

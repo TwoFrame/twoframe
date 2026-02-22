@@ -4,8 +4,6 @@ import { toast } from "sonner";
 export function useAddAttendee() {
   return useMutation({
     mutationFn: async (data: any) => {
-      //fake waiting for testing
-      // await new Promise((resolve) => setTimeout(resolve, 5000))
       const response = await fetch(
         `${import.meta.env.VITE_TWOFRAME_SERVER_URL}/attendee`,
         {
