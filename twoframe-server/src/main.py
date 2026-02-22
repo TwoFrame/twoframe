@@ -132,9 +132,9 @@ def update_tournament_state(payload: UpdateTournamentStatePayload):
     if payload.state == "playing":
         attendees = dynamodb_client.get_attendees(payload.tournament_id)
 
-        if len(attendees) <= 1:
+        if len(attendees) < 2:
             raise HTTPException(
-                status_code=400, detail="Cannot start tournament with 0 attendees"
+                status_code=400, detail="Cannot start tournament with less than 2 attendees"
             )
         tournament = dynamodb_client.update_tournament_state(
             tournament_id=payload.tournament_id,
@@ -171,49 +171,32 @@ def update_tournament_match(
 
     # make sure the match exists by extracting serialized bracket and finding match by id
     bracket = json.loads(tournament["bracket"])
-    curr = bracket["nodes"].get(match_id, None)
+    currNode = bracket["nodes"].get(match_id, None)
 
-    if not curr:
+    if not currNode:
         raise HTTPException(status_code=404, detail="Match not found")
     else:
-        curr["data"]["player1"] = payload.player1 
-        curr["data"]["player2"] = payload.player2 
-        curr["data"]["score1"] = payload.score1
-        curr["data"]["score2"] = payload.score2
-        curr["data"]["winner"] = payload.winner
-
+        currNode["data"]["player1"] = payload.player1 
+        currNode["data"]["player2"] = payload.player2 
+        currNode["data"]["score1"] = payload.score1
+        currNode["data"]["score2"] = payload.score2
+        
         if payload.winner:
-            prevNodeId = match_id
-            updatedPlayer = curr["data"]["player1"] if curr["data"]["winner"] == 1 else curr["data"]["player2"]
-            nextNode = bracket["nodes"].get(curr["data"]["target"], None)
+            currNode["data"]["winner"] = payload.winner
+            currNode["data"]["controllable"] = False
+            
+            nextNode = bracket["nodes"].get(currNode["data"]["target"], None)
+            if nextNode:
+                playerToPropagate = currNode["data"]["player1"] if currNode["data"]["winner"] == 1 else currNode["data"]["player2"]
 
-            while nextNode:
-                edge = bracket["edges"].get(prevNodeId + "-" + nextNode["id"], None)
-                if not edge:
-                    break
-                playerKey = "player" + str(edge["targetPlayer"])
-                nextNode["data"][playerKey] = updatedPlayer
+                relevantEdge = bracket["edges"][currNode["id"] + "-" + nextNode["id"]]
+                nextNode["data"][relevantEdge["targetPlayer"]] = playerToPropagate
 
-                if playerKey in nextNode["data"].get("playerSources", {}):
-                    source = nextNode["data"]["playerSources"][playerKey]
-                    nextNode["data"]["playerSources"][playerKey] = (source[0], True)
+                if relevantEdge["targetPlayer"] in nextNode["data"]["playerSources"]:
+                    nextNode["data"]["playerSources"][relevantEdge["targetPlayer"]] = (currNode["id"], True)
                 
-                allSourcesTrue = all(
-                    src[1] for src in nextNode["data"].get("playerSources", {}).values()
-                )
-                nextNode["data"]["controllable"] = allSourcesTrue
-
-                hasWinner = nextNode["data"].get("winner") is not None
-
-                if not (allSourcesTrue and hasWinner):
-                    break
-
-                updatedPlayer = (
-                    nextNode["data"]["player1"] if nextNode["data"]["winner"] == 1 
-                    else nextNode["data"]["player2"]
-                )
-                prevNodeId = nextNode["id"]
-                nextNode = bracket["nodes"].get(nextNode["data"]["target"], None)
+                if all(src[1] for src in nextNode["data"]["playerSources"].values()):
+                    nextNode["data"]["controllable"] = True
 
 
     dynamodb_client.update_bracket(tournament_id, json.dumps(bracket))

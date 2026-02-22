@@ -20,6 +20,8 @@ export default function MatchForm({
     score1: number;
     score2: number;
     winner: 1 | 2 | null;
+    target: string | null
+    playerSources: Record<string, [string, boolean]>;
     attendees: {
       name: string;
       attendee_id: string;
@@ -28,6 +30,8 @@ export default function MatchForm({
   };
   setOpen: (open: boolean) => void;
 }) {
+  const hasPlayer1Source = "player1" in data.playerSources;
+  const hasPlayer2Source = "player2" in data.playerSources;
   const { code } = Route.useParams();
   const queryClient = useQueryClient();
 
@@ -107,26 +111,32 @@ export default function MatchForm({
                   <label htmlFor="player1" className="text-sm font-medium">
                     Player 1
                   </label>
-                  <NativeSelect
-                    id="player1"
-                    name="player1"
-                    value={field.state.value}
-                    onChange={(e) => {
-                      field.handleChange(e.target.value);
-                    }}
-                  >
-                    <NativeSelectOption value="">
-                      Select player...
-                    </NativeSelectOption>
-                    {data.attendees.map((attendee: any) => (
-                      <NativeSelectOption
-                        key={attendee.attendee_id}
-                        value={attendee.name}
-                      >
-                        {attendee.name}
+                  {hasPlayer1Source ? (
+                    <div className="h-9 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground">
+                      {field.state.value || "TBD"}
+                    </div>
+                  ) : (
+                    <NativeSelect
+                      id="player1"
+                      name="player1"
+                      value={field.state.value}
+                      onChange={(e) => {
+                        field.handleChange(e.target.value);
+                      }}
+                    >
+                      <NativeSelectOption value="">
+                        Select player...
                       </NativeSelectOption>
-                    ))}
-                  </NativeSelect>
+                      {data.attendees.map((attendee: any) => (
+                        <NativeSelectOption
+                          key={attendee.attendee_id}
+                          value={attendee.name}
+                        >
+                          {attendee.name}
+                        </NativeSelectOption>
+                      ))}
+                    </NativeSelect>
+                  )}
                 </div>
               )}
             />
@@ -145,7 +155,7 @@ export default function MatchForm({
                     placeholder="0"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(Number(e.target.value))}
-                    onKeyDown={(e)=> e.preventDefault()}
+                    onKeyDown={(e) => e.preventDefault()}
                     className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 dark:bg-input/30 dark:hover:bg-input/50 h-9 w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
                   />
                 </div>
@@ -162,24 +172,30 @@ export default function MatchForm({
                   <label htmlFor="player2" className="text-sm font-medium">
                     Player 2
                   </label>
-                  <NativeSelect
-                    id="player2"
-                    name="player2"
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  >
-                    <NativeSelectOption value="">
-                      Select player...
-                    </NativeSelectOption>
-                    {data.attendees.map((attendee: any) => (
-                      <NativeSelectOption
-                        key={attendee.attendee_id}
-                        value={attendee.name}
-                      >
-                        {attendee.name}
+                  {hasPlayer2Source ? (
+                    <div className="h-9 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground">
+                      {field.state.value || "TBD"}
+                    </div>
+                  ) : (
+                    <NativeSelect
+                      id="player2"
+                      name="player2"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    >
+                      <NativeSelectOption value="">
+                        Select player...
                       </NativeSelectOption>
-                    ))}
-                  </NativeSelect>
+                      {data.attendees.map((attendee: any) => (
+                        <NativeSelectOption
+                          key={attendee.attendee_id}
+                          value={attendee.name}
+                        >
+                          {attendee.name}
+                        </NativeSelectOption>
+                      ))}
+                    </NativeSelect>
+                  )}
                 </div>
               )}
             />
@@ -198,7 +214,7 @@ export default function MatchForm({
                     placeholder="0"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(Number(e.target.value))}
-                    onKeyDown={(e)=> e.preventDefault()}
+                    onKeyDown={(e) => e.preventDefault()}
                     className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 dark:bg-input/30 dark:hover:bg-input/50 h-9 w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
                   />
                 </div>

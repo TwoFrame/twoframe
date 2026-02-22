@@ -24,8 +24,10 @@ export default function MatchNode({
     score1: number;
     score2: number;
     winner: 1 | 2 | null;
-    controllable: boolean;
+    target: string | null;
+    playerSources: Record<string, [string, boolean]>;
     final?: boolean;
+    controllable: boolean;
     attendees: {
       name: string;
       attendee_id: string;

@@ -94,8 +94,8 @@ def generate_bracket(attendees: int):
                 "id": f"{newMatchId}-{node["id"]}",
                 "source": newMatchId,
                 "target": node["id"],
+                "targetPlayer": f"player{i + 1}",
                 "type": "smoothstep",
-                "targetPlayer": 1 if i == 0 else 2,
                 "animated": True
             }
 
