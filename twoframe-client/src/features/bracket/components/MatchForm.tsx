@@ -37,7 +37,7 @@ export default function MatchForm({
 
   const mutation = useMutation({
     mutationFn: async ({ value }: any) => {
-      const matchId = `R${data.round}_M${data.match}`;
+      const matchId = `R${data.round}M${data.match}`;
       const response = await fetch(
         `${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/${tournamentId}/match/${matchId}`,
         {
@@ -136,7 +136,7 @@ export default function MatchForm({
               children={(field) => (
                 <div className="space-y-2">
                   <label htmlFor="points1" className="text-sm font-medium">
-                    Points
+                    Score
                   </label>
                   <input
                     id="points1"
@@ -145,6 +145,7 @@ export default function MatchForm({
                     placeholder="0"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(Number(e.target.value))}
+                    onKeyDown={(e)=> e.preventDefault()}
                     className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 dark:bg-input/30 dark:hover:bg-input/50 h-9 w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
                   />
                 </div>
@@ -188,7 +189,7 @@ export default function MatchForm({
               children={(field) => (
                 <div className="space-y-2">
                   <label htmlFor="score2" className="text-sm font-medium">
-                    Points
+                    Score
                   </label>
                   <input
                     id="points2"
@@ -197,6 +198,7 @@ export default function MatchForm({
                     placeholder="0"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(Number(e.target.value))}
+                    onKeyDown={(e)=> e.preventDefault()}
                     className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 dark:bg-input/30 dark:hover:bg-input/50 h-9 w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
                   />
                 </div>
@@ -233,7 +235,7 @@ export default function MatchForm({
         <form.Subscribe selector={(state) => [state.canSubmit]}>
           {([canSubmit]) => (
             <Button type="submit" disabled={!canSubmit}>
-              Save Match Result
+              Save
             </Button>
           )}
         </form.Subscribe>

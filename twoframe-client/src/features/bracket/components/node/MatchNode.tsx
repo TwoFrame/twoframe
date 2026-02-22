@@ -7,10 +7,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import MatchForm from "./MatchForm";
+import MatchForm from "../MatchForm";
 import { useState } from "react";
 const NODE_WIDTH = 200;
 const NODE_HEIGHT = 64;
+//TODO: attendees and state are being thrown into each individual match node. super bad but did it to get working
+// should probably have the nodes in the flow pull from the reactflow parent component or some context.
 export default function MatchNode({
   data,
 }: {
@@ -22,23 +24,22 @@ export default function MatchNode({
     score1: number;
     score2: number;
     winner: 1 | 2 | null;
-    //TODO: attendees and state are being thrown into each individual match node. super bad but did it to get working
-    // should probably have the nodes in the flow pull from the reactflow parent component or some context.
+    final?: boolean;
+    control: boolean;
     attendees: {
       name: string;
       attendee_id: string;
       tournament_id: string;
     }[];
     state: "playing" | "completed";
-    readOnly?: boolean;
   };
 }) {
   const [open, setOpen] = useState(false);
-  const isReadOnly = data.readOnly || data.state === "completed";
+  const controllable = data.state === "playing" && data.control;;
 
   const matchNodeContent = (
     <div
-      className={`relative bg-secondary grid grid-cols-[85fr_15fr] grid-rows-2 ${!isReadOnly ? "hover:cursor-pointer hover:bg-secondary/80" : ""}`}
+      className={`relative bg-secondary grid grid-cols-[85fr_15fr] grid-rows-2 ${controllable ? "hover:cursor-pointer hover:bg-secondary/80" : ""}`}
       style={{
         width: `${NODE_WIDTH}px`,
         height: `${NODE_HEIGHT}px`,
@@ -76,10 +77,8 @@ export default function MatchNode({
 
   return (
     <>
-      <Handle type="target" position={Position.Left} />
-      {isReadOnly ? (
-        matchNodeContent
-      ) : (
+      {data.round !== 1 && <Handle type="target" position={Position.Left} />}
+      {controllable ? (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>{matchNodeContent}</DialogTrigger>
           <DialogContent>
@@ -90,8 +89,10 @@ export default function MatchNode({
             <MatchForm data={data} setOpen={setOpen} />
           </DialogContent>
         </Dialog>
+      ) : ( 
+        matchNodeContent
       )}
-      <Handle type="source" position={Position.Right} />
+      {!data.final && <Handle type="source" position={Position.Right} />}
     </>
   );
 }

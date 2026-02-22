@@ -51,6 +51,6 @@ class UpdateMatchPayload(BaseModel):
     admin_code: str
     player1: str | None
     player2: str | None
-    score1: int
-    score2: int
+    score1: int | None
+    score2: int | None
     winner: Literal[1, 2] | None

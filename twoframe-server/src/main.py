@@ -164,24 +164,34 @@ def update_tournament_match(
             status_code=403,
             detail="Edits to tournament matches are only allowed when tournament is in 'playing' state",
         )
-    # make sure admin code matches
+    
+    # make sure admin code matches this
     if tournament["admin_code"] != payload.admin_code:
         raise HTTPException(status_code=403, detail="Invalid admin code")
 
     # make sure the match exists by extracting serialized bracket and finding match by id
     bracket = json.loads(tournament["bracket"])
-    found = False
-    for node in bracket["nodes"]:
-        # match found, update it
-        if node["id"] == match_id:
-            found = True
-            node["data"]["player1"] = payload.player1
-            node["data"]["player2"] = payload.player2
-            node["data"]["score1"] = payload.score1
-            node["data"]["score2"] = payload.score2
-            node["data"]["winner"] = payload.winner
-            dynamodb_client.update_bracket(tournament_id, json.dumps(bracket))
-            return {"message": "Match updated"}
+    curr = bracket["nodes"].get(match_id, None)
 
-    if not found:
+    if not curr:
         raise HTTPException(status_code=404, detail="Match not found")
+    else:
+        curr["data"]["player1"] = payload.player1 
+        curr["data"]["player2"] = payload.player2 
+        curr["data"]["score1"] = payload.score1
+        curr["data"]["score2"] = payload.score2
+        curr["data"]["winner"] = payload.winner
+        curr = bracket["nodes"].get(curr["data"]["nextMatchId"], None)
+        
+        if payload.winner and payload.player:
+            while curr:
+                curr["data"]["player1"] = payload.player1
+                curr["data"]["player2"] = payload.player2
+                curr["data"]["score1"] = payload.score1
+                curr["data"]["score2"] = payload.score2
+                curr["data"]["winner"] = payload.winner
+                curr = bracket["nodes"].get(curr["data"]["nextMatchId"], None)
+
+
+    dynamodb_client.update_bracket(tournament_id, json.dumps(bracket))
+    return {"message": "Match updated"}
