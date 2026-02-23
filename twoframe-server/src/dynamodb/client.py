@@ -4,6 +4,7 @@ import string
 from uuid import uuid4
 from typing import Optional
 import json
+from boto3.dynamodb.conditions import Key
 
 from src.config import settings
 from src.models.tournament import Tournament, Attendee
@@ -48,17 +49,17 @@ class DynamoDBClient:
         return response.get("Item", None)
 
     def get_tournament_by_admin_code(self, admin_code: str):
-        response = self.tournament_table.scan(
-            FilterExpression="admin_code = :code",
-            ExpressionAttributeValues={":code": admin_code},
+        response = self.tournament_table.query(
+            IndexName="admin_code-index",
+            KeyConditionExpression=Key("admin_code").eq(admin_code),
         )
         items = response.get("Items", [])
         return items[0] if items else None
 
     def get_tournament_by_attendee_code(self, attendee_code: str):
-        response = self.tournament_table.scan(
-            FilterExpression="attendee_code = :code",
-            ExpressionAttributeValues={":code": attendee_code},
+        response = self.tournament_table.query(
+            IndexName="attendee_code-index",
+            KeyConditionExpression=Key("attendee_code").eq(attendee_code),
         )
         items = response.get("Items", [])
         return items[0] if items else None
@@ -117,9 +118,9 @@ class DynamoDBClient:
         return attendee
 
     def get_attendees(self, tournament_id: str):
-        response = self.attendee_table.scan(
-            FilterExpression="tournament_id = :id",
-            ExpressionAttributeValues={":id": tournament_id},
+        response = self.attendee_table.query(
+            IndexName="tournament_id-index",
+            KeyConditionExpression=Key("tournament_id").eq(tournament_id),
         )
         return response.get("Items", [])
 
