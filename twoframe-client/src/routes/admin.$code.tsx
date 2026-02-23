@@ -1,8 +1,8 @@
 import { AddAttendeeDialog } from "@/features/admin/components/AddAttendeeDialog";
 import { TournamentCodes } from "@/features/admin/components/TournamentCodes";
 import { createFileRoute } from "@tanstack/react-router";
-import { TournamentSection } from "@/features/admin/components/AttendeeSection";
-import { useGetTournament } from "@/features/admin/hooks/useGetTournament";
+import { TournamentSection } from "@/features/admin/components/TournamentSection";
+import { useGetTournamentWithAdminCode } from "@/features/admin/hooks/useGetTournament";
 import { useGetAttendees } from "@/features/admin/hooks/useGetAttendees";
 import { TournamentHeader } from "@/features/admin/components/TournamentHeader";
 
@@ -14,13 +14,10 @@ export const Route = createFileRoute("/admin/$code")({
 function AdminPage() {
   const { code } = Route.useParams();
 
-  const tournament = useGetTournament(code);
-
-  const tournamentId = tournament?.data?.tournament_id;
-
-  const attendeesQuery = useGetAttendees(code, tournamentId);
-
-  const canStart = (attendeesQuery.data?.attendees?.length ?? 0) >= 2;;
+  const tournament = useGetTournamentWithAdminCode(code);
+  //note: if you look in hooks the attendees query is actually dependent on tournament query
+  const attendees = useGetAttendees(code, tournament?.data?.tournament_id);
+  const canStart = (attendees.data?.attendees?.length ?? 0) >= 2;
 
   if (tournament.isError) {
     return <div>Something went wrong.</div>;
@@ -41,7 +38,7 @@ function AdminPage() {
       {canAddAttendees && (
         <div className="mt-4">
           <AddAttendeeDialog
-            onSuccess={() => attendeesQuery.refetch()}
+            onSuccess={() => attendees.refetch()}
             attendeeCode={tournament.data.attendee_code}
           />
         </div>
@@ -52,9 +49,9 @@ function AdminPage() {
         adminCode={tournament.data.admin_code}
       />
 
-      {attendeesQuery.data && (
+      {attendees.data && (
         <TournamentSection
-          attendees={attendeesQuery.data.attendees}
+          attendees={attendees.data.attendees}
           tournament={tournament}
         />
       )}

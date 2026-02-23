@@ -1,37 +1,37 @@
 import { ReactFlow, Background, Controls } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import MatchNode from "./MatchNode";
-import RoundLabelNode from "./RoundLabelNode";
+import AdminMatchNode from "./node/AdminMatchNode";
+import DisplayMatchNode from "./node/DisplayMatchNode";
+import RoundLabelNode from "./node/RoundLabelNode";
 
 export default function Bracket({
+  readOnly,
   tournament,
   attendees,
-  readOnly = false,
 }: {
+  readOnly: boolean;
   tournament: any;
   attendees: {
     tournament_id: string;
     attendee_id: string;
     name: string;
   }[];
-  readOnly?: boolean;
 }) {
-  const parsedBracket = JSON.parse(tournament.data.bracket);
+  const deserializedBracket = JSON.parse(tournament.data.bracket);
   const finalNodes = [];
-  const finalEdges = [];
-  for (let i = 0; i < parsedBracket.nodes.length; i++) {
+  for (const key of Object.keys(deserializedBracket.nodes)) {
     finalNodes.push({
-      ...parsedBracket.nodes[i],
+      ...deserializedBracket.nodes[key],
       data: {
-        ...parsedBracket.nodes[i].data,
+        ...deserializedBracket.nodes[key].data,
         attendees,
         state: tournament.data.state,
-        readOnly,
       },
     });
   }
-  for (let i = 0; i < parsedBracket.edges.length; i++) {
-    finalEdges.push(parsedBracket.edges[i]);
+  const finalEdges = [];
+  for (const key of Object.keys(deserializedBracket.edges)) {
+    finalEdges.push(deserializedBracket.edges[key]);
   }
 
   return (
@@ -40,7 +40,7 @@ export default function Bracket({
         nodes={finalNodes}
         edges={finalEdges}
         nodeTypes={{
-          bracketNode: MatchNode,
+          bracketNode: readOnly ? DisplayMatchNode : AdminMatchNode,
           roundLabelNode: RoundLabelNode,
         }}
         maxZoom={4}

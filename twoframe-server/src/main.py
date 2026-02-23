@@ -9,6 +9,7 @@ from src.models.tournament import (
     UpdateTournamentStatePayload,
     CreateTournamentResponse,
     UpdateMatchPayload,
+    UndoPlayerSourcePayload,
     CreateAttendeePayload,
 )
 from src.dynamodb.client import dynamodb_client
@@ -132,9 +133,9 @@ def update_tournament_state(payload: UpdateTournamentStatePayload):
     if payload.state == "playing":
         attendees = dynamodb_client.get_attendees(payload.tournament_id)
 
-        if len(attendees) <= 1:
+        if len(attendees) < 2:
             raise HTTPException(
-                status_code=400, detail="Cannot start tournament with 0 attendees"
+                status_code=400, detail="Cannot start tournament with less than 2 attendees"
             )
         tournament = dynamodb_client.update_tournament_state(
             tournament_id=payload.tournament_id,
@@ -150,6 +151,46 @@ def update_tournament_state(payload: UpdateTournamentStatePayload):
     return {"message": "Tournament state updated"}
 
 
+@app.put("/tournament/{tournament_id}/match/{match_id}/undo-source")
+def undo_player_source(
+    tournament_id: str, match_id: str, payload: UndoPlayerSourcePayload
+):
+    # make sure the tournament exists and admin code is valid
+    tournament = dynamodb_client.get_tournament(tournament_id)
+    if not tournament:
+        raise HTTPException(status_code=404, detail="Tournament not found")
+    # make sure tournament is in "playing" state or edits are not allowed
+    if tournament["state"] != "playing":
+        raise HTTPException(
+            status_code=403,
+            detail="Edits to tournament matches are only allowed when tournament is in 'playing' state",
+        )
+    
+    # make sure admin code matches this
+    if tournament["admin_code"] != payload.admin_code:
+        raise HTTPException(status_code=403, detail="Invalid admin code")
+    
+    # make sure the match exists by extracting serialized bracket and finding match by id
+    bracket = json.loads(tournament["bracket"])
+    currNode = bracket["nodes"].get(match_id, None)
+
+    if not currNode:
+        raise HTTPException(status_code=404, detail="Match not found")
+    
+    # actual gobbledy
+    # basically resets player source state,
+    # then lastly undos previous node's winner
+    source = payload.player_source
+    prevNodeId, _ = currNode["data"]["playerSources"][source]
+    currNode["data"]["playerSources"][source] = (prevNodeId, False)
+    currNode["data"][source] = None
+    bracket["nodes"][prevNodeId]["data"]["winner"] = None  
+    
+    dynamodb_client.update_bracket(tournament_id, json.dumps(bracket))
+    return {"message": f"Result from match {prevNodeId} undone."}
+    
+    
+
 @app.put("/tournament/{tournament_id}/match/{match_id}")
 def update_tournament_match(
     tournament_id: str, match_id: str, payload: UpdateMatchPayload
@@ -164,24 +205,50 @@ def update_tournament_match(
             status_code=403,
             detail="Edits to tournament matches are only allowed when tournament is in 'playing' state",
         )
-    # make sure admin code matches
+    
+    # make sure admin code matches this
     if tournament["admin_code"] != payload.admin_code:
         raise HTTPException(status_code=403, detail="Invalid admin code")
 
     # make sure the match exists by extracting serialized bracket and finding match by id
     bracket = json.loads(tournament["bracket"])
-    found = False
-    for node in bracket["nodes"]:
-        # match found, update it
-        if node["id"] == match_id:
-            found = True
-            node["data"]["player1"] = payload.player1
-            node["data"]["player2"] = payload.player2
-            node["data"]["score1"] = payload.score1
-            node["data"]["score2"] = payload.score2
-            node["data"]["winner"] = payload.winner
-            dynamodb_client.update_bracket(tournament_id, json.dumps(bracket))
-            return {"message": "Match updated"}
+    currNode = bracket["nodes"].get(match_id, None)
 
-    if not found:
+    if not currNode:
         raise HTTPException(status_code=404, detail="Match not found")
+    else:
+        currNode["data"]["player1"] = payload.player1 
+        currNode["data"]["player2"] = payload.player2 
+        currNode["data"]["score1"] = payload.score1
+        currNode["data"]["score2"] = payload.score2
+        
+
+        if payload.winner == 1 and payload.player1 == None:
+            raise HTTPException(status_code=400, detail="Player 1 needs to be set before declaring winner")
+        if payload.winner == 2 and payload.player2 == None:
+            raise HTTPException(status_code=400, detail="Player 2 needs to be set before declaring winner")
+        if payload.winner == 1 and payload.score1 <= payload.score2:
+            raise HTTPException(status_code=400, detail="Winner's score must have a higher score.")
+        if payload.winner == 2 and payload.score2 <= payload.score1:
+            raise HTTPException(status_code=400, detail="Winner's score must have a higher score")
+        
+        if payload.winner:
+
+
+            currNode["data"]["winner"] = payload.winner
+            
+            nextNode = bracket["nodes"].get(currNode["data"]["target"], None)
+            if nextNode:
+                playerToPropagate = currNode["data"]["player1"] if currNode["data"]["winner"] == 1 else currNode["data"]["player2"]
+
+                relevantEdge = bracket["edges"][currNode["id"] + "-" + nextNode["id"]]
+                nextNode["data"][relevantEdge["targetPlayer"]] = playerToPropagate
+
+                if relevantEdge["targetPlayer"] in nextNode["data"]["playerSources"]:
+                    nextNode["data"]["playerSources"][relevantEdge["targetPlayer"]] = (currNode["id"], True)
+
+
+    dynamodb_client.update_bracket(tournament_id, json.dumps(bracket))
+    return {"message": "Match updated"}
+
+

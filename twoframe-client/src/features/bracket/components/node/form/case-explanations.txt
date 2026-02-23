@@ -1,0 +1,49 @@
+Short explanation on whhen a node is controllabe. Made for future reference
+Will prob need to update if this logic doesn't work and bugs occur...
+
+A node in the bracket can be CONTROLLABLE under these conditions:
+
+1. Tournament is currently in a "playing" state
+
+2. A match fulfills one of the four cases:
+
+CASE (A)
+The match node is a Round 1 node, and no winner has been set.
+Easiest case. When a tournament first starts round 1 nodes will be the only editable nodes
+
+Here are the allowed actions in Case A
+- Set player1
+- Set player2
+- Set score1
+- Set score2
+- Set a winner
+
+CASE (B)
+The match has exactly one player source it depends on and this player source is filled, 
+and no winner has been set
+
+This essentially mean the node relies on one previous node result.
+
+Here are the allowed actions in Case B
+- Undo the player source, making this node not CONTROLLABLE again.
+- Set the remaining player (as one of the players has already been filled by source result)
+- Set score1
+- Set score2
+- Set a winner
+
+CASE (C)
+The match has exactly 2 player sources it depends on and only one of them is satisfied.
+
+Here are the allowed actions in Case C
+- Undo the player source, making this node not CONTROLLABLE again.
+
+CASE (D)
+The match has exactly 2 player sources it depends on and only BOTH of them are satisfied.
+
+Here are the allowed actions in Case C
+- Undo a player source, putting this node into CASE (C)
+- Set score1
+- Set score2
+- Set a winner
+
+

@@ -7,21 +7,18 @@ import {
 import { Button } from "@/components/ui/button";
 import { Route } from "@/routes/admin.$code";
 import { toast, Toaster } from "sonner";
+import { useGetTournamentWithAdminCode } from "@/features/admin/hooks/useGetTournament";
 
-export default function MatchForm({
+export default function CaseAMatchForm({
   data,
   setOpen,
 }: {
   data: {
-    round: number;
-    match: number;
+    matchId: string;
     player1: string | null;
     player2: string | null;
     score1: number;
     score2: number;
-    winner: 1 | 2 | null;
-    target: string | null;
-    playerSources: Record<string, [string, boolean]>;
     attendees: {
       name: string;
       attendee_id: string;
@@ -30,20 +27,14 @@ export default function MatchForm({
   };
   setOpen: (open: boolean) => void;
 }) {
-  const hasPlayer1Source = "player1" in data.playerSources;
-  const hasPlayer2Source = "player2" in data.playerSources;
   const { code } = Route.useParams();
   const queryClient = useQueryClient();
-
-  // Get the tournament data from the c
-  const tournamentData = queryClient.getQueryData<any>(["tournament", code]);
-  const tournamentId = tournamentData?.tournament_id;
+  const tournament = useGetTournamentWithAdminCode(code).data;
 
   const mutation = useMutation({
     mutationFn: async ({ value }: any) => {
-      const matchId = `R${data.round}M${data.match}`;
       const response = await fetch(
-        `${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/${tournamentId}/match/${matchId}`,
+        `${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/${tournament.tournament_id}/match/${data.matchId}`,
         {
           method: "PUT",
           headers: {
@@ -70,16 +61,15 @@ export default function MatchForm({
     onSuccess: () => {
       setOpen(false);
       queryClient.invalidateQueries({
-        queryKey: ["tournament", code],
+        queryKey: ["tournament", "admin", code],
       });
     },
   });
 
   const undoPlayerSourceMutation = useMutation({
     mutationFn: async ({ value }: any) => {
-      const matchId = `R${data.round}M${data.match}`;
       const response = await fetch(
-        `${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/${tournamentId}/match/${matchId}/undo-source`,
+        `${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/${tournament}/match/${data.matchId}/undo-source`,
         {
           method: "PUT",
           headers: {
@@ -112,7 +102,7 @@ export default function MatchForm({
       player2: data.player2 || "",
       score1: data.score1,
       score2: data.score2,
-      winner: data.winner || (null as number | null),
+      winner: null as number | null,
     },
   });
 
@@ -143,47 +133,26 @@ export default function MatchForm({
                   <label htmlFor="player1" className="text-sm font-medium">
                     Player 1
                   </label>
-                  {hasPlayer1Source ? (
-                    <div className="flex gap-2">
-                      <div className="h-9 flex-1 rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground">
-                        {field.state.value || "TBD"}
-                      </div>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        className="h-9 px-2 text-xs"
-                        onClick={() =>
-                          undoPlayerSourceMutation.mutate({
-                            value: { player_source: "player1" },
-                          })
-                        }
+                  <NativeSelect
+                    id="player1"
+                    name="player1"
+                    value={field.state.value}
+                    onChange={(e) => {
+                      field.handleChange(e.target.value);
+                    }}
+                  >
+                    <NativeSelectOption value="">
+                      Select player...
+                    </NativeSelectOption>
+                    {data.attendees.map((attendee: any) => (
+                      <NativeSelectOption
+                        key={attendee.attendee_id}
+                        value={attendee.name}
                       >
-                        Reset
-                      </Button>
-                    </div>
-                  ) : (
-                    <NativeSelect
-                      id="player1"
-                      name="player1"
-                      value={field.state.value}
-                      onChange={(e) => {
-                        field.handleChange(e.target.value);
-                      }}
-                    >
-                      <NativeSelectOption value="">
-                        Select player...
+                        {attendee.name}
                       </NativeSelectOption>
-                      {data.attendees.map((attendee: any) => (
-                        <NativeSelectOption
-                          key={attendee.attendee_id}
-                          value={attendee.name}
-                        >
-                          {attendee.name}
-                        </NativeSelectOption>
-                      ))}
-                    </NativeSelect>
-                  )}
+                    ))}
+                  </NativeSelect>
                 </div>
               )}
             />
@@ -219,45 +188,24 @@ export default function MatchForm({
                   <label htmlFor="player2" className="text-sm font-medium">
                     Player 2
                   </label>
-                  {hasPlayer2Source ? (
-                    <div className="flex gap-2">
-                      <div className="h-9 flex-1 rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground">
-                        {field.state.value || "TBD"}
-                      </div>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        className="h-9 px-2 text-xs"
-                        onClick={() =>
-                          undoPlayerSourceMutation.mutate({
-                            value: { player_source: "player2" },
-                          })
-                        }
+                  <NativeSelect
+                    id="player2"
+                    name="player2"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  >
+                    <NativeSelectOption value="">
+                      Select player...
+                    </NativeSelectOption>
+                    {data.attendees.map((attendee: any) => (
+                      <NativeSelectOption
+                        key={attendee.attendee_id}
+                        value={attendee.name}
                       >
-                        Reset
-                      </Button>
-                    </div>
-                  ) : (
-                    <NativeSelect
-                      id="player2"
-                      name="player2"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    >
-                      <NativeSelectOption value="">
-                        Select player...
+                        {attendee.name}
                       </NativeSelectOption>
-                      {data.attendees.map((attendee: any) => (
-                        <NativeSelectOption
-                          key={attendee.attendee_id}
-                          value={attendee.name}
-                        >
-                          {attendee.name}
-                        </NativeSelectOption>
-                      ))}
-                    </NativeSelect>
-                  )}
+                    ))}
+                  </NativeSelect>
                 </div>
               )}
             />

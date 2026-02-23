@@ -1,4 +1,5 @@
 import { z } from "zod";
+import dayjs from "dayjs";
 
 //using tanstack form for easier data validation and submission handling
 export interface TournamentFormEntry {
@@ -19,7 +20,8 @@ export const formSchema = z.object({
   date: z
     .string()
     .refine(
-      (val) => val && new Date(val) > new Date(),
-      "Event must be in the future",
+      (val) => val >= dayjs().format("YYYY-MM-DD"),
+      "Event date must be today or later",
     ),
 });
+

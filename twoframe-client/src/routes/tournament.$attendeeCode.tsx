@@ -45,9 +45,9 @@ function TournamentPage() {
       {(tournament.data.state === "playing" ||
         tournament.data.state === "completed") && (
         <Bracket
+          readOnly={true}
           tournament={tournament}
           attendees={tournament.data.attendees}
-          readOnly={true}
         />
       )}
     </div>

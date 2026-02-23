@@ -9,12 +9,10 @@ export default function RoundLabelNode({
 }) {
   return (
     <div
-      className="font-extrabold text-3xl overflow-hidden whitespace-nowrap text-center"
+      className="underline font-extrabold text-3xl overflow-hidden whitespace-nowrap text-center text-white"
       style={{
         width: `${NODE_WIDTH}px`,
         height: `${NODE_HEIGHT}px`,
-        borderBottom: `1px solid var(--bracket-border)`,
-        color: "white",
       }}
     >
       {data.label}
