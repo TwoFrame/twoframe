@@ -8,7 +8,7 @@ A node in the bracket can be CONTROLLABLE under these conditions:
 2. A match fulfills one of the four cases:
 
 CASE (A)
-The match node is a Round 1 node, and no winner has been set.
+The match node is a Round 1 or 2 node, with no sources, and no winner has been set.
 Easiest case. When a tournament first starts round 1 nodes will be the only editable nodes
 
 Here are the allowed actions in Case A
@@ -17,6 +17,7 @@ Here are the allowed actions in Case A
 - Set score1
 - Set score2
 - Set a winner
+
 
 CASE (B)
 The match has exactly one player source it depends on and this player source is filled, 

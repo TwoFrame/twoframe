@@ -51,7 +51,7 @@ export default function AdminMatchNode({
 
   let controlCase: MatchControlCase | null = null;
 
-  if (data.state == "playing" && data.round == 1 && data.winner == null) {
+  if (data.state == "playing" && data.round <=2 && data.winner == null && sources.length==0) {
     controlCase = MatchControlCase.A;
   } else if (
     data.state == "playing" &&

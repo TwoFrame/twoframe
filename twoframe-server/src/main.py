@@ -223,6 +223,9 @@ def update_tournament_match(
         currNode["data"]["score2"] = payload.score2
         
 
+        if payload.player1 and payload.player2 and payload.player1 == payload.player2:
+            raise HTTPException(status_code=400, detail="A player cannot be matched against themselves")
+
         if payload.winner == 1 and payload.player1 == None:
             raise HTTPException(status_code=400, detail="Player 1 needs to be set before declaring winner")
         if payload.winner == 2 and payload.player2 == None:
