@@ -18,13 +18,29 @@ export default function Bracket({
   }[];
 }) {
   const deserializedBracket = JSON.parse(tournament.data.bracket);
+
+  // Collect all players already assigned to any match node
+  const assignedPlayers = new Set<string>();
+  for (const key of Object.keys(deserializedBracket.nodes)) {
+    const nodeData = deserializedBracket.nodes[key].data;
+    if (nodeData.player1) assignedPlayers.add(nodeData.player1);
+    if (nodeData.player2) assignedPlayers.add(nodeData.player2);
+  }
   const finalNodes = [];
   for (const key of Object.keys(deserializedBracket.nodes)) {
+    const nodeData = deserializedBracket.nodes[key].data;
+    // Include globally available players + this node's own assigned players
+    const nodeAttendees = attendees.filter(
+      (a) =>
+        !assignedPlayers.has(a.name) ||
+        a.name === nodeData.player1 ||
+        a.name === nodeData.player2,
+    );
     finalNodes.push({
       ...deserializedBracket.nodes[key],
       data: {
-        ...deserializedBracket.nodes[key].data,
-        attendees,
+        ...nodeData,
+        attendees: nodeAttendees,
         state: tournament.data.state,
       },
     });
