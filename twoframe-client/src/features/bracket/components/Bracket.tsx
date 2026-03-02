@@ -3,6 +3,7 @@ import "@xyflow/react/dist/style.css";
 import AdminMatchNode from "./node/AdminMatchNode";
 import DisplayMatchNode from "./node/DisplayMatchNode";
 import RoundLabelNode from "./node/RoundLabelNode";
+import type { Attendee, TournamentData } from "@/types/tournament";
 
 export default function Bracket({
   readOnly,
@@ -10,14 +11,10 @@ export default function Bracket({
   attendees,
 }: {
   readOnly: boolean;
-  tournament: any;
-  attendees: {
-    tournament_id: string;
-    attendee_id: string;
-    name: string;
-  }[];
+  tournament: TournamentData;
+  attendees: Attendee[];
 }) {
-  const deserializedBracket = JSON.parse(tournament.data.bracket);
+  const deserializedBracket = JSON.parse(tournament.bracket!);
 
   // Collect all players already assigned to any match node
   const assignedPlayers = new Set<string>();
@@ -26,10 +23,10 @@ export default function Bracket({
     if (nodeData.player1) assignedPlayers.add(nodeData.player1);
     if (nodeData.player2) assignedPlayers.add(nodeData.player2);
   }
+
   const finalNodes = [];
   for (const key of Object.keys(deserializedBracket.nodes)) {
     const nodeData = deserializedBracket.nodes[key].data;
-    // Include globally available players + this node's own assigned players
     const nodeAttendees = attendees.filter(
       (a) =>
         !assignedPlayers.has(a.name) ||
@@ -41,10 +38,11 @@ export default function Bracket({
       data: {
         ...nodeData,
         attendees: nodeAttendees,
-        state: tournament.data.state,
+        state: tournament.state,
       },
     });
   }
+
   const finalEdges = [];
   for (const key of Object.keys(deserializedBracket.edges)) {
     finalEdges.push(deserializedBracket.edges[key]);
