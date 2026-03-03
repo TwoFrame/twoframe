@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
+import { ArrowLeft } from "lucide-react";
 import { AddAttendeeForm } from "@/components/shared/join/AddAttendeeForm";
 import {
   Card,
@@ -20,7 +21,15 @@ function JoinTournamentPage() {
   return (
     <div className="min-h-screen flex items-center justify-center py-8">
       <Toaster />
-      <Card className="w-[90%] max-w-[450px]">
+      <div className="w-[90%] max-w-[450px] space-y-4">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-green-600 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Home</span>
+        </Link>
+        <Card>
         {!joinedCode ? (
           <>
             <CardHeader>
@@ -73,6 +82,7 @@ function JoinTournamentPage() {
           </>
         )}
       </Card>
+      </div>
     </div>
   );
 }
