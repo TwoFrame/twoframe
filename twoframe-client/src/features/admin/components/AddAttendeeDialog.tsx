@@ -19,7 +19,9 @@ export function AddAttendeeDialog({ onSuccess, attendeeCode }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Add Attendee</Button>
+        <Button className="bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white shadow-md hover:shadow-green-500/40 transition-all duration-300">
+          Add Attendee
+        </Button>
       </DialogTrigger>
 
       <DialogContent>

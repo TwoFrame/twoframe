@@ -1,4 +1,3 @@
-import { AddAttendeeDialog } from "@/features/admin/components/AddAttendeeDialog";
 import { TournamentCodes } from "@/features/admin/components/TournamentCodes";
 import { createFileRoute } from "@tanstack/react-router";
 import { TournamentSection } from "@/features/admin/components/TournamentSection";
@@ -42,8 +41,6 @@ function AdminPage() {
     );
   }
 
-  const canAddAttendees = tournament.data.state === "open";
-
   return (
     <div className="size-full min-h-screen bg-gradient-to-br from-green-50 via-teal-50 to-cyan-50 p-6">
       <div className="max-w-6xl mx-auto space-y-6">
@@ -51,16 +48,8 @@ function AdminPage() {
           <TournamentHeader
             tournament={tournament.data}
             canStartTournament={canStart}
+            onAttendeeAdded={() => attendees.refetch()}
           />
-
-          {canAddAttendees && (
-            <div className="mt-4">
-              <AddAttendeeDialog
-                onSuccess={() => attendees.refetch()}
-                attendeeCode={tournament.data.attendee_code}
-              />
-            </div>
-          )}
         </div>
 
         <TournamentCodes
