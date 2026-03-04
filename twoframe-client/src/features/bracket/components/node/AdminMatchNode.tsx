@@ -14,16 +14,15 @@ import CaseCMatchForm from "./form/CaseCMatchForm";
 import CaseDMatchForm from "./form/CaseDMatchForm";
 
 const NODE_WIDTH = 200;
-const NODE_HEIGHT = 64;
-//just read case-explanations.txt for what these mean
+const NODE_HEIGHT = 76;
+
 enum MatchControlCase {
   A = 0,
   B = 1,
   C = 2,
   D = 3,
 }
-//TODO: attendees and state are being thrown into each individual match node. super bad but did it to get working
-// should probably have the nodes in the flow pull from the reactflow parent component or some context.
+
 export default function AdminMatchNode({
   data,
 }: {
@@ -51,14 +50,9 @@ export default function AdminMatchNode({
 
   let controlCase: MatchControlCase | null = null;
 
-  if (data.state == "playing" && data.round <=2 && data.winner == null && sources.length==0) {
+  if (data.state == "playing" && data.round <= 2 && data.winner == null && sources.length == 0) {
     controlCase = MatchControlCase.A;
-  } else if (
-    data.state == "playing" &&
-    sources.length == 1 &&
-    sources[0][1] &&
-    data.winner == null
-  ) {
+  } else if (data.state == "playing" && sources.length == 1 && sources[0][1] && data.winner == null) {
     controlCase = MatchControlCase.B;
   } else if (
     data.state == "playing" &&
@@ -76,42 +70,51 @@ export default function AdminMatchNode({
   ) {
     controlCase = MatchControlCase.D;
   }
-  console.log(`R${data.round}M${data.match}`, controlCase);
+
+  const isClickable = controlCase != null;
 
   const matchNodeContent = (
     <div
-      className={`relative bg-secondary grid grid-cols-[85fr_15fr] grid-rows-2 ${controlCase != null ? "hover:cursor-pointer hover:bg-secondary/80" : ""}`}
-      style={{
-        width: `${NODE_WIDTH}px`,
-        height: `${NODE_HEIGHT}px`,
-      }}
+      className={`bg-white border rounded-lg shadow-sm overflow-hidden flex flex-col transition-all duration-150 ${
+        isClickable
+          ? "border-teal-300 hover:border-teal-400 hover:shadow-md hover:shadow-teal-100 cursor-pointer"
+          : "border-green-200"
+      }`}
+      style={{ width: `${NODE_WIDTH}px`, height: `${NODE_HEIGHT}px` }}
     >
-      <div className="text-xs bg-cyan-300 absolute -top-[12px] rounded px-1">
-        R{data.round}M{data.match}
+      {/* Label row */}
+      <div className="flex justify-between items-center px-2 pt-1 pb-0.5">
+        <span className="bg-teal-100 text-teal-700 border border-teal-200 text-[10px] font-semibold rounded-full px-2 py-0.5 leading-none">
+          R{data.round} M{data.match}
+        </span>
+
       </div>
 
-      {/* Player 1 Name */}
-      <div className="pl-2 flex items-center text-sm truncate border-b border-r border-gray-300">
-        {data.player1 || "TBD"}
-      </div>
+      {/* Players grid */}
+      <div className="flex-1 grid grid-cols-[1fr_auto] grid-rows-2">
+        {/* Player 1 Name */}
+        <div className={`pl-2 flex items-center text-sm truncate border-b border-r border-green-100 ${data.winner === 1 ? "font-semibold text-green-700" : "text-gray-600"}`}>
+          {data.player1 || <span className="text-gray-300 italic">TBD</span>}
+        </div>
 
-      {/* Player 1 Score */}
-      <div
-        className={`px-2 flex items-center justify-end text-sm font-semibold border-b border-gray-300 ${data.winner === 1 ? "bg-cyan-600 text-white" : ""}`}
-      >
-        {data.score1 ?? 0}
-      </div>
+        {/* Player 1 Score */}
+        <div className={`w-10 flex items-center justify-center text-sm font-bold border-b border-green-100 ${
+          data.winner === 1 ? "bg-gradient-to-br from-green-500 to-teal-500 text-white" : "text-gray-500"
+        }`}>
+          {data.score1 ?? 0}
+        </div>
 
-      {/* Player 2 Name */}
-      <div className="pl-2 flex items-center text-sm truncate border-r border-gray-300">
-        {data.player2 || "TBD"}
-      </div>
+        {/* Player 2 Name */}
+        <div className={`pl-2 flex items-center text-sm truncate border-r border-green-100 ${data.winner === 2 ? "font-semibold text-green-700" : "text-gray-600"}`}>
+          {data.player2 || <span className="text-gray-300 italic">TBD</span>}
+        </div>
 
-      {/* Player 2 Score */}
-      <div
-        className={`px-2 flex items-center justify-end text-sm font-semibold ${data.winner === 2 ? "bg-cyan-600 text-white" : ""}`}
-      >
-        {data.score2 ?? 0}
+        {/* Player 2 Score */}
+        <div className={`w-10 flex items-center justify-center text-sm font-bold ${
+          data.winner === 2 ? "bg-gradient-to-br from-green-500 to-teal-500 text-white" : "text-gray-500"
+        }`}>
+          {data.score2 ?? 0}
+        </div>
       </div>
     </div>
   );
@@ -119,62 +122,80 @@ export default function AdminMatchNode({
   return (
     <>
       {Object.keys(data.playerSources).length > 0 && (
-        <Handle type="target" position={Position.Left} />
+        <Handle
+          type="target"
+          position={Position.Left}
+          style={{ background: "#14b8a6", border: "2px solid #99f6e4" }}
+        />
       )}
 
-      {controlCase != null ? (
+      {isClickable ? (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>{matchNodeContent}</DialogTrigger>
-          <DialogContent>
+          <DialogContent className="border-green-200">
             <DialogHeader>
-              <DialogTitle>Update Match</DialogTitle>
+              <DialogTitle className="text-gray-700">Update Match</DialogTitle>
             </DialogHeader>
             <DialogDescription></DialogDescription>
             {(() => {
-              switch (+controlCase) {
+              switch (+controlCase!) {
                 case MatchControlCase.A:
-                  let caseAData = {
-                    matchId: `R${data.round}M${data.match}`,
-                    player1: data.player1,
-                    player2: data.player2,
-                    score1: data.score1,
-                    score2: data.score2,
-                    attendees: data.attendees,
-                  };
-                  return <CaseAMatchForm data={caseAData} setOpen={setOpen} />;
+                  return (
+                    <CaseAMatchForm
+                      data={{
+                        matchId: `R${data.round}M${data.match}`,
+                        player1: data.player1,
+                        player2: data.player2,
+                        score1: data.score1,
+                        score2: data.score2,
+                        attendees: data.attendees,
+                      }}
+                      setOpen={setOpen}
+                    />
+                  );
                 case MatchControlCase.B:
                   const sourceKey = Object.keys(data.playerSources)[0];
-                  let caseBData = {
-                    matchId: `R${data.round}M${data.match}`,
-                    sourcedPlayer: (sourceKey === "player1" ? 1 : 2) as 1 | 2,
-                    player1: sourceKey === "player1" ? data.player1 : null,
-                    player2: sourceKey === "player2" ? data.player2 : null,
-                    score1: data.score1,
-                    score2: data.score2,
-                    attendees: data.attendees,
-                  };
-                  return <CaseBMatchForm data={caseBData} setOpen={setOpen} />;
+                  return (
+                    <CaseBMatchForm
+                      data={{
+                        matchId: `R${data.round}M${data.match}`,
+                        sourcedPlayer: (sourceKey === "player1" ? 1 : 2) as 1 | 2,
+                        player1: sourceKey === "player1" ? data.player1 : null,
+                        player2: sourceKey === "player2" ? data.player2 : null,
+                        score1: data.score1,
+                        score2: data.score2,
+                        attendees: data.attendees,
+                      }}
+                      setOpen={setOpen}
+                    />
+                  );
                 case MatchControlCase.C:
                   const sourceEntries = Object.entries(data.playerSources);
                   const filledSource = sourceEntries.find(([, v]) => v[1])!;
-                  let caseCData = {
-                    matchId: `R${data.round}M${data.match}`,
-                    sourcedPlayer: (filledSource[0] === "player1" ? 1 : 2) as
-                      | 1
-                      | 2,
-                    player1: data.player1,
-                    player2: data.player2,
-                  };
-                  return <CaseCMatchForm data={caseCData} setOpen={setOpen} />;
+                  return (
+                    <CaseCMatchForm
+                      data={{
+                        matchId: `R${data.round}M${data.match}`,
+                        sourcedPlayer: (filledSource[0] === "player1" ? 1 : 2) as 1 | 2,
+                        player1: data.player1,
+                        player2: data.player2,
+                      }}
+                      setOpen={setOpen}
+                    />
+                  );
                 case MatchControlCase.D:
-                  let caseDData = {
-                    matchId: `R${data.round}M${data.match}`,
-                    player1: data.player1,
-                    player2: data.player2,
-                    score1: data.score1,
-                    score2: data.score2,
-                  };
-                  return <CaseDMatchForm data={caseDData} setOpen={setOpen} />;
+                  return (
+                    <CaseDMatchForm
+                      data={{
+                        matchId: `R${data.round}M${data.match}`,
+                        player1: data.player1,
+                        player2: data.player2,
+                        score1: data.score1,
+                        score2: data.score2,
+                      }}
+                      setOpen={setOpen}
+                    />
+                  );
                 default:
                   return null;
               }
@@ -184,7 +205,14 @@ export default function AdminMatchNode({
       ) : (
         matchNodeContent
       )}
-      {!data.final && <Handle type="source" position={Position.Right} />}
+
+      {!data.final && (
+        <Handle
+          type="source"
+          position={Position.Right}
+          style={{ background: "#14b8a6", border: "2px solid #99f6e4" }}
+        />
+      )}
     </>
   );
 }

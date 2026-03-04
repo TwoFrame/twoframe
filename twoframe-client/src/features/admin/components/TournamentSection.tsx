@@ -10,11 +10,10 @@ type Props = {
 export function TournamentSection({ attendees, tournament }: Props) {
   return (
     <div className="space-y-6">
-      {/* Attendees Card */}
       <div className="bg-white border border-green-200 rounded-xl p-6 shadow-lg">
         <div className="flex items-center gap-2 mb-4">
           <Users className="w-5 h-5 text-green-500" />
-          <h2 className="text-xl font-black text-gray-800">
+          <h2 className="text-xl font-black text-gray-700">
             Attendees:{" "}
             <span className="text-green-600">{attendees.length}</span>
           </h2>
@@ -37,7 +36,6 @@ export function TournamentSection({ attendees, tournament }: Props) {
         </div>
       </div>
 
-      {/* Bracket Card */}
       {(tournament.state === "playing" || tournament.state === "completed") && (
         <div className="bg-white border border-green-200 rounded-xl p-6 shadow-lg">
           <h2 className="text-2xl font-black mb-4 text-gray-800">
