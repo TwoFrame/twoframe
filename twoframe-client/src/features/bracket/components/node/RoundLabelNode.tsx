@@ -1,5 +1,6 @@
 const NODE_WIDTH = 200;
 const NODE_HEIGHT = 64;
+
 export default function RoundLabelNode({
   data,
 }: {
@@ -9,7 +10,7 @@ export default function RoundLabelNode({
 }) {
   return (
     <div
-      className="underline font-extrabold text-3xl overflow-hidden whitespace-nowrap text-center text-white"
+      className="flex items-center justify-center font-black text-xl tracking-wide text-teal-600"
       style={{
         width: `${NODE_WIDTH}px`,
         height: `${NODE_HEIGHT}px`,

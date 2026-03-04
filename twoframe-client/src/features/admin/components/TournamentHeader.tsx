@@ -44,7 +44,6 @@ export function TournamentHeader({
 
   return (
     <div className="flex items-start justify-between gap-4 flex-wrap">
-      {/* Left: title, date, status */}
       <div className="space-y-2">
         <h1 className="text-4xl font-black text-gray-700">{tournament.name}</h1>
         <p className="text-gray-400 text-sm">
@@ -63,7 +62,6 @@ export function TournamentHeader({
         </div>
       </div>
 
-      {/* Right: action buttons stacked */}
       <div className="flex flex-col items-stretch gap-2 min-w-[160px]">
         {canAddAttendees && (
           <AddAttendeeDialog

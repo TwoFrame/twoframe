@@ -1,4 +1,4 @@
-import { ReactFlow, Background, Controls } from "@xyflow/react";
+import { ReactFlow, Background, BackgroundVariant, Controls } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import AdminMatchNode from "./node/AdminMatchNode";
 import DisplayMatchNode from "./node/DisplayMatchNode";
@@ -16,7 +16,6 @@ export default function Bracket({
 }) {
   const deserializedBracket = JSON.parse(tournament.bracket!);
 
-  // Collect all players already assigned to any match node
   const assignedPlayers = new Set<string>();
   for (const key of Object.keys(deserializedBracket.nodes)) {
     const nodeData = deserializedBracket.nodes[key].data;
@@ -45,11 +44,14 @@ export default function Bracket({
 
   const finalEdges = [];
   for (const key of Object.keys(deserializedBracket.edges)) {
-    finalEdges.push(deserializedBracket.edges[key]);
+    finalEdges.push({
+      ...deserializedBracket.edges[key],
+      style: { stroke: "#5eead4", strokeWidth: 2 },
+    });
   }
 
   return (
-    <div className="h-[500px] w-full border">
+    <div className="h-[500px] w-full rounded-xl overflow-hidden border border-green-200">
       <ReactFlow
         nodes={finalNodes}
         edges={finalEdges}
@@ -61,8 +63,14 @@ export default function Bracket({
         minZoom={0.1}
         fitView
       >
-        <Background bgColor="var(--secondary-foreground)" />
-        <Controls />
+        <Background
+          color="#86efac"
+          gap={20}
+          size={1.5}
+          variant={BackgroundVariant.Dots}
+          style={{ backgroundColor: "#f0fdf4" }}
+        />
+        <Controls className="[&>button]:border-green-200 [&>button]:bg-white [&>button]:text-green-700 [&>button:hover]:bg-green-50" />
       </ReactFlow>
     </div>
   );
