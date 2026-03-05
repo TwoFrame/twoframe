@@ -66,36 +66,6 @@ export default function CaseAMatchForm({
     },
   });
 
-  const undoPlayerSourceMutation = useMutation({
-    mutationFn: async ({ value }: any) => {
-      const response = await fetch(
-        `${import.meta.env.VITE_TWOFRAME_SERVER_URL}/tournament/${tournament}/match/${data.matchId}/undo-source`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            admin_code: code,
-            player_source: value.player_source,
-          }),
-        },
-      );
-      if (!response.ok) {
-        throw new Error("Failed to undo match result");
-      }
-    },
-    onError: () => {
-      toast.error("Failed to undo match result");
-    },
-    onSuccess: () => {
-      setOpen(false);
-      queryClient.invalidateQueries({
-        queryKey: ["tournament", code],
-      });
-    },
-  });
-
   const formOpts = formOptions({
     defaultValues: {
       player1: data.player1 || "",
