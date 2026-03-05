@@ -43,26 +43,38 @@ export default function DisplayMatchNode({
         {/* Players grid */}
         <div className="flex-1 grid grid-cols-[1fr_auto] grid-rows-2">
           {/* Player 1 Name */}
-          <div className={`pl-2 flex items-center text-sm truncate border-b border-r border-green-100 ${data.winner === 1 ? "font-semibold text-green-700" : "text-gray-600"}`}>
+          <div
+            className={`pl-2 flex items-center text-sm truncate border-b border-r border-green-100 ${data.winner === 1 ? "font-semibold text-green-700" : "text-gray-600"}`}
+          >
             {data.player1 || <span className="text-gray-300 italic">TBD</span>}
           </div>
 
           {/* Player 1 Score */}
-          <div className={`w-10 flex items-center justify-center text-sm font-bold border-b border-green-100 ${
-            data.winner === 1 ? "bg-gradient-to-br from-green-500 to-teal-500 text-white" : "text-gray-500"
-          }`}>
+          <div
+            className={`w-10 flex items-center justify-center text-sm font-bold border-b border-green-100 ${
+              data.winner === 1
+                ? "bg-gradient-to-br from-green-500 to-teal-500 text-white"
+                : "text-gray-500"
+            }`}
+          >
             {data.score1 ?? 0}
           </div>
 
           {/* Player 2 Name */}
-          <div className={`pl-2 flex items-center text-sm truncate border-r border-green-100 ${data.winner === 2 ? "font-semibold text-green-700" : "text-gray-600"}`}>
+          <div
+            className={`pl-2 flex items-center text-sm truncate border-r border-green-100 ${data.winner === 2 ? "font-semibold text-green-700" : "text-gray-600"}`}
+          >
             {data.player2 || <span className="text-gray-300 italic">TBD</span>}
           </div>
 
           {/* Player 2 Score */}
-          <div className={`w-10 flex items-center justify-center text-sm font-bold ${
-            data.winner === 2 ? "bg-gradient-to-br from-green-500 to-teal-500 text-white" : "text-gray-500"
-          }`}>
+          <div
+            className={`w-10 flex items-center justify-center text-sm font-bold ${
+              data.winner === 2
+                ? "bg-gradient-to-br from-green-500 to-teal-500 text-white"
+                : "text-gray-500"
+            }`}
+          >
             {data.score2 ?? 0}
           </div>
         </div>

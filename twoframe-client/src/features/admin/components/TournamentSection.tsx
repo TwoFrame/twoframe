@@ -41,7 +41,11 @@ export function TournamentSection({ attendees, tournament }: Props) {
           <h2 className="text-2xl font-black mb-4 text-gray-800">
             Tournament Bracket
           </h2>
-          <Bracket tournament={tournament} attendees={attendees} readOnly={false} />
+          <Bracket
+            tournament={tournament}
+            attendees={attendees}
+            readOnly={false}
+          />
         </div>
       )}
     </div>

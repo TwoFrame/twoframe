@@ -44,7 +44,10 @@ export function AddAttendeeForm({
       <form.Field name="name">
         {(field) => (
           <div className="space-y-1.5">
-            <label htmlFor={field.name} className="text-sm font-medium text-foreground">
+            <label
+              htmlFor={field.name}
+              className="text-sm font-medium text-foreground"
+            >
               Your Name
             </label>
             <Input
@@ -57,7 +60,8 @@ export function AddAttendeeForm({
               disabled={mutation.isPending}
               className="bg-muted/40"
             />
-            {field.state.meta.isBlurred && field.state.meta.errors.length > 0 ? (
+            {field.state.meta.isBlurred &&
+            field.state.meta.errors.length > 0 ? (
               <p className="text-destructive text-xs">
                 {field.state.meta.errors[0]?.message}
               </p>
@@ -71,7 +75,10 @@ export function AddAttendeeForm({
         <form.Field name="attendee_code">
           {(field) => (
             <div className="space-y-1.5">
-              <label htmlFor={field.name} className="text-sm font-medium text-foreground">
+              <label
+                htmlFor={field.name}
+                className="text-sm font-medium text-foreground"
+              >
                 Attendee Code
               </label>
               <Input
@@ -84,7 +91,8 @@ export function AddAttendeeForm({
                 disabled={mutation.isPending}
                 className="bg-muted/40"
               />
-              {field.state.meta.isBlurred && field.state.meta.errors.length > 0 ? (
+              {field.state.meta.isBlurred &&
+              field.state.meta.errors.length > 0 ? (
                 <p className="text-destructive text-xs">
                   {field.state.meta.errors[0]?.message}
                 </p>

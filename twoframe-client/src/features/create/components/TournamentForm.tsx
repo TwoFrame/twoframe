@@ -47,7 +47,8 @@ export function TournamentForm({
               disabled={isSubmitting}
               className="bg-muted/40"
             />
-            {field.state.meta.isBlurred && field.state.meta.errors.length > 0 ? (
+            {field.state.meta.isBlurred &&
+            field.state.meta.errors.length > 0 ? (
               <p className="text-destructive text-xs">
                 {field.state.meta.errors[0]?.message}
               </p>
@@ -59,9 +60,7 @@ export function TournamentForm({
       <form.Field name="date">
         {(field) => (
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-foreground">
-              Date
-            </label>
+            <label className="text-sm font-medium text-foreground">Date</label>
             <Input
               type="date"
               value={field.state.value}

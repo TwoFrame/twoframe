@@ -24,4 +24,3 @@ export const formSchema = z.object({
       "Event date must be today or later",
     ),
 });
-

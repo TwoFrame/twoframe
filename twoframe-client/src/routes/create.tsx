@@ -37,7 +37,9 @@ function CreateTournamentPage() {
           />
 
           {mutation.isError && (
-            <p className="text-red-500 text-sm mt-3">{mutation.error.message}</p>
+            <p className="text-red-500 text-sm mt-3">
+              {mutation.error.message}
+            </p>
           )}
         </div>
       </div>

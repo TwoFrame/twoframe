@@ -9,9 +9,12 @@ ROUND_GAP = 164
 
 def generate_bracket(attendees: int):
     totalRounds = math.ceil(math.log2(attendees))
-    idealTotalAttendees = 2 ** totalRounds
+    idealTotalAttendees = 2**totalRounds
     idealNodesInFirstRound = idealTotalAttendees / 2
-    idealYRangeInFirstRound = idealNodesInFirstRound * NODE_HEIGHT + (idealNodesInFirstRound - 1) * FIRST_ROUND_NODE_GAP
+    idealYRangeInFirstRound = (
+        idealNodesInFirstRound * NODE_HEIGHT
+        + (idealNodesInFirstRound - 1) * FIRST_ROUND_NODE_GAP
+    )
 
     def calculate_node_x(round: int):
         return (round - 1) * ROUND_GAP + (round) * NODE_WIDTH - NODE_WIDTH
@@ -20,39 +23,41 @@ def generate_bracket(attendees: int):
     edges = {}
     q = deque()
 
-    q.append(((1,2), {
-        "id": f"R{totalRounds}M1",
-        "position": {
-            "x": calculate_node_x(totalRounds),
-            "y": idealYRangeInFirstRound / 2
-        },
-        "data": {
-            "round": totalRounds,
-            "match": 1,
-            "player1": None,
-            "player2": None,
-            "score1": 0,
-            "score2": 0,
-            "winner": None,
-            "target": None,
-            "playerSources": {},
-            "final": True,
-        },
-        "type": "bracketNode",
-    }))
-
-
+    q.append(
+        (
+            (1, 2),
+            {
+                "id": f"R{totalRounds}M1",
+                "position": {
+                    "x": calculate_node_x(totalRounds),
+                    "y": idealYRangeInFirstRound / 2,
+                },
+                "data": {
+                    "round": totalRounds,
+                    "match": 1,
+                    "player1": None,
+                    "player2": None,
+                    "score1": 0,
+                    "score2": 0,
+                    "winner": None,
+                    "target": None,
+                    "playerSources": {},
+                    "final": True,
+                },
+                "type": "bracketNode",
+            },
+        )
+    )
 
     while len(q) > 0:
         seeds, node = q.popleft()
         currRound = node["data"]["round"]
         newRound = currRound - 1
-        yChange = idealYRangeInFirstRound / (2 ** (totalRounds - currRound+2))
+        yChange = idealYRangeInFirstRound / (2 ** (totalRounds - currRound + 2))
         nodes[node["id"]] = node
 
-        if (currRound < 2):
+        if currRound < 2:
             continue
-
 
         signs = [-1, 1]
         newMatchNumbers = [2 * node["data"]["match"] - 1, 2 * node["data"]["match"]]
@@ -71,7 +76,9 @@ def generate_bracket(attendees: int):
                         "id": newMatchId,
                         "position": {
                             "x": calculate_node_x(newRound),
-                            "y": node["position"]["y"] if byeFound else node["position"]["y"] + signs[i] * yChange
+                            "y": node["position"]["y"]
+                            if byeFound
+                            else node["position"]["y"] + signs[i] * yChange,
                         },
                         "data": {
                             "round": newRound,
@@ -79,24 +86,24 @@ def generate_bracket(attendees: int):
                             "player1": None,
                             "player2": None,
                             "score1": 0,
-                            "score2": 0,    
+                            "score2": 0,
                             "winner": None,
                             "target": node["id"],
-                            "playerSources": {}
+                            "playerSources": {},
                         },
                         "type": "bracketNode",
-                    }
+                    },
                 )
             )
             node["data"]["playerSources"][f"player{i + 1}"] = (newMatchId, False)
-            
-            edges[f"{newMatchId}-{node["id"]}"] = {
-                "id": f"{newMatchId}-{node["id"]}",
+
+            edges[f"{newMatchId}-{node['id']}"] = {
+                "id": f"{newMatchId}-{node['id']}",
                 "source": newMatchId,
                 "target": node["id"],
                 "targetPlayer": f"player{i + 1}",
                 "type": "smoothstep",
-                "animated": True
+                "animated": True,
             }
 
     for i in range(totalRounds):

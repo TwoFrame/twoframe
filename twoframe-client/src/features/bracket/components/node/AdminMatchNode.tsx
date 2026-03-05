@@ -50,9 +50,19 @@ export default function AdminMatchNode({
 
   let controlCase: MatchControlCase | null = null;
 
-  if (data.state == "playing" && data.round <= 2 && data.winner == null && sources.length == 0) {
+  if (
+    data.state == "playing" &&
+    data.round <= 2 &&
+    data.winner == null &&
+    sources.length == 0
+  ) {
     controlCase = MatchControlCase.A;
-  } else if (data.state == "playing" && sources.length == 1 && sources[0][1] && data.winner == null) {
+  } else if (
+    data.state == "playing" &&
+    sources.length == 1 &&
+    sources[0][1] &&
+    data.winner == null
+  ) {
     controlCase = MatchControlCase.B;
   } else if (
     data.state == "playing" &&
@@ -87,32 +97,43 @@ export default function AdminMatchNode({
         <span className="bg-teal-100 text-teal-700 border border-teal-200 text-[10px] font-semibold rounded-full px-2 py-0.5 leading-none">
           R{data.round} M{data.match}
         </span>
-
       </div>
 
       {/* Players grid */}
       <div className="flex-1 grid grid-cols-[1fr_auto] grid-rows-2">
         {/* Player 1 Name */}
-        <div className={`pl-2 flex items-center text-sm truncate border-b border-r border-green-100 ${data.winner === 1 ? "font-semibold text-green-700" : "text-gray-600"}`}>
+        <div
+          className={`pl-2 flex items-center text-sm truncate border-b border-r border-green-100 ${data.winner === 1 ? "font-semibold text-green-700" : "text-gray-600"}`}
+        >
           {data.player1 || <span className="text-gray-300 italic">TBD</span>}
         </div>
 
         {/* Player 1 Score */}
-        <div className={`w-10 flex items-center justify-center text-sm font-bold border-b border-green-100 ${
-          data.winner === 1 ? "bg-gradient-to-br from-green-500 to-teal-500 text-white" : "text-gray-500"
-        }`}>
+        <div
+          className={`w-10 flex items-center justify-center text-sm font-bold border-b border-green-100 ${
+            data.winner === 1
+              ? "bg-gradient-to-br from-green-500 to-teal-500 text-white"
+              : "text-gray-500"
+          }`}
+        >
           {data.score1 ?? 0}
         </div>
 
         {/* Player 2 Name */}
-        <div className={`pl-2 flex items-center text-sm truncate border-r border-green-100 ${data.winner === 2 ? "font-semibold text-green-700" : "text-gray-600"}`}>
+        <div
+          className={`pl-2 flex items-center text-sm truncate border-r border-green-100 ${data.winner === 2 ? "font-semibold text-green-700" : "text-gray-600"}`}
+        >
           {data.player2 || <span className="text-gray-300 italic">TBD</span>}
         </div>
 
         {/* Player 2 Score */}
-        <div className={`w-10 flex items-center justify-center text-sm font-bold ${
-          data.winner === 2 ? "bg-gradient-to-br from-green-500 to-teal-500 text-white" : "text-gray-500"
-        }`}>
+        <div
+          className={`w-10 flex items-center justify-center text-sm font-bold ${
+            data.winner === 2
+              ? "bg-gradient-to-br from-green-500 to-teal-500 text-white"
+              : "text-gray-500"
+          }`}
+        >
           {data.score2 ?? 0}
         </div>
       </div>
@@ -159,7 +180,9 @@ export default function AdminMatchNode({
                     <CaseBMatchForm
                       data={{
                         matchId: `R${data.round}M${data.match}`,
-                        sourcedPlayer: (sourceKey === "player1" ? 1 : 2) as 1 | 2,
+                        sourcedPlayer: (sourceKey === "player1" ? 1 : 2) as
+                          | 1
+                          | 2,
                         player1: sourceKey === "player1" ? data.player1 : null,
                         player2: sourceKey === "player2" ? data.player2 : null,
                         score1: data.score1,
@@ -176,7 +199,9 @@ export default function AdminMatchNode({
                     <CaseCMatchForm
                       data={{
                         matchId: `R${data.round}M${data.match}`,
-                        sourcedPlayer: (filledSource[0] === "player1" ? 1 : 2) as 1 | 2,
+                        sourcedPlayer: (filledSource[0] === "player1"
+                          ? 1
+                          : 2) as 1 | 2,
                         player1: data.player1,
                         player2: data.player2,
                       }}

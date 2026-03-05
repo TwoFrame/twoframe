@@ -39,7 +39,9 @@ export default function ChangeTournamentStateForm({
     },
     onSuccess: () => {
       setOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["tournament", "admin", code] });
+      queryClient.invalidateQueries({
+        queryKey: ["tournament", "admin", code],
+      });
     },
   });
 
@@ -56,10 +58,7 @@ export default function ChangeTournamentStateForm({
             Start Tournament
           </Button>
         ) : (
-          <Button
-            className="bg-red-500 hover:bg-red-600 text-white"
-            size="sm"
-          >
+          <Button className="bg-red-500 hover:bg-red-600 text-white" size="sm">
             End Tournament
           </Button>
         )}
@@ -67,9 +66,7 @@ export default function ChangeTournamentStateForm({
       <DialogContent className="bg-white border-green-200">
         <DialogHeader>
           <DialogTitle className="text-gray-800">
-            {currentState === "open"
-              ? "Start Tournament?"
-              : "End Tournament?"}
+            {currentState === "open" ? "Start Tournament?" : "End Tournament?"}
           </DialogTitle>
           <DialogDescription asChild>
             <div className="space-y-4 pt-2">

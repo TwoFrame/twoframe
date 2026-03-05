@@ -16,7 +16,10 @@ type TournamentHeaderProps = {
   onAttendeeAdded?: () => void;
 };
 
-const stateStyles: Record<string, { badge: string; dot: string; label: string }> = {
+const stateStyles: Record<
+  string,
+  { badge: string; dot: string; label: string }
+> = {
   open: {
     badge: "bg-teal-50 text-teal-700 border-teal-200",
     dot: "bg-teal-400",
@@ -55,7 +58,9 @@ export function TournamentHeader({
         </p>
         <div className="flex items-center gap-2">
           <span className="text-gray-400 text-sm font-medium">Status</span>
-          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${badge}`}>
+          <span
+            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${badge}`}
+          >
             <span className={`w-1.5 h-1.5 rounded-full ${dot}`} />
             {label}
           </span>
