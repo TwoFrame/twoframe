@@ -1,6 +1,6 @@
 # Twoframe - A simple tournament organizer
 
-TwoFrame.gg is a modern web application for creating and managing competitive gaming tournaments.
+TwoFrame.gg is a modern web application for creating and managing competitive gaming tournaments. Hosted on AWS App Runner and Vercel.
 
 ## Tech Stack
 
